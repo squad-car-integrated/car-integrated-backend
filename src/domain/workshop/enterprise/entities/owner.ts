@@ -1,5 +1,6 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { User, UserProps } from "./user";
+import { Optional } from "@/core/types/optional";
 export interface OwnerProps extends UserProps{
     phoneNumber: string;
     createdAt: Date
@@ -24,9 +25,10 @@ export class Owner extends User<OwnerProps> {
         this.touch()
     }
 
-    static create(props: OwnerProps, id?: UniqueEntityID) {
+    static create(props: Optional<OwnerProps, "createdAt">, id?: UniqueEntityID) {
         const owner = new Owner({
             ...props,
+            createdAt: new Date()
         }, id);
         return owner;
     }
