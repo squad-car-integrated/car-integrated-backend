@@ -1,5 +1,6 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { User, UserProps } from "./user";
+import { Optional } from "@/core/types/optional";
 export interface EmployeeProps extends UserProps{
     monthWorkedHours: number;
     createdAt: Date
@@ -24,9 +25,10 @@ export class Employee extends User<EmployeeProps> {
         this.touch()
     }
 
-    static create(props: EmployeeProps, id?: UniqueEntityID) {
+    static create(props: Optional<EmployeeProps, "createdAt">, id?: UniqueEntityID) {
         const employee = new Employee({
             ...props,
+            createdAt: new Date()
         }, id);
         return employee;
     }

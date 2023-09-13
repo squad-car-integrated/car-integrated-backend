@@ -6,7 +6,7 @@ import { ServiceProductList } from "./service-product-list"
 export interface ServiceProps {
     automobileId: UniqueEntityID
     ownerId: UniqueEntityID
-    employeesIds: UniqueEntityID[]
+    employeesIds: UniqueEntityID
     products: ServiceProductList
     totalValue: number
     description: string
@@ -67,6 +67,7 @@ export class Service extends Entity<ServiceProps>{
             totalValue: props.totalValue ?? 0,
             description: props.description ?? "",
             createdAt: new Date(),
+            
         }, id)
         return service;
     }  
