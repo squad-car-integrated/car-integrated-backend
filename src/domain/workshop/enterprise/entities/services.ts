@@ -6,7 +6,7 @@ import { ServiceProductList } from "./service-product-list"
 export interface ServiceProps {
     automobileId: UniqueEntityID
     ownerId: UniqueEntityID
-    employeesIds: UniqueEntityID
+    employeesIds: UniqueEntityID[]
     products: ServiceProductList
     totalValue: number
     description: string
