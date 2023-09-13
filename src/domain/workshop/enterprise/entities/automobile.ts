@@ -2,7 +2,7 @@ import { Entity } from "@/core/entities/entity"
 import { UniqueEntityID } from "@/core/entities/unique-entity-id"
 import { Optional } from "@/core/types/optional"
 
-export interface ProductProps {
+export interface AutomobileProps {
     model: string
     brand: string
     plate: string
@@ -10,7 +10,7 @@ export interface ProductProps {
     createdAt: Date
     updatedAt?: Date
 }
-export class Automobile extends Entity<ProductProps>{
+export class Automobile extends Entity<AutomobileProps>{
     get model(){
         return this.props.model;
     }
@@ -26,11 +26,11 @@ export class Automobile extends Entity<ProductProps>{
     get updatedAt(){
         return this.props.updatedAt;
     }
-    static create(props: Optional<ProductProps, "createdAt"> , id?: UniqueEntityID){
-        const product = new Automobile({
+    static create(props: Optional<AutomobileProps, "createdAt"> , id?: UniqueEntityID){
+        const automobile = new Automobile({
             ...props,
             createdAt: new Date(),
         }, id)
-        return product;
+        return automobile;
     }  
 }

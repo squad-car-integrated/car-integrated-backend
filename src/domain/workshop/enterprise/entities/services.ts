@@ -61,11 +61,12 @@ export class Service extends Entity<ServiceProps>{
         this.props.status = status;
         this.touch()
     }
-    static create(props: Optional<ServiceProps, "createdAt" | "totalValue" | "description"> , id?: UniqueEntityID){
+    static create(props: Optional<ServiceProps, "createdAt" | "totalValue" | "description" | "products"> , id?: UniqueEntityID){
         const service = new Service({
             ...props,
             totalValue: props.totalValue ?? 0,
             description: props.description ?? "",
+            products: props.products ?? new ServiceProductList(),
             createdAt: new Date(),
             
         }, id)

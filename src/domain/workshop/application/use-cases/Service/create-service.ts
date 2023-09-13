@@ -8,7 +8,7 @@ interface CreateServiceUseCaseRequest {
     automobileId: string
     ownerId: string
     employeesIds: string[]
-    products: ServiceProductList
+    productsIds: string[]
     totalValue: number
     description: string
     status: ServiceStatus
@@ -16,25 +16,36 @@ interface CreateServiceUseCaseRequest {
 type CreateServiceUseCaseResponse = Either<null, {
     service: Service
 }>
-// @Injectable()
-// export class CreateServiceUseCase { 
-//     constructor(
-//         private serviceRepository: ServicesRepository,
-//     ){}
-//     async execute({automobileId, ownerId, employeesIds,products,totalValue, description, status}: CreateServiceUseCaseRequest) : Promise<CreateServiceUseCaseResponse> {
-//         const service = Service.create({
-//             automobileId : new UniqueEntityID(automobileId),
-//             ownerId : new UniqueEntityID(ownerId),
-//             employeesIds : [new UniqueEntityID(employeesIds["1"])],
-//             products,
-//             totalValue, 
-//             description, 
-//             status
-//         })
-//         await this.serviceRepository.create(service)
-//         return right({
-//             service
-//         })
-//     }
+@Injectable()
+export class CreateServiceUseCase { 
+    constructor(
+        private serviceRepository: ServicesRepository,
+    ){}
+    async execute({automobileId, ownerId, employeesIds,productsIds,totalValue, description, status}: CreateServiceUseCaseRequest) : Promise<CreateServiceUseCaseResponse> {
+        const employeesIdsFormat: UniqueEntityID[] = []
+        employeesIds.forEach(id => {
+            const uniqueId = new UniqueEntityID(id)
+            employeesIdsFormat.push(uniqueId)
+        })
+        const service = Service.create({
+            automobileId : new UniqueEntityID(automobileId),
+            ownerId : new UniqueEntityID(ownerId),
+            employeesIds : employeesIdsFormat,
+            totalValue, 
+            description, 
+            status
+        })
+        const serviceProducts = productsIds.map(productId => {
+            return serviceProducts.create({
+                productId: new UniqueEntityID(productId),
+                serviceId: service.id
+            })
+        })
+        service.products = new ServiceProductList(serviceProducts)
+        await this.serviceRepository.create(service)
+        return right({
+            service
+        })
+    }
     
-// }
+}
