@@ -10,7 +10,7 @@ export interface ProductProps {
     createdAt: Date
     updatedAt?: Date
 }
-export class Product extends Entity<ProductProps>{
+export class Automobile extends Entity<ProductProps>{
     get model(){
         return this.props.model;
     }
@@ -26,11 +26,8 @@ export class Product extends Entity<ProductProps>{
     get updatedAt(){
         return this.props.updatedAt;
     }
-    private touch(){
-        this.props.updatedAt = new Date();
-    }
     static create(props: Optional<ProductProps, "createdAt"> , id?: UniqueEntityID){
-        const product = new Product({
+        const product = new Automobile({
             ...props,
             createdAt: new Date(),
         }, id)

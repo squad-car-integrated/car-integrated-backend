@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
-  "author": "Natan de Melo Borges",
+  "author": "Natan de Melo Borges, Victor Manuel",
   "main": "index.js",
   "private": true,
   "scripts": {
