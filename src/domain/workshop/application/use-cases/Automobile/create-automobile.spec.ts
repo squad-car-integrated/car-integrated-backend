@@ -1,7 +1,7 @@
 import { InMemoryAutomobilesRepository } from "test/repositories/in-memory-automobile-repository"
 import { CreateAutomobileUseCase } from "./create-automobile"
 import {faker} from "@faker-js/faker"
-import { UniqueEntityID } from "@/core/entities/unique-entity-id"
+import { makeOwner } from "test/factories/make-owner"
 
 
 let inMemoryAutomobilesRepository: InMemoryAutomobilesRepository
@@ -14,12 +14,12 @@ describe("Create Automobile", () => {
     })
 
     it("Should be able to create a automobile", async () => {
-
+        const owner = makeOwner()
         const result = await sut.execute({
             model: faker.vehicle.model(),
             brand: "Honda",
             plate: "KFG91230I",
-            ownerId: "123123",
+            ownerId: owner.id.toString(),
         })
         expect(result.isRight()).toBe(true)
         expect(inMemoryAutomobilesRepository.items[0]).toEqual(result.value?.automobile)
