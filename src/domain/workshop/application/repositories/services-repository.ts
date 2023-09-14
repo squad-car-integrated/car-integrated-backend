@@ -1,5 +1,5 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
-import { Service } from "../../enterprise/entities/services";
+import { Service } from "../../enterprise/entities/service";
 
 export abstract class ServicesRepository {
     abstract findById(id: string): Promise<Service | null>

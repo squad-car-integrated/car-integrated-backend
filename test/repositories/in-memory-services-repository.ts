@@ -1,6 +1,6 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
 import { ServicesRepository } from "@/domain/workshop/application/repositories/services-repository";
-import { Service } from "@/domain/workshop/enterprise/entities/services";
+import { Service } from "@/domain/workshop/enterprise/entities/service";
 
 export class InMemoryServicesRepository implements ServicesRepository {
     async findManyRecent({page}: PaginationParams) {
