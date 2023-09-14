@@ -1,8 +1,12 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
+import { ServiceProductsRepository } from "@/domain/workshop/application/repositories/service-products-repository";
 import { ServicesRepository } from "@/domain/workshop/application/repositories/services-repository";
 import { Service } from "@/domain/workshop/enterprise/entities/service";
 
 export class InMemoryServicesRepository implements ServicesRepository {
+    constructor(
+        private serviceProductsRepository: ServiceProductsRepository,
+    ){}
     async findManyRecent({page}: PaginationParams) {
         const services = this.items
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice((page - 1) * 20, page * 20)
@@ -26,5 +30,6 @@ export class InMemoryServicesRepository implements ServicesRepository {
     async delete(service: Service) {
         const itemIndex = this.items.findIndex(item => item.id === service.id)
         this.items.splice(itemIndex, 1)
+        this.serviceProductsRepository.deleteManyByServiceId(service.id.toString())
     }
 }

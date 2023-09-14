@@ -1,13 +1,16 @@
 import { makeService } from "test/factories/make-service"
 import { InMemoryServicesRepository } from "test/repositories/in-memory-services-repository"
 import { FetchRecentServicesUseCase } from "./fetch-recent-services"
+import { InMemoryServiceProductsRepository } from "test/repositories/in-memory-service-products-repository"
 
 let inMemoryServicesRepository: InMemoryServicesRepository
+let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
 let sut: FetchRecentServicesUseCase
 
 describe("Fetch recent services", () => {
     beforeEach(() => {
-        inMemoryServicesRepository = new InMemoryServicesRepository();
+        inMemoryServiceProductsRepository = new InMemoryServiceProductsRepository()
+        inMemoryServicesRepository = new InMemoryServicesRepository(inMemoryServiceProductsRepository);
         sut = new FetchRecentServicesUseCase(inMemoryServicesRepository)
     })
 

@@ -5,13 +5,16 @@ import { makeOwner } from "test/factories/make-owner"
 import { makeEmployee } from "test/factories/make-employee"
 import { makeAutomobile } from "test/factories/make-automobile"
 import { ServiceStatus } from "@/core/entities/service-status-enum"
+import { InMemoryServiceProductsRepository } from "test/repositories/in-memory-service-products-repository"
 
 let inMemoryServicesRepository: InMemoryServicesRepository
+let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
 let sut: CreateServiceUseCase
 
 describe("Create Service", () => {
     beforeEach(() => {
-        inMemoryServicesRepository = new InMemoryServicesRepository();
+        inMemoryServiceProductsRepository = new InMemoryServiceProductsRepository()
+        inMemoryServicesRepository = new InMemoryServicesRepository(inMemoryServiceProductsRepository);
         sut = new CreateServiceUseCase(inMemoryServicesRepository)
     })
 

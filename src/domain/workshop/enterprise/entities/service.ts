@@ -68,7 +68,7 @@ export class Service extends Entity<ServiceProps>{
             totalValue: props.totalValue ?? 0,
             description: props.description ?? "",
             products: props.products ?? new ServiceProductList(),
-            createdAt: new Date(),
+            createdAt: props.createdAt ?? new Date(),
             
         }, id)
         return service;

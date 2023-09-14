@@ -2,13 +2,16 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { makeService } from "test/factories/make-service";
 import { InMemoryServicesRepository } from "test/repositories/in-memory-services-repository";
 import { DeleteServiceUseCase } from "./delete-service";
+import { InMemoryServiceProductsRepository } from "test/repositories/in-memory-service-products-repository";
 
 let inMemoryServicesRepository: InMemoryServicesRepository
+let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
 let sut: DeleteServiceUseCase
 
 describe("Delete Service", () => {
     beforeEach(() => {
-        inMemoryServicesRepository = new InMemoryServicesRepository();
+        inMemoryServiceProductsRepository = new InMemoryServiceProductsRepository()
+        inMemoryServicesRepository = new InMemoryServicesRepository(inMemoryServiceProductsRepository);
         sut = new DeleteServiceUseCase(inMemoryServicesRepository)
     })
 

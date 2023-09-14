@@ -16,7 +16,7 @@ export class Owner extends User<OwnerProps> {
     static create(props: Optional<OwnerProps, "createdAt">, id?: UniqueEntityID) {
         const owner = new Owner({
             ...props,
-            createdAt: new Date()
+            createdAt: props.createdAt ?? new Date(),
         }, id);
         return owner;
     }

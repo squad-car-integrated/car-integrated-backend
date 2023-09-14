@@ -18,7 +18,7 @@ export class Employee extends User<EmployeeProps> {
     static create(props: Optional<EmployeeProps, "createdAt">, id?: UniqueEntityID) {
         const employee = new Employee({
             ...props,
-            createdAt: new Date()
+            createdAt: props.createdAt ?? new Date(),
         }, id);
         return employee;
     }

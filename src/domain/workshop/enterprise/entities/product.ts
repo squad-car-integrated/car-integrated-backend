@@ -60,7 +60,7 @@ export class Product extends Entity<ProductProps>{
         const product = new Product({
             ...props,
             photo: props.photo ?? "",
-            createdAt: new Date(),
+            createdAt: props.createdAt ?? new Date(),
         }, id)
         return product;
     }  
