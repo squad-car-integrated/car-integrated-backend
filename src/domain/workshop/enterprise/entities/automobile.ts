@@ -29,7 +29,7 @@ export class Automobile extends Entity<AutomobileProps>{
     static create(props: Optional<AutomobileProps, "createdAt"> , id?: UniqueEntityID){
         const automobile = new Automobile({
             ...props,
-            createdAt: new Date(),
+            createdAt: props.createdAt ?? new Date(),
         }, id)
         return automobile;
     }  

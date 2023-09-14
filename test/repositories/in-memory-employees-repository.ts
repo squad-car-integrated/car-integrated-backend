@@ -1,12 +1,14 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
-import { EmployeeRepository } from "@/domain/workshop/application/repositories/employee-repository";
+import { EmployeesRepository } from "@/domain/workshop/application/repositories/employees-repository";
 import { Employee } from "@/domain/workshop/enterprise/entities/employee";
 
-export class InMemoryEmployeeRepository implements EmployeeRepository {
-    async findManyRecent({page}: PaginationParams) {
-        const employees = this.items
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice((page - 1) * 20, page * 20)
-        return employees
+export class InMemoryEmployeesRepository implements EmployeesRepository {
+    async findByEmail(email: string){
+        const employee = this.items.find(item => item.email === email);
+        if(!employee){
+            return null
+        }
+        return employee
     }
     public items: Employee[] = [];
     async findById(id: string){

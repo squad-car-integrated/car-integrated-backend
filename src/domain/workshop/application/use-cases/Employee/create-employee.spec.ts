@@ -1,14 +1,14 @@
-import { InMemoryEmployeeRepository } from "test/repositories/in-memory-employee-repository"
+import { InMemoryEmployeesRepository } from "test/repositories/in-memory-employees-repository"
 import { CreateEmployeeUseCase } from "./create-employee"
 import {faker} from "@faker-js/faker"
 
 
-let inMemoryEmployeeRepository: InMemoryEmployeeRepository
+let inMemoryEmployeeRepository: InMemoryEmployeesRepository
 let sut: CreateEmployeeUseCase
 
 describe("Create Employee", () => {
     beforeEach(() => {
-        inMemoryEmployeeRepository = new InMemoryEmployeeRepository();
+        inMemoryEmployeeRepository = new InMemoryEmployeesRepository();
         sut = new CreateEmployeeUseCase(inMemoryEmployeeRepository)
     })
 
@@ -18,6 +18,7 @@ describe("Create Employee", () => {
             monthWorkedHours: faker.number.float(),
             email: faker.internet.email(),
             password: faker.internet.password(),
+            roles: ["User"]
         })
         expect(result.isRight()).toBe(true)
         expect(inMemoryEmployeeRepository.items[0]).toEqual(result.value?.employee)

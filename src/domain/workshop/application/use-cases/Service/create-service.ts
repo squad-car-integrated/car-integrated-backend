@@ -4,6 +4,8 @@ import { ServicesRepository } from "../../repositories/services-repository"
 import { Service } from "../../../enterprise/entities/services"
 import { ServiceProductList } from "@/domain/workshop/enterprise/entities/service-product-list"
 import { UniqueEntityID } from "@/core/entities/unique-entity-id"
+import { ServiceStatus } from "@/core/entities/service-status-enum"
+import { ServiceProduct } from "@/domain/workshop/enterprise/entities/service-products"
 interface CreateServiceUseCaseRequest {
     automobileId: string
     ownerId: string
@@ -36,7 +38,7 @@ export class CreateServiceUseCase {
             status
         })
         const serviceProducts = productsIds.map(productId => {
-            return serviceProducts.create({
+            return ServiceProduct.create({
                 productId: new UniqueEntityID(productId),
                 serviceId: service.id
             })

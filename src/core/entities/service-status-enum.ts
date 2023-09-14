@@ -1,4 +1,4 @@
-enum ServiceStatus {
+export enum ServiceStatus {
     PendingApproval = 'Aguardando Aprovação',
     InProgress = 'Em Andamento',
     Completed = 'Concluída',

@@ -1,4 +1,4 @@
-import { InMemoryAutomobilesRepository } from "test/repositories/in-memory-automobile-repository"
+import { InMemoryAutomobilesRepository } from "test/repositories/in-memory-automobiles-repository"
 import { CreateAutomobileUseCase } from "./create-automobile"
 import {faker} from "@faker-js/faker"
 import { makeOwner } from "test/factories/make-owner"

@@ -11,20 +11,10 @@ export class Employee extends User<EmployeeProps> {
     get monthWorkedHours() {
         return this.props.monthWorkedHours;
     }
-    get createdAt(){
-        return this.props.createdAt
-    }
-    get updatedAt(){
-        return this.props.updatedAt
-    }
-    private touch(){
-        this.props.updatedAt = new Date();
-    }
     set monthWorkedHours(workedHours: number) {
         this.props.monthWorkedHours = workedHours
         this.touch()
     }
-
     static create(props: Optional<EmployeeProps, "createdAt">, id?: UniqueEntityID) {
         const employee = new Employee({
             ...props,

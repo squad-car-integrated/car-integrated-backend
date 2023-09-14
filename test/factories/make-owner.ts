@@ -7,6 +7,7 @@ export function makeOwner(override: Partial<OwnerProps> = {}, id?: UniqueEntityI
         phoneNumber: faker.phone.number(),
         email: faker.internet.email(),
         password: faker.internet.password(),
+        roles: ["User"],
         ...override
     }, id)
     return owner;

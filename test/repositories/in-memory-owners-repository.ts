@@ -1,12 +1,14 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
-import { OwnerRepository } from "@/domain/workshop/application/repositories/owner-repository";
+import { OwnersRepository } from "@/domain/workshop/application/repositories/owners-repository";
 import { Owner } from "@/domain/workshop/enterprise/entities/owner";
 
-export class InMemoryOwnersRepository implements OwnerRepository {
-    async findManyRecent({page}: PaginationParams) {
-        const owners = this.items
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice((page - 1) * 20, page * 20)
-        return owners
+export class InMemoryOwnersRepository implements OwnersRepository {
+    async findByEmail(email: string){
+        const owner = this.items.find(item => item.email === email);
+        if(!owner){
+            return null
+        }
+        return owner
     }
     public items: Owner[] = [];
     async findById(id: string){

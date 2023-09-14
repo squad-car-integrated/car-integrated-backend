@@ -2,6 +2,7 @@ import { Entity } from "@/core/entities/entity"
 import { UniqueEntityID } from "@/core/entities/unique-entity-id"
 import { Optional } from "@/core/types/optional"
 import { ServiceProductList } from "./service-product-list"
+import { ServiceStatus } from "@/core/entities/service-status-enum"
 
 export interface ServiceProps {
     automobileId: UniqueEntityID

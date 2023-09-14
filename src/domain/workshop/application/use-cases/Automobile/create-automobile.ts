@@ -1,7 +1,7 @@
 import { Either, right } from "@/core/either"
 import { Injectable } from "@nestjs/common"
 import { Automobile } from "../../../enterprise/entities/automobile"
-import { AutomobilesRepository } from "../../repositories/automobile-repository"
+import { AutomobilesRepository } from "../../repositories/automobiles-repository"
 import { UniqueEntityID } from "@/core/entities/unique-entity-id"
 interface CreateAutomobileUseCaseRequest {
     model: string

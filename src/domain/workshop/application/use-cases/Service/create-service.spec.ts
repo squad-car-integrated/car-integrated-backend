@@ -1,10 +1,10 @@
-import { InMemoryServicesRepository } from "test/repositories/in-memory-service-repository"
+import { InMemoryServicesRepository } from "test/repositories/in-memory-services-repository"
 import { CreateServiceUseCase } from "./create-service"
 import {faker} from "@faker-js/faker"
 import { makeOwner } from "test/factories/make-owner"
 import { makeEmployee } from "test/factories/make-employee"
 import { makeAutomobile } from "test/factories/make-automobile"
-
+import { ServiceStatus } from "@/core/entities/service-status-enum"
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let sut: CreateServiceUseCase

@@ -1,4 +1,4 @@
-import { InMemoryProductsRepository } from "test/repositories/in-memory-product-repository"
+import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository"
 import { CreateProductUseCase } from "./create-product"
 import {faker} from "@faker-js/faker"
 

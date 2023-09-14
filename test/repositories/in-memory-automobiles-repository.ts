@@ -1,5 +1,5 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
-import { AutomobilesRepository } from "@/domain/workshop/application/repositories/automobile-repository";
+import { AutomobilesRepository } from "@/domain/workshop/application/repositories/automobiles-repository";
 import { Automobile } from "@/domain/workshop/enterprise/entities/automobile";
 
 export class InMemoryAutomobilesRepository implements AutomobilesRepository {

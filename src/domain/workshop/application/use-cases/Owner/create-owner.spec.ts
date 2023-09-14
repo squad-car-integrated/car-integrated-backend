@@ -1,15 +1,15 @@
-import { InMemoryOwnersRepository } from "test/repositories/in-memory-owner-repository"
+import { InMemoryOwnersRepository } from "test/repositories/in-memory-owners-repository"
 import { CreateOwnerUseCase } from "./create-owner"
 import {faker} from "@faker-js/faker"
 
 
-let inMemoryOwnerRepository: InMemoryOwnersRepository
+let inMemoryOwnersRepository: InMemoryOwnersRepository
 let sut: CreateOwnerUseCase
 
 describe("Create Owner", () => {
     beforeEach(() => {
-        inMemoryOwnerRepository = new InMemoryOwnersRepository();
-        sut = new CreateOwnerUseCase(inMemoryOwnerRepository)
+        inMemoryOwnersRepository = new InMemoryOwnersRepository();
+        sut = new CreateOwnerUseCase(inMemoryOwnersRepository)
     })
 
     it("Should be able to create a owner", async () => {
@@ -18,9 +18,9 @@ describe("Create Owner", () => {
             phoneNumber: faker.phone.number(),
             email: faker.internet.email(),
             password: faker.internet.password(),
-      
+            roles: ["admin"]
         })
         expect(result.isRight()).toBe(true)
-        expect(inMemoryOwnerRepository.items[0]).toEqual(result.value?.owner)
+        expect(inMemoryOwnersRepository.items[0]).toEqual(result.value?.owner)
     })
 })
