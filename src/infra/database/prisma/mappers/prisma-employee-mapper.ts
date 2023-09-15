@@ -15,9 +15,9 @@ export class PrismaEmployeeMapper {
     }
     static toPrisma(employee: Employee):Prisma.EmployeeUncheckedCreateInput {
         return {
-            name: employee.name,
-            email: employee.email,
-            password: employee.password,
+            name: employee.name.toString(),
+            email: employee.email.toString(),
+            password: employee.password.toString(),
             monthWorkedHours: employee.monthWorkedHours,
             role: UserRole.EMPLOYEE,
         }

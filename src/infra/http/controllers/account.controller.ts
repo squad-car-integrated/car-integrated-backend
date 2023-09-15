@@ -13,7 +13,7 @@ const accountSchema = z.object({
 })
 type AccountBodySchema = z.infer<typeof accountSchema>
 @Controller("/accounts")
-export class AccountController {
+export class AuthenticateController {
     constructor(private createOwner: CreateOwnerUseCase, private createEmployee: CreateEmployeeUseCase ){}
     
     @Post("/owner")

@@ -5,6 +5,7 @@ import { EditServiceUseCase } from "./edit-service"
 import { InMemoryServiceProductsRepository } from "test/repositories/in-memory-service-products-repository"
 import { makeServiceProduct } from "test/factories/make-service-product"
 import { ServiceStatus } from "@/core/entities/service-status-enum"
+import { ServiceEmployeeList } from "@/domain/workshop/enterprise/entities/service-employee-list"
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
@@ -21,7 +22,6 @@ describe("Edit Service", () => {
         const newService = makeService({
             ownerId: new UniqueEntityID("owner-1"),
             automobileId: new UniqueEntityID("car-1"),
-            employeesIds: [new UniqueEntityID("employee-1")]
         }, new UniqueEntityID("service-1"))
         await inMemoryServicesRepository.create(newService)
         inMemoryServiceProductsRepository.items.push(
