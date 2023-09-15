@@ -3,8 +3,6 @@ import { User, UserProps } from "./user";
 import { Optional } from "@/core/types/optional";
 export interface EmployeeProps extends UserProps{
     monthWorkedHours: number;
-    createdAt: Date
-    updatedAt?: Date | null
 }
 
 export class Employee extends User<EmployeeProps> {

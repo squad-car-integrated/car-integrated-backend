@@ -1,11 +1,24 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.access_token}}
-POST {{baseUrl}}/accounts
+
+# @name createOwner
+POST {{baseUrl}}/accounts/owner
 Content-Type: application/json
 
 {
-	"name": "Natan Borges",
-	"email": "natan@gmail.com",
+	"name": "Natan Borges Owner",
+	"email": "natanowner@gmail.com",
+	"password": "123123"
+}
+
+###
+# @name createEmployee
+POST {{baseUrl}}/accounts/employee
+Content-Type: application/json
+
+{
+	"name": "Natan Borges Employee",
+	"email": "natanemployee@gmail.com",
 	"password": "123123"
 }
 

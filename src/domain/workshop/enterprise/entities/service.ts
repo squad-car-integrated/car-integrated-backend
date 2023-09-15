@@ -3,11 +3,12 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id"
 import { Optional } from "@/core/types/optional"
 import { ServiceProductList } from "./service-product-list"
 import { ServiceStatus } from "@/core/entities/service-status-enum"
+import { ServiceEmployeeList } from "./service-employee-list"
 
 export interface ServiceProps {
     automobileId: UniqueEntityID
     ownerId: UniqueEntityID
-    employeesIds: UniqueEntityID[]
+    employees: ServiceEmployeeList
     products: ServiceProductList
     totalValue: number
     description: string
@@ -22,8 +23,8 @@ export class Service extends Entity<ServiceProps>{
     get ownerId(){
         return this.props.ownerId;
     }
-    get employeesIds(){
-        return this.props.employeesIds;
+    get employees(){
+        return this.props.employees;
     }
     get products() {
         return this.props.products
@@ -50,6 +51,10 @@ export class Service extends Entity<ServiceProps>{
         this.props.products = products;
         this.touch()
     }
+    set employees(employees: ServiceEmployeeList){
+        this.props.employees = employees;
+        this.touch()
+    }
     set totalValue(totalValue: number){
         this.props.totalValue = totalValue;
         this.touch()
@@ -62,11 +67,12 @@ export class Service extends Entity<ServiceProps>{
         this.props.status = status;
         this.touch()
     }
-    static create(props: Optional<ServiceProps, "createdAt" | "totalValue" | "description" | "products"> , id?: UniqueEntityID){
+    static create(props: Optional<ServiceProps, "createdAt" | "totalValue" | "description" | "products" | "employees"> , id?: UniqueEntityID){
         const service = new Service({
             ...props,
             totalValue: props.totalValue ?? 0,
             description: props.description ?? "",
+            employees: props.employees ?? new ServiceEmployeeList(),
             products: props.products ?? new ServiceProductList(),
             createdAt: props.createdAt ?? new Date(),
             

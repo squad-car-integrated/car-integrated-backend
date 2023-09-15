@@ -2,6 +2,7 @@ import { Either, right } from "@/core/either"
 import { Injectable } from "@nestjs/common"
 import { OwnersRepository } from "../../repositories/owners-repository"
 import { Owner } from "../../../enterprise/entities/owner"
+import { UserAlreadyExistsError } from "../errors/user-already-exists-error"
 interface CreateOwnerUseCaseRequest {
     phoneNumber: string
     name: string
@@ -9,7 +10,7 @@ interface CreateOwnerUseCaseRequest {
     password: string
     roles: string[]
 }
-type CreateOwnerUseCaseResponse = Either<null, {
+type CreateOwnerUseCaseResponse = Either<UserAlreadyExistsError, {
     owner: Owner
 }>
 @Injectable()

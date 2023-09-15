@@ -2,6 +2,7 @@ import { Either, right } from "@/core/either"
 import { Injectable } from "@nestjs/common"
 import { EmployeesRepository } from "../../repositories/employees-repository"
 import { Employee } from "../../../enterprise/entities/employee"
+import { UserAlreadyExistsError } from "../errors/user-already-exists-error"
 interface CreateEmployeeUseCaseRequest {
     monthWorkedHours: number
     name: string
@@ -9,7 +10,7 @@ interface CreateEmployeeUseCaseRequest {
     password: string
     roles: string[]
 }
-type CreateEmployeeUseCaseResponse = Either<null, {
+type CreateEmployeeUseCaseResponse = Either<UserAlreadyExistsError, {
     employee: Employee
 }>
 @Injectable()

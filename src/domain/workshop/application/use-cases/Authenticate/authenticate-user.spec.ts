@@ -1,21 +1,24 @@
 import { FakeEncrypter } from "test/cryptography/fake-encrypter"
 import { FakeHasher } from "test/cryptography/fake-hasher"
-import { AuthenticateUserUseCase } from "./authenticate-student"
-import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository"
+import { AuthenticateUserUseCase } from "./authenticate-user"
 import { makeOwner } from "test/factories/make-owner"
-import { User } from "@/domain/workshop/enterprise/entities/user"
+import { InMemoryEmployeesRepository } from "test/repositories/in-memory-employees-repository"
+import { InMemoryOwnersRepository } from "test/repositories/in-memory-owners-repository"
+import { makeEmployee } from "test/factories/make-employee"
 
-let inMemoryUsersRepository: InMemoryUsersRepository
+let inMemoryEmployeesRepository: InMemoryEmployeesRepository
+let inMemoryOwnersRepository: InMemoryOwnersRepository
 let fakeHasher: FakeHasher
 let fakeEncrypter: FakeEncrypter
 let sut: AuthenticateUserUseCase
 
 describe("Authenticate User", () => {
     beforeEach(() => {
-        inMemoryUsersRepository = new InMemoryUsersRepository();
+        inMemoryEmployeesRepository = new InMemoryEmployeesRepository();
+        inMemoryOwnersRepository = new InMemoryOwnersRepository();
         fakeHasher = new FakeHasher()
         fakeEncrypter = new FakeEncrypter()
-        sut = new AuthenticateUserUseCase(inMemoryUsersRepository,fakeHasher,fakeEncrypter)
+        sut = new AuthenticateUserUseCase(inMemoryEmployeesRepository,inMemoryOwnersRepository,fakeHasher,fakeEncrypter)
     })
 
     it("Should be able to authenticate a user", async () => {
@@ -23,12 +26,12 @@ describe("Authenticate User", () => {
             email: "johndoeowner@example.com",
             password: await fakeHasher.hash("123123")
         })
-        const userEmployee = makeOwner({
+        const userEmployee = makeEmployee({
             email: "johndoeempolyee@example.com",
             password: await fakeHasher.hash("123456")
         })
-        await inMemoryUsersRepository.create(userOwner)
-        await inMemoryUsersRepository.create(userEmployee)
+        await inMemoryOwnersRepository.create(userOwner)
+        await inMemoryEmployeesRepository.create(userEmployee)
         const result = await sut.execute({
             email: "johndoeowner@example.com",
             password: "123123"

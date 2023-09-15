@@ -15,16 +15,29 @@ enum UserRole {
   OWNER
 }
 
-model User {
+model Owner {
   id          String       @id @default(uuid())
   name        String
   email       String       @unique
   password    String
+  phoneNumber String
   role        UserRole     @default(OWNER)
   automobiles Automobile[]
   services    Service[]
 
-  @@map("users")
+  @@map("owners")
+}
+
+model Employee {
+  id               String             @id @default(uuid())
+  name             String
+  email            String             @unique
+  password         String
+  monthWorkedHours Float
+  role             UserRole           @default(EMPLOYEE)
+  services         ServiceEmployees[]
+
+  @@map("employees")
 }
 
 model Product {
@@ -36,7 +49,7 @@ model Product {
   photo           String
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime?         @updatedAt @map("updated")
-  ServiceProducts ServiceProducts[]
+  serviceProducts ServiceProducts[]
 
   @@map("products")
 }
@@ -46,8 +59,8 @@ model Automobile {
   model     String
   brand     String
   plate     String
-  ownerId   String    @map("user_id")
-  owner     User      @relation(fields: [ownerId], references: [id])
+  ownerId   String    @map("owner_id")
+  owner     Owner     @relation(fields: [ownerId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated")
   Service   Service[]
@@ -56,19 +69,18 @@ model Automobile {
 }
 
 model Service {
-  id           String            @id @default(uuid())
-  automobileId String
-  ownerId      String
-  employeesIds String[]
+  id           String             @id @default(uuid())
+  automobileId String             @map("automobile_id")
+  ownerId      String             @map("owner_id")
+  employees    ServiceEmployees[]
   products     ServiceProducts[]
   totalValue   Float
   description  String
   status       String
-  userId       String?
-  createdAt    DateTime          @default(now()) @map("created_at")
-  updatedAt    DateTime?         @updatedAt @map("updated")
-  user         User?             @relation(fields: [ownerId], references: [id])
-  automobile   Automobile        @relation(fields: [automobileId], references: [id])
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime?          @updatedAt @map("updated")
+  owner        Owner              @relation(fields: [ownerId], references: [id])
+  automobile   Automobile         @relation(fields: [automobileId], references: [id])
 
   @@map("services")
 }
@@ -80,5 +92,15 @@ model ServiceProducts {
   service   Service @relation(fields: [serviceId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 
-  @@map("services_products")
+  @@map("service_products")
+}
+
+model ServiceEmployees {
+  id         String   @id @default(uuid())
+  serviceId  String
+  employeeId String
+  service    Service  @relation(fields: [serviceId], references: [id])
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("service_employees")
 }

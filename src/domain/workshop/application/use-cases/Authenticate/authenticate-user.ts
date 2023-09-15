@@ -2,8 +2,11 @@ import { Either, left, right } from "@/core/either"
 import { Injectable } from "@nestjs/common"
 import { Encrypter } from "../../cryptography/encrypter"
 import { HashComparer } from "../../cryptography/hash-comparer"
-import { UsersRepository } from "../../repositories/users-repository"
 import { WrongCredentialsError } from "../errors/wrong-credentials-error"
+import { OwnersRepository } from "../../repositories/owners-repository"
+import { EmployeesRepository } from "../../repositories/employees-repository"
+import { Employee } from "@/domain/workshop/enterprise/entities/employee"
+import { Owner } from "@/domain/workshop/enterprise/entities/owner"
 
 interface AuthenticateUserUseCaseRequest {
     email: string
@@ -15,14 +18,20 @@ type AuthenticateUserUseCaseResponse = Either<WrongCredentialsError, {
 @Injectable()
 export class AuthenticateUserUseCase { 
     constructor(
-        private userRepository: UsersRepository,
+        private employeesRepository: EmployeesRepository,
+        private ownersRepository: OwnersRepository,
         private hashComparer: HashComparer,
         private encrypter: Encrypter
     ){}
     async execute({email, password}: AuthenticateUserUseCaseRequest) : Promise<AuthenticateUserUseCaseResponse> {
-        const user = await this.userRepository.findByEmail(email)
+        let user: Owner | Employee | null
+        user = await this.employeesRepository.findByEmail(email)
+
         if(!user){
-            return left(new WrongCredentialsError())
+            user = await this.ownersRepository.findByEmail(email)
+            if(!user){
+                return left(new WrongCredentialsError())
+            }
         }
         const isPasswordValid = await this.hashComparer.compare(password, user.password)
         if(!isPasswordValid){
