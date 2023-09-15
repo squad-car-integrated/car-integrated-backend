@@ -22,7 +22,6 @@ describe("Create Owner", () => {
             phoneNumber: faker.phone.number(),
             email: faker.internet.email(),
             password: faker.internet.password(),
-            roles: ["admin"]
         })
         expect(result.isRight()).toBe(true)
         expect(result.value).toEqual({
@@ -35,7 +34,6 @@ describe("Create Owner", () => {
             phoneNumber: faker.phone.number(),
             email: faker.internet.email(),
             password: "123123",
-            roles: [UserRole.OWNER.toString()]
         })
         const hashedPassword = await fakeHasher.hash("123123")
         expect(result.isRight()).toBe(true)

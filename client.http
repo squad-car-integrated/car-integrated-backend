@@ -2,7 +2,7 @@
 @authToken = {{authenticate.response.body.access_token}}
 
 # @name createOwner
-POST {{baseUrl}}/accounts/owner
+POST {{baseUrl}}/owner
 Content-Type: application/json
 
 {
@@ -12,8 +12,17 @@ Content-Type: application/json
 }
 
 ###
+# @name GetOwnerByEmail
+Get {{baseUrl}}/owner
+Content-Type: application/json
+
+{
+	"email": "natanowner@gmail.com"
+}
+
+###
 # @name createEmployee
-POST {{baseUrl}}/accounts/employee
+POST {{baseUrl}}/employee
 Content-Type: application/json
 
 {
@@ -28,7 +37,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-	"email": "natan@gmail.com",
+	"email": "natanowner@gmail.com",
 	"password": "123123"
 }
 ###

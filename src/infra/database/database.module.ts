@@ -17,7 +17,7 @@ import { EmployeesRepository } from "@/domain/workshop/application/repositories/
             useClass: PrismaEmployeesRepository
         },
     ],
-    exports: [PrismaService,PrismaEmployeesRepository, PrismaOwnersRepository]
+    exports: [PrismaService,EmployeesRepository, OwnersRepository]
 })
 export class DatabaseModule{
 

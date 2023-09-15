@@ -22,7 +22,6 @@ describe("Create Employee", () => {
             monthWorkedHours: faker.number.float(),
             email: faker.internet.email(),
             password: faker.internet.password(),
-            roles: [UserRole.EMPLOYEE.toString()]
         })
         expect(result.isRight()).toBe(true)
         expect(result.value).toEqual({
@@ -35,7 +34,6 @@ describe("Create Employee", () => {
             monthWorkedHours: faker.number.float(),
             email: faker.internet.email(),
             password: "123123",
-            roles: [UserRole.EMPLOYEE.toString()]
         })
         const hashedPassword = await fakeHasher.hash("123123")
         expect(result.isRight()).toBe(true)

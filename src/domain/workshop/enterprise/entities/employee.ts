@@ -13,9 +13,10 @@ export class Employee extends User<EmployeeProps> {
         this.props.monthWorkedHours = workedHours
         this.touch()
     }
-    static create(props: Optional<EmployeeProps, "createdAt">, id?: UniqueEntityID) {
+    static create(props: Optional<EmployeeProps, "createdAt" | "roles">, id?: UniqueEntityID) {
         const employee = new Employee({
             ...props,
+            roles: props.roles ?? [],
             createdAt: props.createdAt ?? new Date(),
         }, id);
         return employee;

@@ -4,12 +4,12 @@ import { EmployeesRepository } from "../../repositories/employees-repository"
 import { Employee } from "../../../enterprise/entities/employee"
 import { UserAlreadyExistsError } from "../errors/user-already-exists-error"
 import { HashGenerator } from "../../cryptography/hasher-generator"
+import { UserRole } from "@/core/entities/user-role-enum"
 interface CreateEmployeeUseCaseRequest {
     monthWorkedHours: number
     name: string
     email: string
     password: string
-    roles: string[]
 }
 type CreateEmployeeUseCaseResponse = Either<UserAlreadyExistsError, {
     employee: Employee
@@ -20,7 +20,7 @@ export class CreateEmployeeUseCase {
         private employeeRepository: EmployeesRepository,
         private hashGenerator: HashGenerator
     ){}
-    async execute({name, monthWorkedHours, email,password,roles}: CreateEmployeeUseCaseRequest) : Promise<CreateEmployeeUseCaseResponse> {
+    async execute({name, monthWorkedHours, email,password}: CreateEmployeeUseCaseRequest) : Promise<CreateEmployeeUseCaseResponse> {
         const employeeWithSameEmail = await this.employeeRepository.findByEmail(email)
         if(employeeWithSameEmail){
             return left(new UserAlreadyExistsError(email)) 
@@ -31,7 +31,7 @@ export class CreateEmployeeUseCase {
             monthWorkedHours,
             email,
             password: hashedPassword,
-            roles,
+            roles: [UserRole.EMPLOYEE.toString()],
         })
         await this.employeeRepository.create(employee)
         return right({

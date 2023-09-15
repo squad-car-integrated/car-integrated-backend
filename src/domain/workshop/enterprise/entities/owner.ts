@@ -13,9 +13,10 @@ export class Owner extends User<OwnerProps> {
         this.props.phoneNumber = phoneNumber
         this.touch()
     }
-    static create(props: Optional<OwnerProps, "createdAt">, id?: UniqueEntityID) {
+    static create(props: Optional<OwnerProps, "createdAt" | "roles">, id?: UniqueEntityID) {
         const owner = new Owner({
             ...props,
+            roles: props.roles ?? [],
             createdAt: props.createdAt ?? new Date(),
         }, id);
         return owner;
