@@ -10,6 +10,9 @@ $ git clone https://github.com/squad-car-integrated/car-integrated-backend.git
 # Instalar todas as dependências da aplicação
 $ npm i
 
+# Iniciar o container docker
+$ docker-compose up -D
+
 # Rode a aplicação com o seguinte comando
 $ npm run start
 ```
