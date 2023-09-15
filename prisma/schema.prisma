@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  EMPLOYEE
+  OWNER
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  role        UserRole     @default(OWNER)
+  automobiles Automobile[]
+  services    Service[]
+
+  @@map("users")
+}
+
+model Product {
+  id              String            @id @default(uuid())
+  name            String
+  unitValue       Float
+  productAmout    Int
+  description     String
+  photo           String
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime?         @updatedAt @map("updated")
+  ServiceProducts ServiceProducts[]
+
+  @@map("products")
+}
+
+model Automobile {
+  id        String    @id @default(uuid())
+  model     String
+  brand     String
+  plate     String
+  ownerId   String    @map("user_id")
+  owner     User      @relation(fields: [ownerId], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated")
+  Service   Service[]
+
+  @@map("automobiles")
+}
+
+model Service {
+  id           String            @id @default(uuid())
+  automobileId String
+  ownerId      String
+  employeesIds String[]
+  products     ServiceProducts[]
+  totalValue   Float
+  description  String
+  status       String
+  userId       String?
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime?         @updatedAt @map("updated")
+  user         User?             @relation(fields: [ownerId], references: [id])
+  automobile   Automobile        @relation(fields: [automobileId], references: [id])
+
+  @@map("services")
+}
+
+model ServiceProducts {
+  id        String  @id @default(uuid())
+  serviceId String
+  productId String
+  service   Service @relation(fields: [serviceId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@map("services_products")
+}
