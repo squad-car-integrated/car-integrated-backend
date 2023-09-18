@@ -24,21 +24,21 @@ describe("Authenticate User", () => {
     it("Should be able to authenticate a user", async () => {
         const userOwner = makeOwner({
             email: "johndoeowner@example.com",
-            password: await fakeHasher.hash("123123")
+            password: await fakeHasher.hash("mypassword")// sensitive
         })
         const userEmployee = makeEmployee({
             email: "johndoeempolyee@example.com",
-            password: await fakeHasher.hash("123456")
+            password: await fakeHasher.hash("mypassword")// sensitive
         })
         await inMemoryOwnersRepository.create(userOwner)
         await inMemoryEmployeesRepository.create(userEmployee)
         const result = await sut.execute({
             email: "johndoeowner@example.com",
-            password: "123123"
+            password: "mypassword", // sensitive
         })
         const result2 = await sut.execute({
             email: "johndoeowner@example.com",
-            password: "123123"
+            password: "mypassword", // sensitive
         })
         expect(result.isRight()).toBe(true)
         expect(result.value).toEqual({
