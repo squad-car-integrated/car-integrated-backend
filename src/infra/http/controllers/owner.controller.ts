@@ -5,13 +5,11 @@ import {
   Controller,
   Get,
   HttpCode,
-  Param,
   Post,
-  Query,
   UsePipes,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { string, z } from 'zod'
+import { z } from 'zod'
 import { CreateOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/create-owner'
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
 import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'

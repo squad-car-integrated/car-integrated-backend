@@ -5,8 +5,6 @@ import {
   ServiceProps,
 } from '@/domain/workshop/enterprise/entities/service'
 import { faker } from '@faker-js/faker'
-import { makeProduct } from './make-product'
-import { ServiceEmployeeList } from '@/domain/workshop/enterprise/entities/service-employee-list'
 export function makeService(
   override: Partial<ServiceProps> = {},
   id?: UniqueEntityID,

@@ -10,9 +10,6 @@ import {
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
-import { CreateOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/create-owner'
-import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
-import { CreateEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/create-employee'
 import { AuthenticateUserUseCase } from '@/domain/workshop/application/use-cases/Authenticate/authenticate-user'
 import { WrongCredentialsError } from '@/domain/workshop/application/use-cases/errors/wrong-credentials-error'
 const AuthenticateSchema = z.object({
