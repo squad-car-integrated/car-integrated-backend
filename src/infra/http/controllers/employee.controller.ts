@@ -34,6 +34,12 @@ export class EmployeeController {
     })
     if (result.isLeft()) {
       const error = result.value
+      // switch (error.constructor) {
+      //   case UserAlreadyExistsError:
+      //     throw new ConflictException(error.message)
+      //   default:
+      //     throw new BadRequestException(error.message)
+      // }
       switch (error.constructor) {
         case UserAlreadyExistsError:
           throw new ConflictException(error.message)
