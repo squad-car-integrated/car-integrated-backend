@@ -3,6 +3,7 @@
 ## 🎲 [Rodando a aplicação](#rodando-a-api)
 
 ### Rodando localmente
+
 ```bash
 # Primeiramente é necessário clonar a aplicação no github:
 $ git clone https://github.com/squad-car-integrated/car-integrated-backend.git
