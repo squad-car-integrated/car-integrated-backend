@@ -5,6 +5,7 @@ import { makeOwner } from "test/factories/make-owner"
 import { InMemoryEmployeesRepository } from "test/repositories/in-memory-employees-repository"
 import { InMemoryOwnersRepository } from "test/repositories/in-memory-owners-repository"
 import { makeEmployee } from "test/factories/make-employee"
+import { faker } from "@faker-js/faker"
 
 let inMemoryEmployeesRepository: InMemoryEmployeesRepository
 let inMemoryOwnersRepository: InMemoryOwnersRepository
@@ -22,23 +23,24 @@ describe("Authenticate User", () => {
     })
 
     it("Should be able to authenticate a user", async () => {
+        const password = faker.internet.password()
         const userOwner = makeOwner({
             email: "johndoeowner@example.com",
-            password: await fakeHasher.hash("mypassword")// sensitive
+            password: await fakeHasher.hash(password)// sensitive
         })
         const userEmployee = makeEmployee({
             email: "johndoeempolyee@example.com",
-            password: await fakeHasher.hash("mypassword")// sensitive
+            password: await fakeHasher.hash(password)// sensitive
         })
         await inMemoryOwnersRepository.create(userOwner)
         await inMemoryEmployeesRepository.create(userEmployee)
         const result = await sut.execute({
             email: "johndoeowner@example.com",
-            password: "mypassword", // sensitive
+            password: password, // sensitive
         })
         const result2 = await sut.execute({
             email: "johndoeowner@example.com",
-            password: "mypassword", // sensitive
+            password: password, // sensitive
         })
         expect(result.isRight()).toBe(true)
         expect(result.value).toEqual({
