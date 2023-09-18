@@ -1,7 +1,6 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeOwner } from 'test/factories/make-owner'
 import { InMemoryOwnersRepository } from 'test/repositories/in-memory-owners-repository'
-import { NotAllowedError } from '../errors/not-allowed-error'
 import { EditOwnerUseCase } from './edit-owner'
 
 let inMemoryOwnersRepository: InMemoryOwnersRepository

@@ -2,7 +2,6 @@ import { InMemoryOwnersRepository } from 'test/repositories/in-memory-owners-rep
 import { CreateOwnerUseCase } from './create-owner'
 import { faker } from '@faker-js/faker'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
-import { UserRole } from '@/core/entities/user-role-enum'
 
 let inMemoryOwnersRepository: InMemoryOwnersRepository
 let fakeHasher: FakeHasher

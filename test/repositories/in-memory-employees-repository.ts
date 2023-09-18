@@ -1,4 +1,3 @@
-import { PaginationParams } from '@/core/repositories/pagination-params'
 import { EmployeesRepository } from '@/domain/workshop/application/repositories/employees-repository'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 

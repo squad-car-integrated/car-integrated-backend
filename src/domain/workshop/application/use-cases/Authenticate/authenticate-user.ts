@@ -1,5 +1,5 @@
 import { Either, left, right } from '@/core/either'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { Encrypter } from '../../cryptography/encrypter'
 import { HashComparer } from '../../cryptography/hash-comparer'
 import { WrongCredentialsError } from '../errors/wrong-credentials-error'
@@ -13,7 +13,7 @@ interface AuthenticateUserUseCaseRequest {
   password: string
 }
 type AuthenticateUserUseCaseResponse = Either<
-  WrongCredentialsError,
+  WrongCredentialsError | BadRequestException,
   {
     accessToken: string
   }

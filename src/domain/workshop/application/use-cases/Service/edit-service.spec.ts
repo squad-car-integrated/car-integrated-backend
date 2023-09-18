@@ -5,7 +5,6 @@ import { EditServiceUseCase } from './edit-service'
 import { InMemoryServiceProductsRepository } from 'test/repositories/in-memory-service-products-repository'
 import { makeServiceProduct } from 'test/factories/make-service-product'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
-import { ServiceEmployeeList } from '@/domain/workshop/enterprise/entities/service-employee-list'
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository

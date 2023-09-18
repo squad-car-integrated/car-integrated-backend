@@ -1,9 +1,7 @@
 import {
   BadRequestException,
   Body,
-  ConflictException,
   Controller,
-  HttpCode,
   Post,
   UnauthorizedException,
   UsePipes,
@@ -30,11 +28,10 @@ export class AuthenticateController {
     })
     if (result.isLeft()) {
       const error = result.value
-      switch (error.constructor) {
-        case WrongCredentialsError:
-          throw new UnauthorizedException(error.message)
-        default:
-          throw new BadRequestException(error.message)
+      if(error instanceof WrongCredentialsError){
+        throw new UnauthorizedException(error.message)
+      }else {
+        throw new BadRequestException(error.message)
       }
     }
     const { accessToken } = result.value

@@ -1,5 +1,5 @@
 import { Either, left, right } from '@/core/either'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { OwnersRepository } from '../../repositories/owners-repository'
 import { Owner } from '../../../enterprise/entities/owner'
 import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
@@ -12,7 +12,7 @@ interface CreateOwnerUseCaseRequest {
   password: string
 }
 type CreateOwnerUseCaseResponse = Either<
-  UserAlreadyExistsError,
+  UserAlreadyExistsError | BadRequestException,
   {
     owner: Owner
   }

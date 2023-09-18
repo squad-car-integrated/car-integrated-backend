@@ -1,4 +1,3 @@
-import { PaginationParams } from '@/core/repositories/pagination-params'
 import { OwnersRepository } from '@/domain/workshop/application/repositories/owners-repository'
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
 

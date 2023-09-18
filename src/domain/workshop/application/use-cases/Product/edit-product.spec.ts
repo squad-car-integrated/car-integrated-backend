@@ -1,7 +1,6 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeProduct } from 'test/factories/make-product'
 import { InMemoryProductsRepository } from 'test/repositories/in-memory-products-repository'
-import { NotAllowedError } from '../errors/not-allowed-error'
 import { EditProductUseCase } from './edit-product'
 
 let inMemoryProductsRepository: InMemoryProductsRepository

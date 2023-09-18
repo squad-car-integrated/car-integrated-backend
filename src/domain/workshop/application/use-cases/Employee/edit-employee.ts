@@ -1,5 +1,4 @@
 import { Either, left, right } from '@/core/either'
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 import { EmployeesRepository } from '../../repositories/employees-repository'
 import { NotAllowedError } from '../errors/not-allowed-error'

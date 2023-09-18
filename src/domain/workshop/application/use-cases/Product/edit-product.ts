@@ -1,5 +1,4 @@
 import { Either, left, right } from '@/core/either'
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Product } from '@/domain/workshop/enterprise/entities/product'
 import { ProductsRepository } from '../../repositories/products-repository'
 import { NotAllowedError } from '../errors/not-allowed-error'
