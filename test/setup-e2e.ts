@@ -17,7 +17,7 @@ const schemaId = randomUUID()
 beforeAll(async () => {
   const databaseUrl = generateUniqueDatabaseUrl(schemaId)
   process.env.DATABASE_URL = databaseUrl
-  execSync("C:/Program Files/nodejs/npx.cmd/npx prisma migrate deploy")
+  execSync('prisma migrate deploy')
 })
 afterAll(async () => {
   await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`)
