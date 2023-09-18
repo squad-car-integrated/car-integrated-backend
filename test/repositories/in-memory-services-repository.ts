@@ -6,7 +6,9 @@ import { Service } from '@/domain/workshop/enterprise/entities/service'
 export class InMemoryServicesRepository implements ServicesRepository {
   constructor(private serviceProductsRepository: ServiceProductsRepository) {}
   async findManyRecent({ page }: PaginationParams) {
-    return this.toSorted(page)
+    const sortedProducts = this.items.slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const products = sortedProducts.slice((page - 1) * 20, page * 20);
+    return products;
   }
   public items: Service[] = []
   async findById(id: string) {
@@ -27,9 +29,5 @@ export class InMemoryServicesRepository implements ServicesRepository {
     const itemIndex = this.items.findIndex((item) => item.id === service.id)
     this.items.splice(itemIndex, 1)
     this.serviceProductsRepository.deleteManyByServiceId(service.id.toString())
-  }
-  async toSorted(page: number){
-    return this.items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    .slice((page - 1) * 20, page * 20)
   }
 }

@@ -4,10 +4,9 @@ import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 
 export class InMemoryAutomobilesRepository implements AutomobilesRepository {
   async findManyRecent({ page }: PaginationParams) {
-    const automobiles = this.items
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice((page - 1) * 20, page * 20)
-    return automobiles
+    const sortedProducts = this.items.slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const products = sortedProducts.slice((page - 1) * 20, page * 20);
+    return products;
   }
   public items: Automobile[] = []
   async findById(id: string) {
