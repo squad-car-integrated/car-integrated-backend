@@ -13,6 +13,7 @@ import { z } from 'zod'
 import { CreateOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/create-owner'
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
 import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
+import { OnwerPresenter } from '../presenters/owner-presenter'
 const ownerSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -35,7 +36,6 @@ export class OwnerController {
   @UsePipes(new ZodValidationPipe(ownerEmailSchema))
   async handleGetOwnerById(@Body() body: OwnerEmailBodySchema) {
     const { email } = body
-    console.log(email)
     const result = await this.getOwnerByEmail.execute({
       email,
     })
@@ -44,7 +44,7 @@ export class OwnerController {
     }
     const owner = result.value.owner
     return {
-      owner: owner,
+      owner: OnwerPresenter.toHTTP(owner),
     }
   }
   @Post()

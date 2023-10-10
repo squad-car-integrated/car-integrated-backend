@@ -7,8 +7,8 @@ import { CreateEmployeeUseCase } from '@/domain/workshop/application/use-cases/E
 import { AuthenticateController } from './controllers/authenticate.controller'
 import { EmployeeController } from './controllers/employee.controller'
 import { OwnerController } from './controllers/owner.controller'
-import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-id'
 import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
+import { GetEmployeeByEmailUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-email'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -18,7 +18,7 @@ import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/
     CreateOwnerUseCase,
     CreateEmployeeUseCase,
     GetOwnerByEmailUseCase,
-    GetEmployeeByIdUseCase,
+    GetEmployeeByEmailUseCase,
   ],
 })
 export class HttpModule {}
