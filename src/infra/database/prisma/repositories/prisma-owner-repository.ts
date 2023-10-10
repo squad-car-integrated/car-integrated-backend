@@ -29,13 +29,11 @@ export class PrismaOwnersRepository implements OwnersRepository {
     })
   }
   async findByEmail(email: string): Promise<Owner | null> {
-    console.log(email)
     const owner = await this.prisma.owner.findUnique({
       where: {
         email,
       },
     })
-    console.log(owner)
     if (!owner) {
       return null
     }

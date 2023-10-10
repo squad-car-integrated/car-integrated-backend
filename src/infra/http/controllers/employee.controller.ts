@@ -13,7 +13,7 @@ import { z } from 'zod'
 import { CreateEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/create-employee'
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
 import { GetEmployeeByEmailUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-email'
-import { EmployeePresenter } from '../presenters/employee-presentet'
+import { EmployeePresenter } from '../presenters/employee-presenter'
 const accountSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -28,7 +28,7 @@ type EmployeeEmailBodySchema = z.infer<typeof employeeEmailSchema>
 export class EmployeeController {
   constructor(
     private createEmployee: CreateEmployeeUseCase,
-    private getEmployeeByEmail: GetEmployeeByEmailUseCase
+    private getEmployeeByEmail: GetEmployeeByEmailUseCase,
   ) {}
   @Get()
   @HttpCode(200)
@@ -60,9 +60,9 @@ export class EmployeeController {
     })
     if (result.isLeft()) {
       const error = result.value
-      if(error instanceof UserAlreadyExistsError){
+      if (error instanceof UserAlreadyExistsError) {
         throw new ConflictException(error.message)
-      }else {
+      } else {
         throw new BadRequestException(error.message)
       }
     }

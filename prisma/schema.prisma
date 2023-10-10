@@ -58,7 +58,7 @@ model Automobile {
   id        String    @id @default(uuid())
   model     String
   brand     String
-  plate     String
+  plate     String    @unique
   ownerId   String    @map("owner_id")
   owner     Owner     @relation(fields: [ownerId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")

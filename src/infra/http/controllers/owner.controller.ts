@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   Post,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
@@ -14,6 +15,7 @@ import { CreateOwnerUseCase } from '@/domain/workshop/application/use-cases/Owne
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
 import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
 import { OnwerPresenter } from '../presenters/owner-presenter'
+import { AuthGuard } from '@nestjs/passport'
 const ownerSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -26,6 +28,7 @@ const ownerEmailSchema = z.object({
 type OwnerBodySchema = z.infer<typeof ownerSchema>
 type OwnerEmailBodySchema = z.infer<typeof ownerEmailSchema>
 @Controller('/owner')
+@UseGuards(AuthGuard("jwt"))
 export class OwnerController {
   constructor(
     private createOwner: CreateOwnerUseCase,
@@ -61,9 +64,9 @@ export class OwnerController {
     })
     if (result.isLeft()) {
       const error = result.value
-      if(error instanceof UserAlreadyExistsError){
+      if (error instanceof UserAlreadyExistsError) {
         throw new ConflictException(error.message)
-      }else {
+      } else {
         throw new BadRequestException(error.message)
       }
     }

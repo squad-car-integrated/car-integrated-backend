@@ -1,8 +1,9 @@
-import { Either, right } from '@/core/either'
-import { Injectable } from '@nestjs/common'
+import { Either, left, right } from '@/core/either'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { Automobile } from '../../../enterprise/entities/automobile'
 import { AutomobilesRepository } from '../../repositories/automobiles-repository'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { AutomobileAlreadyExistsError } from '../errors/automobile-already-exists-error'
 interface CreateAutomobileUseCaseRequest {
   model: string
   brand: string
@@ -10,7 +11,7 @@ interface CreateAutomobileUseCaseRequest {
   ownerId: string
 }
 type CreateAutomobileUseCaseResponse = Either<
-  null,
+  AutomobileAlreadyExistsError | BadRequestException,
   {
     automobile: Automobile
   }
@@ -24,6 +25,10 @@ export class CreateAutomobileUseCase {
     plate,
     ownerId,
   }: CreateAutomobileUseCaseRequest): Promise<CreateAutomobileUseCaseResponse> {
+    const autoAlreadyExists = await this.automobileRepository.findByPlate(plate)
+    if (autoAlreadyExists) {
+      return left(new AutomobileAlreadyExistsError(plate))
+    }
     const automobile = Automobile.create({
       model,
       brand,

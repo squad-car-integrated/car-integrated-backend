@@ -46,23 +46,25 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-	"email": "natanowner@gmail.com",
+	"email": "natanemployee@gmail.com",
 	"password": "123123"
 }
 ###
 
-# @name create_question
-POST {{baseUrl}}/questions
+# @name create_automobile
+POST {{baseUrl}}/automobile
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-	"title": "Como sobreviver a vida de developer2?",
-	"content": "Trabalho igual corno todo dia"
+	"model": "Civic Si 2008",
+	"brand": "Honda",
+	"plate": "KZA8B22",
+	"ownerId": "7fb029bd-d74b-4407-bf72-799d51acdb18"
 }
 ###
 
-# @name fetch_recente_questions
-GET {{baseUrl}}/questions?page=1
+# @name fetch_recente_automobile
+GET {{baseUrl}}/automobile?page=1
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

@@ -4,6 +4,8 @@ import { PrismaEmployeesRepository } from './prisma/repositories/prisma-employee
 import { PrismaOwnersRepository } from './prisma/repositories/prisma-owner-repository'
 import { OwnersRepository } from '@/domain/workshop/application/repositories/owners-repository'
 import { EmployeesRepository } from '@/domain/workshop/application/repositories/employees-repository'
+import { AutomobilesRepository } from '@/domain/workshop/application/repositories/automobiles-repository'
+import { PrismaAutomobilesRepository } from './prisma/repositories/prisma-automobile-repository'
 
 @Module({
   providers: [
@@ -16,7 +18,16 @@ import { EmployeesRepository } from '@/domain/workshop/application/repositories/
       provide: EmployeesRepository,
       useClass: PrismaEmployeesRepository,
     },
+    {
+      provide: AutomobilesRepository,
+      useClass: PrismaAutomobilesRepository,
+    },
   ],
-  exports: [PrismaService, EmployeesRepository, OwnersRepository],
+  exports: [
+    PrismaService,
+    EmployeesRepository,
+    OwnersRepository,
+    AutomobilesRepository,
+  ],
 })
 export class DatabaseModule {}

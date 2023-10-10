@@ -20,6 +20,9 @@ export class Automobile extends Entity<AutomobileProps> {
   get plate() {
     return this.props.plate
   }
+  get ownerId() {
+    return this.props.ownerId
+  }
   get createdAt() {
     return this.props.createdAt
   }

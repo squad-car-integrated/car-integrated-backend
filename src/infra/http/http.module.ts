@@ -9,16 +9,28 @@ import { EmployeeController } from './controllers/employee.controller'
 import { OwnerController } from './controllers/owner.controller'
 import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
 import { GetEmployeeByEmailUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-email'
+import { AutomobileController } from './controllers/automobile.controller'
+import { CreateAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/create-automobile'
+import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-id'
+import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use-cases/Automobile/fetch-recent-automobile'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
-  controllers: [AuthenticateController, EmployeeController, OwnerController],
+  controllers: [
+    AuthenticateController,
+    EmployeeController,
+    OwnerController,
+    AutomobileController,
+  ],
   providers: [
     AuthenticateUserUseCase,
     CreateOwnerUseCase,
     CreateEmployeeUseCase,
     GetOwnerByEmailUseCase,
     GetEmployeeByEmailUseCase,
+    CreateAutomobileUseCase,
+    GetAutomobileByIdUseCase,
+    FetchRecentAutomobilesUseCase
   ],
 })
 export class HttpModule {}

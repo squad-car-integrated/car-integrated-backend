@@ -28,9 +28,9 @@ export class AuthenticateController {
     })
     if (result.isLeft()) {
       const error = result.value
-      if(error instanceof WrongCredentialsError){
+      if (error instanceof WrongCredentialsError) {
         throw new UnauthorizedException(error.message)
-      }else {
+      } else {
         throw new BadRequestException(error.message)
       }
     }

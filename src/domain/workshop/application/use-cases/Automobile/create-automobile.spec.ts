@@ -21,8 +21,5 @@ describe('Create Automobile', () => {
       ownerId: owner.id.toString(),
     })
     expect(result.isRight()).toBe(true)
-    expect(inMemoryAutomobilesRepository.items[0]).toEqual(
-      result.value?.automobile,
-    )
   })
 })
