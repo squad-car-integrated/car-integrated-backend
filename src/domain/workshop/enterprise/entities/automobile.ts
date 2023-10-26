@@ -29,6 +29,18 @@ export class Automobile extends Entity<AutomobileProps> {
   get updatedAt() {
     return this.props.updatedAt
   }
+  set model(model: string){
+    this.model = model
+  }
+  set brand(brand: string){
+    this.brand = brand
+  }
+  set plate(plate: string){
+    this.plate = plate
+  }
+  set ownerId(ownerId: UniqueEntityID){
+    this.ownerId = ownerId
+  }
   static create(
     props: Optional<AutomobileProps, 'createdAt'>,
     id?: UniqueEntityID,

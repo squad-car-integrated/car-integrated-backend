@@ -3,18 +3,20 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  Param,
   Post,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { CreateOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/create-owner'
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
-import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
 import { OnwerPresenter } from '../presenters/owner-presenter'
+import { GetOwnerByIdUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-id'
+import { DeleteOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/delete-owner'
 const ownerSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -25,21 +27,19 @@ const ownerEmailSchema = z.object({
   email: z.string().email(),
 })
 type OwnerBodySchema = z.infer<typeof ownerSchema>
-type OwnerEmailBodySchema = z.infer<typeof ownerEmailSchema>
 @Controller('/owner')
 export class OwnerController {
   constructor(
     private createOwner: CreateOwnerUseCase,
-    private getOwnerByEmail: GetOwnerByEmailUseCase,
+    private getOwnerById: GetOwnerByIdUseCase,
+    private deleteOnwer: DeleteOwnerUseCase
   ) {}
   
   @Get()
   @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(ownerEmailSchema))
-  async handleGetOwnerById(@Body() body: OwnerEmailBodySchema) {
-    const { email } = body
-    const result = await this.getOwnerByEmail.execute({
-      email,
+  async handleGetOwnerById(@Param() ownerId: string) {
+    const result = await this.getOwnerById.execute({
+      id: ownerId
     })
     if (result.isLeft()) {
       throw new BadRequestException()
@@ -60,6 +60,22 @@ export class OwnerController {
       email,
       password,
       phoneNumber: phoneNumber ?? '',
+    })
+    if (result.isLeft()) {
+      const error = result.value
+      if (error instanceof UserAlreadyExistsError) {
+        throw new ConflictException(error.message)
+      } else {
+        throw new BadRequestException(error.message)
+      }
+    }
+  }
+  @Delete("/:id")
+  @HttpCode(204)
+  async handleDeleteOwner(@Param("id") ownerId: string) {
+
+    const result = await this.deleteOnwer.execute({
+      ownerId
     })
     if (result.isLeft()) {
       const error = result.value

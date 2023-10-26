@@ -3,8 +3,10 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  Param,
   Post,
   UsePipes,
 } from '@nestjs/common'
@@ -12,31 +14,27 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { CreateEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/create-employee'
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
-import { GetEmployeeByEmailUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-email'
 import { EmployeePresenter } from '../presenters/employee-presenter'
+import { DeleteEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/delete-employee'
+import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-id'
 const accountSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
 })
-const employeeEmailSchema = z.object({
-  email: z.string().email(),
-})
 type AccountBodySchema = z.infer<typeof accountSchema>
-type EmployeeEmailBodySchema = z.infer<typeof employeeEmailSchema>
 @Controller('/employee')
 export class EmployeeController {
   constructor(
     private createEmployee: CreateEmployeeUseCase,
-    private getEmployeeByEmail: GetEmployeeByEmailUseCase,
+    private getEmployeeById: GetEmployeeByIdUseCase,
+    private deleteEmployee: DeleteEmployeeUseCase
   ) {}
   @Get()
   @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(employeeEmailSchema))
-  async handleGetEmployeeById(@Body() body: EmployeeEmailBodySchema) {
-    const { email } = body
-    const result = await this.getEmployeeByEmail.execute({
-      email,
+  async handleGetEmployeeById(@Param() employeeId: string) {
+    const result = await this.getEmployeeById.execute({
+      id: employeeId,
     })
     if (result.isLeft()) {
       throw new BadRequestException()
@@ -57,6 +55,22 @@ export class EmployeeController {
       email,
       password,
       monthWorkedHours: 0,
+    })
+    if (result.isLeft()) {
+      const error = result.value
+      if (error instanceof UserAlreadyExistsError) {
+        throw new ConflictException(error.message)
+      } else {
+        throw new BadRequestException(error.message)
+      }
+    }
+  }
+  @Delete("/:id")
+  @HttpCode(204)
+  async handleDeleteEmployee(@Param("id") employeeId: string) {
+
+    const result = await this.deleteEmployee.execute({
+      employeeId
     })
     if (result.isLeft()) {
       const error = result.value

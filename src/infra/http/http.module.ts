@@ -13,6 +13,7 @@ import { AutomobileController } from './controllers/automobile.controller'
 import { CreateAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/create-automobile'
 import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-id'
 import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use-cases/Automobile/fetch-recent-automobile'
+import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-id'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -25,9 +26,9 @@ import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use
   providers: [
     AuthenticateUserUseCase,
     CreateOwnerUseCase,
-    CreateEmployeeUseCase,
     GetOwnerByEmailUseCase,
-    GetEmployeeByEmailUseCase,
+    CreateEmployeeUseCase,
+    GetEmployeeByIdUseCase,
     CreateAutomobileUseCase,
     GetAutomobileByIdUseCase,
     FetchRecentAutomobilesUseCase

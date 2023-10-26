@@ -5,9 +5,10 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
+  Put,
   Query,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
@@ -17,7 +18,7 @@ import { AutomobilePresenter } from '../presenters/automobile-presenter'
 import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-id'
 import { AutomobileAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/automobile-already-exists-error'
 import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use-cases/Automobile/fetch-recent-automobile'
-import { AuthGuard } from '@nestjs/passport'
+import { EditAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/edit-automobile'
 const automobileSchema = z.object({
   model: z.string(),
   brand: z.string(),
@@ -37,7 +38,8 @@ export class AutomobileController {
   constructor(
     private createAutomobile: CreateAutomobileUseCase,
     private getAutomobileById: GetAutomobileByIdUseCase,
-    private fetchAutomobile: FetchRecentAutomobilesUseCase
+    private fetchAutomobile: FetchRecentAutomobilesUseCase,
+    private editAutomobile: EditAutomobileUseCase,
   ) {}
 
   @Get()
@@ -85,6 +87,28 @@ export class AutomobileController {
       brand,
       plate,
       ownerId,
+    })
+    if (result.isLeft()) {
+      const error = result.value
+      if (error instanceof AutomobileAlreadyExistsError) {
+        throw new ConflictException(error.message)
+      } else {
+        throw new BadRequestException(error.message)
+      }
+    }
+  }
+  @Put()
+  @HttpCode(204)
+  @UsePipes(new ZodValidationPipe(automobileSchema))
+  async handleEditAutomobile(@Body() body: AutomobileBodySchema, @Param("id") automobileId: string) {
+    const { model, brand, plate, ownerId } = body
+
+    const result = await this.editAutomobile.execute({
+      model,
+      brand,
+      plate,
+      ownerId,
+      automobileId
     })
     if (result.isLeft()) {
       const error = result.value
