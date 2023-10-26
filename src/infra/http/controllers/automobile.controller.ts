@@ -59,13 +59,11 @@ export class AutomobileController {
     }
   }
 
-  @Get("/id")
+  @Get("/:id")
   @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(automobileIdSchema))
-  async handleGetAutomobileById(@Body() body: AutomobileIdBodySchema) {
-    const { id } = body
+  async handleGetAutomobileById(@Param() automobileId: string) {
     const result = await this.getAutomobileById.execute({
-      id,
+      id: automobileId,
     })
     if (result.isLeft()) {
       throw new BadRequestException()

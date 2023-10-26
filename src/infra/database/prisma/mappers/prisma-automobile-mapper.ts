@@ -25,9 +25,9 @@ export class PrismaAutomobileMapper {
     automobile: Automobile,
   ): Prisma.AutomobileUncheckedCreateInput {
     return {
-      model: automobile.model.toString(),
-      brand: automobile.brand.toString(),
-      plate: automobile.plate.toString(),
+      model: automobile.model,
+      brand: automobile.brand,
+      plate: automobile.plate,
       ownerId: automobile.ownerId.toString(),
     }
   }

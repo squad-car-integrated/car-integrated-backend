@@ -29,8 +29,15 @@ export class PrismaAutomobilesRepository implements AutomobilesRepository {
     }
     return PrismaAutomobileMapper.toDomain(automobile)
   }
-  save(automobile: Automobile): Promise<void> {
-    throw new Error('Method not implemented.')
+  async save(automobile: Automobile): Promise<void> {
+    const data = PrismaAutomobileMapper.toPrisma(automobile)
+
+    await this.prisma.automobile.update({
+      where: {
+        id: automobile.id.toString(),
+      },
+      data,
+    })
   }
   async delete(automobile: Automobile): Promise<void> {
     await this.prisma.automobile.delete({

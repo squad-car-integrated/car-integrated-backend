@@ -1,7 +1,8 @@
 import { Either, right } from '@/core/either'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { ProductsRepository } from '../../repositories/products-repository'
 import { Product } from '../../../enterprise/entities/product'
+import { ProductAlreadyExistsError } from '../errors/product-already-exists-error'
 interface CreateProductUseCaseRequest {
   name: string
   unitValue: number
@@ -10,7 +11,7 @@ interface CreateProductUseCaseRequest {
   photo: string
 }
 type CreateProductUseCaseResponse = Either<
-  null,
+  ProductAlreadyExistsError | BadRequestException,
   {
     product: Product
   }
