@@ -15,7 +15,6 @@ import { CreateOwnerUseCase } from '@/domain/workshop/application/use-cases/Owne
 import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/user-already-exists-error'
 import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
 import { OnwerPresenter } from '../presenters/owner-presenter'
-import { AuthGuard } from '@nestjs/passport'
 const ownerSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -28,12 +27,12 @@ const ownerEmailSchema = z.object({
 type OwnerBodySchema = z.infer<typeof ownerSchema>
 type OwnerEmailBodySchema = z.infer<typeof ownerEmailSchema>
 @Controller('/owner')
-@UseGuards(AuthGuard("jwt"))
 export class OwnerController {
   constructor(
     private createOwner: CreateOwnerUseCase,
     private getOwnerByEmail: GetOwnerByEmailUseCase,
   ) {}
+  
   @Get()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(ownerEmailSchema))

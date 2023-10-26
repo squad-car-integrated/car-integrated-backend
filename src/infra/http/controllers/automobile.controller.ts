@@ -17,7 +17,6 @@ import { AutomobilePresenter } from '../presenters/automobile-presenter'
 import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-id'
 import { AutomobileAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/automobile-already-exists-error'
 import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use-cases/Automobile/fetch-recent-automobile'
-import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 import { AuthGuard } from '@nestjs/passport'
 const automobileSchema = z.object({
   model: z.string(),
@@ -34,7 +33,6 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 type AutomobileBodySchema = z.infer<typeof automobileSchema>
 type AutomobileIdBodySchema = z.infer<typeof automobileIdSchema>
 @Controller('/automobile')
-@UseGuards(AuthGuard("jwt"))
 export class AutomobileController {
   constructor(
     private createAutomobile: CreateAutomobileUseCase,
