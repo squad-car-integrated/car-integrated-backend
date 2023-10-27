@@ -1,3 +1,4 @@
+import { PaginationParams } from '@/core/repositories/pagination-params'
 import { EmployeesRepository } from '@/domain/workshop/application/repositories/employees-repository'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 
@@ -7,6 +8,13 @@ export class InMemoryEmployeesRepository implements EmployeesRepository {
     if (!employee) {
       return null
     }
+    return employee
+  }
+  async getAll({ page }: PaginationParams) {
+    const sortedEmployee = this.items
+      .slice()
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const employee = sortedEmployee.slice((page - 1) * 20, page * 20)
     return employee
   }
   public items: Employee[] = []

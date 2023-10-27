@@ -20,11 +20,9 @@ describe('Edit Owner', () => {
       name: 'Nome editado',
       password: newOwner.password,
       phoneNumber: newOwner.phoneNumber,
-      roles: ['User', 'Admin'],
     })
     expect(inMemoryOwnersRepository.items[0]).toMatchObject({
       name: 'Nome editado',
-      roles: ['User', 'Admin'],
     })
   })
 })

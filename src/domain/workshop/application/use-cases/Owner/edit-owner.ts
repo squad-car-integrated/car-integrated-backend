@@ -9,7 +9,6 @@ interface EditOwnerUseCaseRequest {
   email: string
   password: string
   phoneNumber: string
-  roles: string[]
 }
 type EditOwnerUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,

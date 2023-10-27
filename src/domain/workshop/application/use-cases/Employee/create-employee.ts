@@ -29,8 +29,7 @@ export class CreateEmployeeUseCase {
     email,
     password,
   }: CreateEmployeeUseCaseRequest): Promise<CreateEmployeeUseCaseResponse> {
-    const employeeWithSameEmail =
-      await this.employeeRepository.findByEmail(email)
+    const employeeWithSameEmail = await this.employeeRepository.findByEmail(email)
     if (employeeWithSameEmail) {
       return left(new UserAlreadyExistsError(email))
     }

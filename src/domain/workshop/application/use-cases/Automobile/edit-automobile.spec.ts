@@ -16,14 +16,14 @@ describe('Edit Automobile', () => {
     const newAutomobile = makeAutomobile({}, new UniqueEntityID('automobile-1'))
     await inMemoryAutomobilesRepository.create(newAutomobile)
     await sut.execute({
-      brand: "Brand edited",
-      plate: 'New Plate',
-      model: "New model",
-      ownerId: "newid",
+      brand: newAutomobile.brand,
+      plate: "kza212121",
+      model: newAutomobile.model,
+      ownerId: "ownerid",
       automobileId: newAutomobile.id.toString()
     })
     expect(inMemoryAutomobilesRepository.items[0]).toMatchObject({
-      brand: 'Brand edited',
+      plate: 'kza212121',
     })
   })
 })

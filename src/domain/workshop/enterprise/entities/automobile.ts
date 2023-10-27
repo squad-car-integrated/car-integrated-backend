@@ -31,16 +31,23 @@ export class Automobile extends AggregateRoot<AutomobileProps> {
     return this.props.updatedAt
   }
   set model(model: string){
-    this.model = model
+    this.props.model = model
+    this.touch()
   }
   set brand(brand: string){
-    this.brand = brand
+    this.props.brand = brand
+    this.touch()
   }
   set plate(plate: string){
-    this.plate = plate
+    this.props.plate = plate
+    this.touch()
   }
   set ownerId(ownerId: UniqueEntityID){
-    this.ownerId = ownerId
+    this.props.ownerId = ownerId
+    this.touch()
+  }
+  private touch() {
+    this.props.updatedAt = new Date()
   }
   static create(
     props: Optional<AutomobileProps, 'createdAt'>,

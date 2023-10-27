@@ -3,10 +3,21 @@ import { PrismaService } from '../prisma.service'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 import { EmployeesRepository } from '@/domain/workshop/application/repositories/employees-repository'
 import { PrismaEmployeeMapper } from '../mappers/prisma-employee-mapper'
+import { PaginationParams } from '@/core/repositories/pagination-params'
 
 @Injectable()
 export class PrismaEmployeesRepository implements EmployeesRepository {
   constructor(private prisma: PrismaService) {}
+  async getAll(params: PaginationParams): Promise<Employee[]> {
+    const employee = await this.prisma.employee.findMany({
+      take: 20,
+      skip: (params.page - 1) * 20,
+      orderBy: {
+        name: "desc"
+      }
+    })
+    return employee.map(PrismaEmployeeMapper.toDomain)
+  }
   async findById(id: string): Promise<Employee | null> {
     const employee = await this.prisma.employee.findUnique({
       where: {
