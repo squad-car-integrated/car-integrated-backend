@@ -19,7 +19,7 @@ describe('Edit Product', () => {
       productId: newProduct.id.toString(),
       name: 'Nome do Produto Editado',
       unitValue: newProduct.unitValue,
-      productAmout: newProduct.productAmout,
+      productAmount: newProduct.productAmout,
       description: newProduct.description,
       photo: newProduct.photo,
     })

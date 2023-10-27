@@ -3,12 +3,13 @@ import { Product } from '@/domain/workshop/enterprise/entities/product'
 import { ProductsRepository } from '../../repositories/products-repository'
 import { NotAllowedError } from '../errors/not-allowed-error'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface EditProductUseCaseRequest {
   productId: string
   name: string
   unitValue: number
-  productAmout: number
+  productAmount: number
   description: string
   photo: string
 }
@@ -16,13 +17,14 @@ type EditProductUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   { product: Product }
 >
+@Injectable()
 export class EditProductUseCase {
   constructor(private productRepository: ProductsRepository) {}
   async execute({
     productId,
     name,
     unitValue,
-    productAmout,
+    productAmount,
     description,
     photo,
   }: EditProductUseCaseRequest): Promise<EditProductUseCaseResponse> {
@@ -32,7 +34,7 @@ export class EditProductUseCase {
     }
     product.name = name
     product.unitValue = unitValue
-    product.productAmout = productAmout
+    product.productAmount = productAmount
     product.description = description
     product.photo = photo
     await this.productRepository.save(product)

@@ -9,7 +9,6 @@ import {
     Post,
     Put,
     Query,
-    UsePipes,
   } from '@nestjs/common'
   import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
   import { z } from 'zod'
@@ -22,18 +21,15 @@ import {
   const productSchema = z.object({
     name: z.string(),
     unitValue: z.number(),
-    productAmout: z.number(),
-    description: z.string().uuid(),
+    productAmount: z.number(),
+    description: z.string(),
     photo: z.string()
-  })
-  const productIdSchema = z.object({
-    id: z.string().uuid(),
   })
   const pageQueryParamSchema = z.string().optional().default("1").transform(Number).pipe(z.number().min(1))
   const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+
   type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
   type ProductBodySchema = z.infer<typeof productSchema>
-  type ProductIdBodySchema = z.infer<typeof productIdSchema>
   @Controller('/product')
   export class ProductController {
     constructor(
@@ -60,13 +56,11 @@ import {
       }
     }
   
-    @Get("/id")
+    @Get("/:id")
     @HttpCode(200)
-    @UsePipes(new ZodValidationPipe(productIdSchema))
-    async handleGetProductById(@Body() body: ProductIdBodySchema) {
-      const { id } = body
+    async handleGetProductById(@Param() productId: string) {
       const result = await this.getProductById.execute({
-        id,
+        id: productId,
       })
       if (result.isLeft()) {
         throw new BadRequestException()
@@ -79,14 +73,13 @@ import {
   
     @Post()
     @HttpCode(201)
-    @UsePipes(new ZodValidationPipe(productSchema))
-    async handleRegisterProduct(@Body() body: ProductBodySchema) {
-      const { name, unitValue, productAmout, description, photo } = body
+    async handleRegisterProduct(@Body(new ZodValidationPipe(productSchema)) body: ProductBodySchema) {
+      const { name, unitValue, productAmount, description, photo } = body
   
       const result = await this.createProduct.execute({
         name,
         unitValue,
-        productAmout,
+        productAmount,
         description,
         photo
       })
@@ -99,20 +92,19 @@ import {
         }
       }
     }
-    @Put()
+    @Put("/:id")
     @HttpCode(204)
-    @UsePipes(new ZodValidationPipe(productSchema))
-    async handleEditProduct(@Body() body: ProductBodySchema, @Param("id") productId: string) {
-      const { name, unitValue, productAmout, description, photo } = body
-  
+    async handleEditProduct(@Body(new ZodValidationPipe(productSchema)) body: ProductBodySchema, @Param("id") productId: string) {
+      const { name, unitValue, productAmount, description, photo } = body
       const result = await this.editProduct.execute({
         name,
         unitValue,
-        productAmout,
+        productAmount,
         description,
         photo,
         productId
       })
+      console.log(result)
       if (result.isLeft()) {
         const error = result.value
         if (error instanceof ProductAlreadyExistsError) {

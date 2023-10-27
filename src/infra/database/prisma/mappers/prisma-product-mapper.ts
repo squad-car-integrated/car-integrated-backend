@@ -12,7 +12,7 @@ export class PrismaProductMapper {
       {
         name: raw.name,
         unitValue: raw.unitValue,
-        productAmout: raw.productAmout,
+        productAmount: raw.productAmount,
         description: raw.description,
         photo: raw.photo,
       },
@@ -28,7 +28,7 @@ export class PrismaProductMapper {
     return {
       name: product.name,
       unitValue: product.unitValue,
-      productAmout: product.productAmout,
+      productAmount: product.productAmount,
       description: product.description,
       photo: product.photo,
     }

@@ -95,7 +95,7 @@ export class AutomobileController {
       }
     }
   }
-  @Put()
+  @Put("/:id")
   @HttpCode(204)
   @UsePipes(new ZodValidationPipe(automobileSchema))
   async handleEditAutomobile(@Body() body: AutomobileBodySchema, @Param("id") automobileId: string) {

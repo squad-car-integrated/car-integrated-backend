@@ -13,7 +13,7 @@ export class PrismaProductsRepository implements ProductsRepository {
       take: 20,
       skip: (params.page - 1) * 20,
       orderBy: {
-        createdAt: "desc"
+        name: "desc"
       }
     })
     return PrismaProductMapper.toDomainMany(products)

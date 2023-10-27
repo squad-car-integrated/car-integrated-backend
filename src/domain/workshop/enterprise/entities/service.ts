@@ -4,6 +4,7 @@ import { Optional } from '@/core/types/optional'
 import { ServiceProductList } from './service-product-list'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
 import { ServiceEmployeeList } from './service-employee-list'
+import { AggregateRoot } from '@/core/entities/aggregate-root'
 
 export interface ServiceProps {
   automobileId: UniqueEntityID
@@ -16,7 +17,7 @@ export interface ServiceProps {
   createdAt: Date
   updatedAt?: Date
 }
-export class Service extends Entity<ServiceProps> {
+export class Service extends AggregateRoot<ServiceProps> {
   get automobileId() {
     return this.props.automobileId
   }

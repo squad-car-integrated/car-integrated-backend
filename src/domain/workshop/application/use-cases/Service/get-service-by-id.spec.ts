@@ -1,21 +1,21 @@
-import { makeProduct } from 'test/factories/make-product'
-import { InMemoryProductsRepository } from 'test/repositories/in-memory-products-repository'
-import { GetProductByIdUseCase } from './get-service-by-id'
+import { makeService } from 'test/factories/make-service'
+import { InMemoryServicesRepository } from 'test/repositories/in-memory-services-repository'
+import { GetServiceByIdUseCase } from './get-service-by-id'
 
-let inMemoryProductsRepository: InMemoryProductsRepository
-let sut: GetProductByIdUseCase
+let inMemoryServicesRepository: InMemoryServicesRepository
+let sut: GetServiceByIdUseCase
 
-describe('Get Product By Id', () => {
+describe('Get Service By Id', () => {
   beforeEach(() => {
-    inMemoryProductsRepository = new InMemoryProductsRepository()
-    sut = new GetProductByIdUseCase(inMemoryProductsRepository)
+    inMemoryServicesRepository = new InMemoryServicesRepository()
+    sut = new GetServiceByIdUseCase(inMemoryServicesRepository)
   })
 
-  it('Should be able to get a product by id', async () => {
-    const newProduct = makeProduct({})
-    await inMemoryProductsRepository.create(newProduct)
+  it('Should be able to get a service by id', async () => {
+    const newService = makeService({})
+    await inMemoryServicesRepository.create(newService)
     const result = await sut.execute({
-      id: newProduct.id.toString(),
+      id: newService.id.toString(),
     })
     expect(result.value).toBeTruthy()
   })

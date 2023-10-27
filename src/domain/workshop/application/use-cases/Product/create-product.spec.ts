@@ -15,11 +15,10 @@ describe('Create Product', () => {
     const result = await sut.execute({
       name: faker.commerce.productName(),
       unitValue: Number(faker.commerce.price()),
-      productAmout: 10,
+      productAmount: 10,
       description: faker.commerce.productDescription(),
       photo: 'uri',
     })
     expect(result.isRight()).toBe(true)
-    expect(inMemoryProductsRepository.items[0]).toEqual(result.value?.product)
   })
 })

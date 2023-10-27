@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { Entity } from '@/core/entities/entity'
 export interface UserProps {
   name: string
@@ -7,7 +8,7 @@ export interface UserProps {
   createdAt: Date
   updatedAt?: Date | null
 }
-export abstract class User<Props extends UserProps> extends Entity<Props> {
+export abstract class User<Props extends UserProps> extends AggregateRoot<Props> {
   get name() {
     return this.props.name
   }

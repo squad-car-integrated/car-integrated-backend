@@ -18,6 +18,11 @@ import { GetOwnerByIdUseCase } from '@/domain/workshop/application/use-cases/Own
 import { DeleteEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/delete-employee'
 import { DeleteOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/delete-owner'
 import { EditAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/edit-automobile'
+import { CreateProductUseCase } from '@/domain/workshop/application/use-cases/Product/create-product'
+import { GetProductByIdUseCase } from '@/domain/workshop/application/use-cases/Product/get-product-by-id'
+import { FetchRecentProductsUseCase } from '@/domain/workshop/application/use-cases/Product/fetch-recent-products'
+import { EditProductUseCase } from '@/domain/workshop/application/use-cases/Product/edit-product'
+import { ProductController } from './controllers/product.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -26,19 +31,28 @@ import { EditAutomobileUseCase } from '@/domain/workshop/application/use-cases/A
     EmployeeController,
     OwnerController,
     AutomobileController,
+    ProductController,
   ],
   providers: [
     AuthenticateUserUseCase,
+
     CreateOwnerUseCase,
     GetOwnerByIdUseCase,
     DeleteOwnerUseCase,
+
     CreateEmployeeUseCase,
     GetEmployeeByIdUseCase,
     DeleteEmployeeUseCase,
+
     CreateAutomobileUseCase,
     GetAutomobileByIdUseCase,
     FetchRecentAutomobilesUseCase,
-    EditAutomobileUseCase
+    EditAutomobileUseCase,
+
+    CreateProductUseCase,
+    GetProductByIdUseCase,
+    FetchRecentProductsUseCase,
+    EditProductUseCase
   ],
 })
 export class HttpModule {}

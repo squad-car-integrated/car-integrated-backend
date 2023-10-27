@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
@@ -5,21 +6,21 @@ import { Optional } from '@/core/types/optional'
 export interface ProductProps {
   name: string
   unitValue: number
-  productAmout: number
+  productAmount: number
   description: string
   photo: string
   createdAt: Date
   updatedAt?: Date
 }
-export class Product extends Entity<ProductProps> {
+export class Product extends AggregateRoot<ProductProps> {
   get name() {
     return this.props.name
   }
   get unitValue() {
-    return this.props.unitValue
+    return this.props.productAmount
   }
-  get productAmout() {
-    return this.props.productAmout
+  get productAmount() {
+    return this.props.productAmount
   }
   get description() {
     return this.props.description
@@ -44,8 +45,8 @@ export class Product extends Entity<ProductProps> {
     this.props.unitValue = unitValue
     this.touch()
   }
-  set productAmout(productAmout: number) {
-    this.props.productAmout = productAmout
+  set productAmount(productAmout: number) {
+    this.props.productAmount = productAmout
     this.touch()
   }
   set description(description: string) {

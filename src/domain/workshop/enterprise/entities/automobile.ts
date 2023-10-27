@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
@@ -10,7 +11,7 @@ export interface AutomobileProps {
   createdAt: Date
   updatedAt?: Date
 }
-export class Automobile extends Entity<AutomobileProps> {
+export class Automobile extends AggregateRoot<AutomobileProps> {
   get model() {
     return this.props.model
   }
