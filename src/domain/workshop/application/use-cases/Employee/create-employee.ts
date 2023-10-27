@@ -40,7 +40,6 @@ export class CreateEmployeeUseCase {
       monthWorkedHours,
       email,
       password: hashedPassword,
-      roles: [UserRole.EMPLOYEE.toString()],
     })
     await this.employeeRepository.create(employee)
     return right({

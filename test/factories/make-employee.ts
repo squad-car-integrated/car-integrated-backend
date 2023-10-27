@@ -17,7 +17,6 @@ export function makeEmployee(
       monthWorkedHours: faker.number.int({ min: 1, max: 100 }),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roles: ['User'],
       ...override,
     },
     id,

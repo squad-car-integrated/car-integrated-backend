@@ -18,8 +18,15 @@ export class PrismaEmployeesRepository implements EmployeesRepository {
     }
     return PrismaEmployeeMapper.toDomain(employee)
   }
-  save(employee: Employee): Promise<void> {
-    throw new Error('Method not implemented.')
+  async save(employee: Employee): Promise<void> {
+    const data = PrismaEmployeeMapper.toPrisma(employee)
+
+    await this.prisma.employee.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    })
   }
   async delete(employee: Employee): Promise<void> {
     await this.prisma.employee.delete({

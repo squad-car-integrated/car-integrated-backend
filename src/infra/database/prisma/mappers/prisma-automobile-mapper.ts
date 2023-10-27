@@ -3,7 +3,6 @@ import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 import {
   Automobile as PrismaAutomobile,
   Prisma,
-  UserRole,
 } from '@prisma/client'
 
 export class PrismaAutomobileMapper {
@@ -25,6 +24,7 @@ export class PrismaAutomobileMapper {
     automobile: Automobile,
   ): Prisma.AutomobileUncheckedCreateInput {
     return {
+      id: automobile.id.toString(),
       model: automobile.model,
       brand: automobile.brand,
       plate: automobile.plate,

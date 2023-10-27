@@ -3,7 +3,6 @@ import { Product } from '@/domain/workshop/enterprise/entities/product'
 import {
   Product as PrismaProduct,
   Prisma,
-  UserRole,
 } from '@prisma/client'
 
 export class PrismaProductMapper {
@@ -19,18 +18,18 @@ export class PrismaProductMapper {
       new UniqueEntityID(raw.id),
     )
   }
-  static toDomainMany(rawList: PrismaProduct[]): Product[] {
-    return rawList.map((raw) => this.toDomain(raw));
-  }
   static toPrisma(
     product: Product,
   ): Prisma.ProductUncheckedCreateInput {
     return {
+      id: product.id.toString(),
       name: product.name,
       unitValue: product.unitValue,
       productAmount: product.productAmount,
       description: product.description,
       photo: product.photo,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
     }
   }
 }

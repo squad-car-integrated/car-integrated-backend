@@ -22,7 +22,6 @@ export class EditOwnerUseCase {
     email,
     password,
     phoneNumber,
-    roles,
   }: EditOwnerUseCaseRequest): Promise<EditOwnerUseCaseResponse> {
     const owner = await this.ownerRepository.findByEmail(email)
     if (!owner) {
@@ -32,7 +31,6 @@ export class EditOwnerUseCase {
     owner.email = email
     owner.password = password
     owner.phoneNumber = phoneNumber
-    owner.roles = roles
     await this.ownerRepository.save(owner)
     return right({ owner })
   }

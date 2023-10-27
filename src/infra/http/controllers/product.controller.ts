@@ -30,7 +30,7 @@ import {
 
   type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
   type ProductBodySchema = z.infer<typeof productSchema>
-  @Controller('/product')
+  @Controller('/products')
   export class ProductController {
     constructor(
       private createProduct: CreateProductUseCase,
@@ -75,7 +75,6 @@ import {
     @HttpCode(201)
     async handleRegisterProduct(@Body(new ZodValidationPipe(productSchema)) body: ProductBodySchema) {
       const { name, unitValue, productAmount, description, photo } = body
-  
       const result = await this.createProduct.execute({
         name,
         unitValue,
@@ -92,7 +91,7 @@ import {
         }
       }
     }
-    @Put("/:id")
+    @Put('/:id')
     @HttpCode(204)
     async handleEditProduct(@Body(new ZodValidationPipe(productSchema)) body: ProductBodySchema, @Param("id") productId: string) {
       const { name, unitValue, productAmount, description, photo } = body
@@ -104,7 +103,6 @@ import {
         photo,
         productId
       })
-      console.log(result)
       if (result.isLeft()) {
         const error = result.value
         if (error instanceof ProductAlreadyExistsError) {

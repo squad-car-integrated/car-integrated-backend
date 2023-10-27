@@ -39,7 +39,6 @@ export class CreateOwnerUseCase {
       name,
       email,
       password: hashedPassword,
-      roles: [UserRole.OWNER.toString()],
     })
     await this.ownersRepository.create(owner)
     return right({

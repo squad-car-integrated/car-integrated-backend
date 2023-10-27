@@ -10,18 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  EMPLOYEE
-  OWNER
-}
-
 model Owner {
   id          String       @id @default(uuid())
   name        String
   email       String       @unique
   password    String
   phoneNumber String
-  role        UserRole     @default(OWNER)
   automobiles Automobile[]
   services    Service[]
 
@@ -34,7 +28,6 @@ model Employee {
   email            String             @unique
   password         String
   monthWorkedHours Float
-  role             UserRole           @default(EMPLOYEE)
   services         ServiceEmployees[]
 
   @@map("employees")

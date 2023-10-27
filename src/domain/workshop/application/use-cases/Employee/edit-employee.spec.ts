@@ -16,15 +16,14 @@ describe('Edit Employee', () => {
     const newEmployee = makeEmployee({}, new UniqueEntityID('employee-1'))
     await inMemoryEmployeesRepository.create(newEmployee)
     await sut.execute({
+      employeeId: newEmployee.id.toString(),
       email: newEmployee.email,
       name: 'Nome editado',
       password: newEmployee.password,
       monthWorkedHours: newEmployee.monthWorkedHours,
-      roles: ['User', 'Admin'],
     })
     expect(inMemoryEmployeesRepository.items[0]).toMatchObject({
       name: 'Nome editado',
-      roles: ['User', 'Admin'],
     })
   })
 })

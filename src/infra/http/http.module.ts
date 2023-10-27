@@ -23,6 +23,7 @@ import { GetProductByIdUseCase } from '@/domain/workshop/application/use-cases/P
 import { FetchRecentProductsUseCase } from '@/domain/workshop/application/use-cases/Product/fetch-recent-products'
 import { EditProductUseCase } from '@/domain/workshop/application/use-cases/Product/edit-product'
 import { ProductController } from './controllers/product.controller'
+import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -43,6 +44,7 @@ import { ProductController } from './controllers/product.controller'
     CreateEmployeeUseCase,
     GetEmployeeByIdUseCase,
     DeleteEmployeeUseCase,
+    EditEmployeeUseCase,
 
     CreateAutomobileUseCase,
     GetAutomobileByIdUseCase,

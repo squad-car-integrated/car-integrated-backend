@@ -14,13 +14,12 @@ export class Owner extends User<OwnerProps> {
     this.touch()
   }
   static create(
-    props: Optional<OwnerProps, 'createdAt' | 'roles'>,
+    props: Optional<OwnerProps, 'createdAt' >,
     id?: UniqueEntityID,
   ) {
     const owner = new Owner(
       {
         ...props,
-        roles: props.roles ?? [],
         createdAt: props.createdAt ?? new Date(),
       },
       id,

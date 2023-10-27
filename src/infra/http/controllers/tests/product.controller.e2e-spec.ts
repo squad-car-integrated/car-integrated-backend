@@ -7,7 +7,7 @@ import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { EmployeeFactory } from 'test/factories/make-employee'
 import { ProductFactory } from 'test/factories/make-product'
-describe('Create product (E2E)', () => {
+describe('Create products (E2E)', () => {
     let app: INestApplication
     let prisma: PrismaService
     let jwt: JwtService
@@ -26,16 +26,16 @@ describe('Create product (E2E)', () => {
         productFactory = moduleRef.get(ProductFactory)
         await app.init()
     })
-    test('[POST] /product', async () => {
+    test('[POST] /products', async () => {
         const user = await employeeFactory.makePrismaEmployee()
         const accessToken = jwt.sign({ sub: user.id.toString() })
         const response = await request(app.getHttpServer())
-            .post('/product')
+            .post('/products')
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
                 name: 'Oleo Motul',
-                unitValue: 89.99,
-                productAmount: 200,
+                unitValue: 90,
+                productAmount: 20,
                 description: '1L w40',
                 photo: "uri da photo"
             })
@@ -43,11 +43,12 @@ describe('Create product (E2E)', () => {
         const productsOnDatabase = await prisma.product.findFirst({
             where: {
                 name: 'Oleo Motul',
+                unitValue: 90
             },
         })
         expect(productsOnDatabase).toBeTruthy()
     })
-    test('[GET] /product', async () => {
+    test('[GET] Fetch Products /products', async () => {
         const user = await employeeFactory.makePrismaEmployee()
         const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -72,7 +73,7 @@ describe('Create product (E2E)', () => {
             }),
         ])
         const response = await request(app.getHttpServer())
-            .get('/product')
+            .get('/products')
             .set('Authorization', `Bearer ${accessToken}`)
             .send()
         expect(response.statusCode).toBe(200)
@@ -98,7 +99,7 @@ describe('Create product (E2E)', () => {
         })
         const productId = product.id.toString()
         const response = await request(app.getHttpServer())
-            .put(`/product/${productId}`)
+            .put(`/products/${productId}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
                 name: product.name,
@@ -107,7 +108,6 @@ describe('Create product (E2E)', () => {
                 description: product.description,
                 photo: product.photo
             })
-            console.log(response.body)
         expect(response.statusCode).toBe(204)
         const productsOnDatabase = await prisma.product.findUnique({
             where: {
@@ -115,7 +115,7 @@ describe('Create product (E2E)', () => {
             },
         })
         expect(productsOnDatabase).toBeTruthy()
-        expect(product.unitValue).toBe(27.50)
-        expect(product.productAmount).toBe(22)
+        expect(productsOnDatabase?.unitValue).toBe(27.50)
+        expect(productsOnDatabase?.productAmount).toBe(22)
     })
 })

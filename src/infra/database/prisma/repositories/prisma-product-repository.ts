@@ -16,7 +16,7 @@ export class PrismaProductsRepository implements ProductsRepository {
         name: "desc"
       }
     })
-    return PrismaProductMapper.toDomainMany(products)
+    return products.map(PrismaProductMapper.toDomain)
   }
   async findById(id: string): Promise<Product | null> {
     const product = await this.prisma.product.findUnique({
@@ -34,7 +34,7 @@ export class PrismaProductsRepository implements ProductsRepository {
 
     await this.prisma.product.update({
       where: {
-        id: product.id.toString(),
+        id: data.id,
       },
       data,
     })

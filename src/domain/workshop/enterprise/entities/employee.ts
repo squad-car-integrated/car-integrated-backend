@@ -14,13 +14,12 @@ export class Employee extends User<EmployeeProps> {
     this.touch()
   }
   static create(
-    props: Optional<EmployeeProps, 'createdAt' | 'roles'>,
+    props: Optional<EmployeeProps, 'createdAt'>,
     id?: UniqueEntityID,
   ) {
     const employee = new Employee(
       {
         ...props,
-        roles: props.roles ?? [],
         createdAt: props.createdAt ?? new Date(),
       },
       id,

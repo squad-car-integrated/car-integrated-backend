@@ -8,7 +8,7 @@ import {
   HttpCode,
   Param,
   Post,
-  UsePipes,
+  Put,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
@@ -17,22 +17,26 @@ import { UserAlreadyExistsError } from '@/domain/workshop/application/use-cases/
 import { EmployeePresenter } from '../presenters/employee-presenter'
 import { DeleteEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/delete-employee'
 import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-id'
-const accountSchema = z.object({
+import { Public } from '@/infra/auth/public'
+import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
+const employeeSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
+  monthWorkedHours: z.number()
 })
-type AccountBodySchema = z.infer<typeof accountSchema>
+type EmployeeBodySchema = z.infer<typeof employeeSchema>
 @Controller('/employee')
 export class EmployeeController {
   constructor(
     private createEmployee: CreateEmployeeUseCase,
     private getEmployeeById: GetEmployeeByIdUseCase,
-    private deleteEmployee: DeleteEmployeeUseCase
+    private deleteEmployee: DeleteEmployeeUseCase,
+    private editEmployee: EditEmployeeUseCase
   ) {}
-  @Get()
+  @Get("/:id")
   @HttpCode(200)
-  async handleGetEmployeeById(@Param() employeeId: string) {
+  async handleGetEmployeeById(@Param("id") employeeId: string) {
     const result = await this.getEmployeeById.execute({
       id: employeeId,
     })
@@ -45,16 +49,16 @@ export class EmployeeController {
     }
   }
   @Post()
+  @Public()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(accountSchema))
-  async handleRegisterEmployee(@Body() body: AccountBodySchema) {
-    const { name, email, password } = body
+  async handleRegisterEmployee(@Body(new ZodValidationPipe(employeeSchema)) body: EmployeeBodySchema) {
+    const { name, email, password, monthWorkedHours } = body
 
     const result = await this.createEmployee.execute({
       name,
       email,
       password,
-      monthWorkedHours: 0,
+      monthWorkedHours,
     })
     if (result.isLeft()) {
       const error = result.value
@@ -71,6 +75,26 @@ export class EmployeeController {
 
     const result = await this.deleteEmployee.execute({
       employeeId
+    })
+    if (result.isLeft()) {
+      const error = result.value
+      if (error instanceof UserAlreadyExistsError) {
+        throw new ConflictException(error.message)
+      } else {
+        throw new BadRequestException(error.message)
+      }
+    }
+  }
+  @Put('/:id')
+  @HttpCode(204)
+  async handleEditEmployee(@Body(new ZodValidationPipe(employeeSchema)) body: EmployeeBodySchema, @Param("id") employeeId: string) {
+    const { name, email, password, monthWorkedHours } = body
+    const result = await this.editEmployee.execute({
+      employeeId,
+      name,
+      email,
+      password,
+      monthWorkedHours,
     })
     if (result.isLeft()) {
       const error = result.value

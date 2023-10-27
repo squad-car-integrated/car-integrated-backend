@@ -17,7 +17,7 @@ export class Product extends AggregateRoot<ProductProps> {
     return this.props.name
   }
   get unitValue() {
-    return this.props.productAmount
+    return this.props.unitValue
   }
   get productAmount() {
     return this.props.productAmount
@@ -45,8 +45,8 @@ export class Product extends AggregateRoot<ProductProps> {
     this.props.unitValue = unitValue
     this.touch()
   }
-  set productAmount(productAmout: number) {
-    this.props.productAmount = productAmout
+  set productAmount(productAmount: number) {
+    this.props.productAmount = productAmount
     this.touch()
   }
   set description(description: string) {
