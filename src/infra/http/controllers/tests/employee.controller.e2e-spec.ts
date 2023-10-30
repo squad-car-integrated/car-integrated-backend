@@ -40,6 +40,44 @@ describe('Create employee (E2E)', () => {
         })
         expect(userOnDatabase).toBeTruthy()
     })
+    test('[GET] Fetch All Employees /employee', async () => {
+        const user = await employeeFactory.makePrismaEmployee()
+        const accessToken = jwt.sign({ sub: user.id.toString() })
+
+        await Promise.all([
+            employeeFactory.makePrismaEmployee({
+                name: 'New Employee 4',
+                email: 'employee4@example.com',
+                password: '123456',
+                monthWorkedHours: 12
+            }),
+            employeeFactory.makePrismaEmployee({
+                name: 'New Employee 5',
+                email: 'employee5@example.com',
+                password: '123456',
+                monthWorkedHours: 4
+            }),
+            employeeFactory.makePrismaEmployee({
+                name: 'New Employee 6',
+                email: 'employee6@example.com',
+                password: '123456',
+                monthWorkedHours: 30
+            }),
+        ])
+        const response = await request(app.getHttpServer())
+            .get('/employee')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send()
+            console.log(response.body)
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual({
+            employees: expect.arrayContaining([
+                expect.objectContaining({ name: 'New Employee 4' }),
+                expect.objectContaining({ name: 'New Employee 6' }),
+                expect.objectContaining({ name: 'New Employee 5' }),
+            ]),
+        })
+    })
     test('[GET] /employee/:id', async () => {
         const user = await employeeFactory.makePrismaEmployee()
         const accessToken = jwt.sign({ sub: user.id.toString() })

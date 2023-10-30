@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
@@ -19,12 +20,17 @@ import { DeleteEmployeeUseCase } from '@/domain/workshop/application/use-cases/E
 import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-id'
 import { Public } from '@/infra/auth/public'
 import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
+import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-cases/Employee/fetch-all-employees'
 const employeeSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
   monthWorkedHours: z.number()
 })
+const pageQueryParamSchema = z.string().optional().default("1").transform(Number).pipe(z.number().min(1))
+const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+
+type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 type EmployeeBodySchema = z.infer<typeof employeeSchema>
 @Controller('/employee')
 export class EmployeeController {
@@ -32,8 +38,21 @@ export class EmployeeController {
     private createEmployee: CreateEmployeeUseCase,
     private getEmployeeById: GetEmployeeByIdUseCase,
     private deleteEmployee: DeleteEmployeeUseCase,
-    private editEmployee: EditEmployeeUseCase
+    private editEmployee: EditEmployeeUseCase,
+    private getAllEmployees: FetchAllEmployeesUseCase
   ) {}
+  @Get()
+    @HttpCode(200)
+    async handleFetchEmployee(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
+      const result = await this.getAllEmployees.execute({page})
+      if (result.isLeft()) {
+        throw new BadRequestException()
+      }
+      const employees = result.value.employees
+      return {
+        employees : employees.map(EmployeePresenter.toHTTP)
+      }
+    }
   @Get("/:id")
   @HttpCode(200)
   async handleGetEmployeeById(@Param("id") employeeId: string) {

@@ -7,8 +7,6 @@ import { CreateEmployeeUseCase } from '@/domain/workshop/application/use-cases/E
 import { AuthenticateController } from './controllers/authenticate.controller'
 import { EmployeeController } from './controllers/employee.controller'
 import { OwnerController } from './controllers/owner.controller'
-import { GetOwnerByEmailUseCase } from '@/domain/workshop/application/use-cases/Owner/get-owner-by-email'
-import { GetEmployeeByEmailUseCase } from '@/domain/workshop/application/use-cases/Employee/get-employee-by-email'
 import { AutomobileController } from './controllers/automobile.controller'
 import { CreateAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/create-automobile'
 import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-id'
@@ -24,6 +22,7 @@ import { FetchRecentProductsUseCase } from '@/domain/workshop/application/use-ca
 import { EditProductUseCase } from '@/domain/workshop/application/use-cases/Product/edit-product'
 import { ProductController } from './controllers/product.controller'
 import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
+import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-cases/Employee/fetch-all-employees'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -41,6 +40,7 @@ import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Emp
     GetOwnerByIdUseCase,
     DeleteOwnerUseCase,
 
+    FetchAllEmployeesUseCase,
     CreateEmployeeUseCase,
     GetEmployeeByIdUseCase,
     DeleteEmployeeUseCase,

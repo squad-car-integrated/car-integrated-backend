@@ -46,13 +46,9 @@ import {
       if (result.isLeft()) {
         throw new BadRequestException()
       }
-      let products: ProductPresenter[] = [];
-      result.value.products.forEach(element => {
-        const convert = ProductPresenter.toHTTP(element)
-        products.push(convert)
-      });
+      const products = result.value.products
       return {
-        products
+        products : products.map(ProductPresenter.toHTTP)
       }
     }
   
