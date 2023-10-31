@@ -68,7 +68,6 @@ describe('Create employee (E2E)', () => {
             .get('/employee')
             .set('Authorization', `Bearer ${accessToken}`)
             .send()
-            console.log(response.body)
         expect(response.statusCode).toBe(200)
         expect(response.body).toEqual({
             employees: expect.arrayContaining([
@@ -121,7 +120,6 @@ describe('Create employee (E2E)', () => {
                 password: employee.password,
                 monthWorkedHours: 20
             })
-            console.log(response.body)
         expect(response.statusCode).toBe(204)
         const employeeOnDatabase = await prisma.employee.findUnique({
             where: {

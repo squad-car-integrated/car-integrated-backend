@@ -23,6 +23,8 @@ import { EditProductUseCase } from '@/domain/workshop/application/use-cases/Prod
 import { ProductController } from './controllers/product.controller'
 import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
 import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-cases/Employee/fetch-all-employees'
+import { FetchAllOwnersUseCase } from '@/domain/workshop/application/use-cases/Owner/fetch-all-owners'
+import { EditOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/edit-owner'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -36,9 +38,11 @@ import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-case
   providers: [
     AuthenticateUserUseCase,
 
+    FetchAllOwnersUseCase,
     CreateOwnerUseCase,
     GetOwnerByIdUseCase,
     DeleteOwnerUseCase,
+    EditOwnerUseCase,
 
     FetchAllEmployeesUseCase,
     CreateEmployeeUseCase,

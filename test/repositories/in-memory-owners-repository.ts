@@ -1,3 +1,4 @@
+import { PaginationParams } from '@/core/repositories/pagination-params'
 import { OwnersRepository } from '@/domain/workshop/application/repositories/owners-repository'
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
 
@@ -8,6 +9,13 @@ export class InMemoryOwnersRepository implements OwnersRepository {
       return null
     }
     return owner
+  }
+  async getAll({ page }: PaginationParams) {
+    const sortedEmployee = this.items
+      .slice()
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const employee = sortedEmployee.slice((page - 1) * 20, page * 20)
+    return employee
   }
   public items: Owner[] = []
   async findById(id: string) {

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service'
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
 import { OwnersRepository } from '@/domain/workshop/application/repositories/owners-repository'
 import { PrismaOwnerMapper } from '../mappers/prisma-owner-mapper'
+import { PaginationParams } from '@/core/repositories/pagination-params'
 
 @Injectable()
 export class PrismaOwnersRepository implements OwnersRepository {
@@ -18,8 +19,25 @@ export class PrismaOwnersRepository implements OwnersRepository {
     }
     return PrismaOwnerMapper.toDomain(owner)
   }
-  save(owner: Owner): Promise<void> {
-    throw new Error('Method not implemented.')
+  async getAll(params: PaginationParams): Promise<Owner[]> {
+    const owner = await this.prisma.owner.findMany({
+      take: 20,
+      skip: (params.page - 1) * 20,
+      orderBy: {
+        name: "desc"
+      }
+    })
+    return owner.map(PrismaOwnerMapper.toDomain)
+  }
+  async save(owner: Owner): Promise<void> {
+    const data = PrismaOwnerMapper.toPrisma(owner)
+
+    await this.prisma.owner.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    })
   }
   async delete(owner: Owner): Promise<void> {
     await this.prisma.owner.delete({

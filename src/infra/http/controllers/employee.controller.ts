@@ -42,17 +42,17 @@ export class EmployeeController {
     private getAllEmployees: FetchAllEmployeesUseCase
   ) {}
   @Get()
-    @HttpCode(200)
-    async handleFetchEmployee(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
-      const result = await this.getAllEmployees.execute({page})
-      if (result.isLeft()) {
-        throw new BadRequestException()
-      }
-      const employees = result.value.employees
-      return {
-        employees : employees.map(EmployeePresenter.toHTTP)
-      }
+  @HttpCode(200)
+  async handleFetchEmployee(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
+    const result = await this.getAllEmployees.execute({page})
+    if (result.isLeft()) {
+      throw new BadRequestException()
     }
+    const employees = result.value.employees
+    return {
+      employees : employees.map(EmployeePresenter.toHTTP)
+    }
+  }
   @Get("/:id")
   @HttpCode(200)
   async handleGetEmployeeById(@Param("id") employeeId: string) {
