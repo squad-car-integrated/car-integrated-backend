@@ -16,6 +16,7 @@ describe('Edit Owner', () => {
     const newOwner = makeOwner({}, new UniqueEntityID('owner-1'))
     await inMemoryOwnersRepository.create(newOwner)
     await sut.execute({
+      ownerId: newOwner.id.toString(),
       email: newOwner.email,
       name: 'Nome editado',
       password: newOwner.password,

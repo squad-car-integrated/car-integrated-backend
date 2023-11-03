@@ -25,6 +25,11 @@ import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Emp
 import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-cases/Employee/fetch-all-employees'
 import { FetchAllOwnersUseCase } from '@/domain/workshop/application/use-cases/Owner/fetch-all-owners'
 import { EditOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/edit-owner'
+import { ServiceController } from './controllers/service.controller'
+import { CreateServiceUseCase } from '@/domain/workshop/application/use-cases/Service/create-service'
+import { EditServiceUseCase } from '@/domain/workshop/application/use-cases/Service/edit-service'
+import { FetchRecentServicesUseCase } from '@/domain/workshop/application/use-cases/Service/fetch-recent-services'
+import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/Service/get-service-by-id'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -34,6 +39,7 @@ import { EditOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/
     OwnerController,
     AutomobileController,
     ProductController,
+    ServiceController
   ],
   providers: [
     AuthenticateUserUseCase,
@@ -58,7 +64,12 @@ import { EditOwnerUseCase } from '@/domain/workshop/application/use-cases/Owner/
     CreateProductUseCase,
     GetProductByIdUseCase,
     FetchRecentProductsUseCase,
-    EditProductUseCase
+    EditProductUseCase,
+
+    CreateServiceUseCase,
+    GetServiceByIdUseCase,
+    FetchRecentServicesUseCase,
+    EditServiceUseCase
   ],
 })
 export class HttpModule {}

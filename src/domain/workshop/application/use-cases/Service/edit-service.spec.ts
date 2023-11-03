@@ -5,20 +5,26 @@ import { EditServiceUseCase } from './edit-service'
 import { InMemoryServiceProductsRepository } from 'test/repositories/in-memory-service-products-repository'
 import { makeServiceProduct } from 'test/factories/make-service-product'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
+import { InMemoryServiceEmployeesRepository } from 'test/repositories/in-memory-service-employees-repository'
+import { makeServiceEmployee } from 'test/factories/make-service-employee'
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
+let inMemoryServiceEmployeesRepository: InMemoryServiceEmployeesRepository
 let sut: EditServiceUseCase
 
 describe('Edit Service', () => {
   beforeEach(() => {
     inMemoryServiceProductsRepository = new InMemoryServiceProductsRepository()
+    inMemoryServiceEmployeesRepository = new InMemoryServiceEmployeesRepository()
     inMemoryServicesRepository = new InMemoryServicesRepository(
       inMemoryServiceProductsRepository,
+      inMemoryServiceEmployeesRepository
     )
     sut = new EditServiceUseCase(
       inMemoryServicesRepository,
       inMemoryServiceProductsRepository,
+      inMemoryServiceEmployeesRepository
     )
   })
 
@@ -27,6 +33,9 @@ describe('Edit Service', () => {
       {
         ownerId: new UniqueEntityID('owner-1'),
         automobileId: new UniqueEntityID('car-1'),
+        description: "New service",
+        totalValue: 20,
+        status: ServiceStatus.PendingApproval
       },
       new UniqueEntityID('service-1'),
     )
@@ -41,22 +50,45 @@ describe('Edit Service', () => {
         productId: new UniqueEntityID('2'),
       }),
     )
+    inMemoryServiceEmployeesRepository.items.push(
+      makeServiceEmployee({
+        serviceId: newService.id,
+        employeeId: new UniqueEntityID('3'),
+      }),
+      makeServiceEmployee({
+        serviceId: newService.id,
+        employeeId: new UniqueEntityID('4'),
+      }),
+    )
     await sut.execute({
+      automobileId: newService.automobileId.toString(),
+      ownerId: newService.ownerId.toString(),
       serviceId: newService.id.toString(),
-      totalValue: newService.totalValue,
+      totalValue: 30,
       description: 'Descricao editada',
       status: ServiceStatus.Completed,
-      productsIds: ['1', '3'],
+      productsIds: ['1', '2'],
+      employeesIds: ["3", "4"]
     })
     expect(inMemoryServicesRepository.items[0]).toMatchObject({
       description: 'Descricao editada',
+      totalValue: 30,
+      status: ServiceStatus.Completed
     })
     expect(
       inMemoryServicesRepository.items[0].products.currentItems,
     ).toHaveLength(2)
     expect(inMemoryServicesRepository.items[0].products.currentItems).toEqual([
       expect.objectContaining({ productId: new UniqueEntityID('1') }),
-      expect.objectContaining({ productId: new UniqueEntityID('3') }),
+      expect.objectContaining({ productId: new UniqueEntityID('2') }),
+    ])
+
+    expect(
+      inMemoryServicesRepository.items[0].employees.currentItems,
+    ).toHaveLength(2)
+    expect(inMemoryServicesRepository.items[0].employees.currentItems).toEqual([
+      expect.objectContaining({ employeeId: new UniqueEntityID('3') }),
+      expect.objectContaining({ employeeId: new UniqueEntityID('4') }),
     ])
   })
 })

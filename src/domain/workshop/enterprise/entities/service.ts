@@ -15,7 +15,7 @@ export interface ServiceProps {
   description: string
   status: ServiceStatus
   createdAt: Date
-  updatedAt?: Date
+  updatedAt?: Date | null
 }
 export class Service extends AggregateRoot<ServiceProps> {
   get automobileId() {
@@ -68,6 +68,15 @@ export class Service extends AggregateRoot<ServiceProps> {
     this.props.status = status
     this.touch()
   }
+  set automobileId(automobileId: UniqueEntityID) {
+    this.props.automobileId = automobileId
+    this.touch()
+  }
+  set ownerId(ownerId: UniqueEntityID) {
+    this.props.ownerId = ownerId
+    this.touch()
+  }
+
   static create(
     props: Optional<
       ServiceProps,

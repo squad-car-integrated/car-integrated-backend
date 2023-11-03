@@ -1,12 +1,11 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root'
-import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export interface ServiceEmployeesProps {
   serviceId: UniqueEntityID
   employeeId: UniqueEntityID
 }
-export class ServiceEmployees extends AggregateRoot<ServiceEmployeesProps> {
+export class ServiceEmployee extends AggregateRoot<ServiceEmployeesProps> {
   get serviceId() {
     return this.props.serviceId
   }
@@ -14,7 +13,7 @@ export class ServiceEmployees extends AggregateRoot<ServiceEmployeesProps> {
     return this.props.employeeId
   }
   static create(props: ServiceEmployeesProps, id?: UniqueEntityID) {
-    const employee = new ServiceEmployees(props, id)
+    const employee = new ServiceEmployee(props, id)
     return employee
   }
 }

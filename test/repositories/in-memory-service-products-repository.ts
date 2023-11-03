@@ -1,5 +1,5 @@
 import { ServiceProductsRepository } from '@/domain/workshop/application/repositories/service-products-repository'
-import { ServiceProducts } from '@/domain/workshop/enterprise/entities/service-products'
+import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
 
 export class InMemoryServiceProductsRepository
   implements ServiceProductsRepository
@@ -10,7 +10,7 @@ export class InMemoryServiceProductsRepository
     )
     this.items = serviceProducts
   }
-  public items: ServiceProducts[] = []
+  public items: ServiceProduct[] = []
   async findManyByServiceId(serviceId: string) {
     const serviceProducts = this.items.filter(
       (item) => item.serviceId.toString() === serviceId,

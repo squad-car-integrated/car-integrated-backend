@@ -1,8 +1,8 @@
 import { WatchedList } from '@/core/entities/watched-list'
-import { ServiceProducts } from './service-products'
+import { ServiceProduct } from './service-products'
 
-export class ServiceProductList extends WatchedList<ServiceProducts> {
-  compareItems(a: ServiceProducts, b: ServiceProducts): boolean {
+export class ServiceProductList extends WatchedList<ServiceProduct> {
+  compareItems(a: ServiceProduct, b: ServiceProduct): boolean {
     return a.productId === b.productId
   }
 }
