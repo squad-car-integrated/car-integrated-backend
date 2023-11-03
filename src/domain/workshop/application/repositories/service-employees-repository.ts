@@ -1,6 +1,6 @@
-import { ServiceEmployees } from '../../enterprise/entities/service-employees'
+import { ServiceEmployee } from '../../enterprise/entities/service-employees'
 
-export interface ServiceEmployeesRepository {
-  findManyByServiceId(serviceId: string): Promise<ServiceEmployees[]>
-  deleteManyByServiceId(serviceId: string): Promise<void>
+export abstract class ServiceEmployeesRepository {
+  abstract findManyByServiceId(serviceId: string): Promise<ServiceEmployee[]>
+  abstract deleteManyByServiceId(serviceId: string): Promise<void>
 }

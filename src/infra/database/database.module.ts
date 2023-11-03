@@ -10,6 +10,10 @@ import { ProductsRepository } from '@/domain/workshop/application/repositories/p
 import { PrismaProductsRepository } from './prisma/repositories/prisma-product-repository'
 import { ServicesRepository } from '@/domain/workshop/application/repositories/services-repository'
 import { PrismaServicesRepository } from './prisma/repositories/prisma-service-repositoryt'
+import { ServiceProductsRepository } from '@/domain/workshop/application/repositories/service-products-repository'
+import { PrismaServiceProductsRepository } from './prisma/repositories/prisma-service-products-repository'
+import { ServiceEmployeesRepository } from '@/domain/workshop/application/repositories/service-employees-repository'
+import { PrismaServiceEmployeesRepository } from './prisma/repositories/prisma-service-employees-repository'
 
 @Module({
   providers: [
@@ -33,6 +37,14 @@ import { PrismaServicesRepository } from './prisma/repositories/prisma-service-r
     {
       provide: ServicesRepository,
       useClass: PrismaServicesRepository
+    },
+    {
+      provide: ServiceProductsRepository,
+      useClass: PrismaServiceProductsRepository
+    },
+    {
+      provide: ServiceEmployeesRepository,
+      useClass: PrismaServiceEmployeesRepository
     }
   ],
   exports: [
@@ -41,7 +53,9 @@ import { PrismaServicesRepository } from './prisma/repositories/prisma-service-r
     OwnersRepository,
     AutomobilesRepository,
     ProductsRepository,
-    ServicesRepository
+    ServicesRepository,
+    ServiceProductsRepository,
+    ServiceEmployeesRepository
   ],
 })
 export class DatabaseModule {}

@@ -3,7 +3,10 @@ import {
   Automobile,
   AutomobileProps,
 } from '@/domain/workshop/enterprise/entities/automobile'
+import { PrismaAutomobileMapper } from '@/infra/database/prisma/mappers/prisma-automobile-mapper'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { faker } from '@faker-js/faker'
+import { Injectable } from '@nestjs/common'
 export function makeAutomobile(
   override: Partial<AutomobileProps> = {},
   id?: UniqueEntityID,
@@ -19,4 +22,17 @@ export function makeAutomobile(
     id,
   )
   return automobile
+}
+@Injectable()
+export class AutomobileFactory {
+    constructor(private prisma: PrismaService) {}
+    async makePrismaAutomobile(
+        data: Partial<AutomobileProps> = {},
+    ): Promise<Automobile> {
+        const automobile = makeAutomobile(data)
+        await this.prisma.automobile.create({
+            data: PrismaAutomobileMapper.toPrisma(automobile),
+        })
+        return automobile
+    }
 }
