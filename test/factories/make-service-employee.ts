@@ -3,6 +3,8 @@ import {
   ServiceEmployee,
   ServiceEmployeesProps,
 } from '@/domain/workshop/enterprise/entities/service-employees'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { Injectable } from '@nestjs/common'
 
 export function makeServiceEmployee(
   override: Partial<ServiceEmployeesProps> = {},
@@ -17,4 +19,24 @@ export function makeServiceEmployee(
     id,
   )
   return serviceemployee
+}
+@Injectable()
+export class ServiceEmployeeFactory {
+  constructor(private prisma: PrismaService) {}
+
+  async makePrismaServiceEmployee(
+    data: Partial<ServiceEmployeesProps> = {},
+  ): Promise<ServiceEmployee> {
+    const serviceEmployee = makeServiceEmployee(data)
+    await this.prisma.serviceEmployees.update({
+      where: {
+        id: serviceEmployee.id.toString(),
+      },
+      data: {
+        employeeId: serviceEmployee.employeeId.toString(),
+      },
+    })
+
+    return serviceEmployee
+  }
 }

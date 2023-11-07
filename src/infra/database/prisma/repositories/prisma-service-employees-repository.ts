@@ -26,4 +26,10 @@ export class PrismaServiceEmployeesRepository
             },
         })
     }
+    async create(serviceEmployee: ServiceEmployee): Promise<void> {
+        const data = PrismaServiceEmployeesMapper.toPrisma(serviceEmployee)
+        await this.prisma.serviceEmployees.create({
+          data,
+        })
+    }
 }

@@ -1,6 +1,9 @@
+import { ServiceStatus } from '@/core/entities/service-status-enum'
+import { ProductAndQuantity } from '@/domain/workshop/application/use-cases/Service/create-service'
 import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
+import { Product } from '@/domain/workshop/enterprise/entities/product'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
@@ -11,7 +14,10 @@ import request from 'supertest'
 import { AutomobileFactory } from 'test/factories/make-automobile'
 import { EmployeeFactory } from 'test/factories/make-employee'
 import { OwnerFactory } from 'test/factories/make-owner'
+import { ProductFactory } from 'test/factories/make-product'
 import { ServiceFactory } from 'test/factories/make-service'
+import { ServiceEmployeeFactory } from 'test/factories/make-service-employee'
+import { ServiceProductFactory } from 'test/factories/make-service-product'
 describe('Create service (E2E)', () => {
     let app: INestApplication
     let prisma: PrismaService
@@ -20,14 +26,18 @@ describe('Create service (E2E)', () => {
     let ownerFactory: OwnerFactory
     let serviceFactory: ServiceFactory
     let automobileFactory: AutomobileFactory
-
+    let productFactory: ProductFactory
+    let serviceProductFactory : ServiceProductFactory
+    let serviceEmployeeFactory : ServiceEmployeeFactory
     let employee: Employee
     let owner: Owner
     let car: Automobile
+    let product1: Product
+    let product2: Product
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule, DatabaseModule],
-            providers: [EmployeeFactory, ServiceFactory, OwnerFactory]
+            providers: [EmployeeFactory, ServiceFactory, OwnerFactory, AutomobileFactory, ProductFactory, ServiceProductFactory, ServiceEmployeeFactory]
         }).compile()
 
         app = moduleRef.createNestApplication()
@@ -37,120 +47,166 @@ describe('Create service (E2E)', () => {
         ownerFactory = moduleRef.get(OwnerFactory)
         automobileFactory = moduleRef.get(AutomobileFactory)
         employeeFactory = moduleRef.get(EmployeeFactory)
+        productFactory = moduleRef.get(ProductFactory)
+        serviceProductFactory = moduleRef.get(ServiceProductFactory)
+        serviceEmployeeFactory = moduleRef.get(ServiceEmployeeFactory)
+        
         await app.init()
         employee = await employeeFactory.makePrismaEmployee()
         owner = await ownerFactory.makePrismaOwner()
-        car = await automobileFactory.makePrismaAutomobile()
+        car = await automobileFactory.makePrismaAutomobile({ownerId: owner.id})
+        product1= await productFactory.makePrismaProduct()
+        product2= await productFactory.makePrismaProduct()
     })
     test('[POST] /service', async () => {
         const accessToken = jwt.sign({ sub: employee.id.toString() })
+
         const response = await request(app.getHttpServer())
-            .post('/service')
+            .post('/services')
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
-                ownerId: owner.id,
-                automobileId: car.id,
+                ownerId: owner.id.toString(),
+                automobileId: car.id.toString(),
                 description: 'New car service',
                 totalValue: 0,
-                password: '123456',
+                employeesIds: [employee.id.toString()],
+                productsIds: [product1.id.toString(), product2.id.toString()]
             })
         expect(response.statusCode).toBe(201)
-        const userOnDatabase = await prisma.service.findFirst({
+        const serviceOnDatabase = await prisma.service.findFirst({
             where: {
                 description: 'New car service',
             },
         })
-        expect(userOnDatabase).toBeTruthy()
+        expect(serviceOnDatabase).toBeTruthy()
     })
-    // test('[GET] Fetch All Services /service', async () => {
-    //     const user = await employeeFactory.makePrismaEmployee()
+    test('[GET] Fetch All Services /service', async () => {
+        const accessToken = jwt.sign({ sub: employee.id.toString() })
 
-    //     const accessToken = jwt.sign({ sub: user.id.toString() })
+        await Promise.all([
+            serviceFactory.makePrismaService({
+                description: 'New Service 2',
+                ownerId: owner.id,
+                automobileId: car.id,
+            }),
+            serviceFactory.makePrismaService({
+                description: 'New Service 3',
+                ownerId: owner.id,
+                automobileId: car.id,
+            }),
+            serviceFactory.makePrismaService({
+                description: 'New Service 4',
+                ownerId: owner.id,
+                automobileId: car.id,
+            }),
+        ])
+        const response = await request(app.getHttpServer())
+            .get('/services')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send()
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual({
+            services: expect.arrayContaining([
+                expect.objectContaining({ description: 'New Service 2' }),
+                expect.objectContaining({ description: 'New Service 3' }),
+                expect.objectContaining({ description: 'New Service 4' }),
+            ]),
+        })
+    })
+    test('[GET] /service/:id', async () => {
+        const accessToken = jwt.sign({ sub: employee.id.toString() })
+        const newService = await serviceFactory.makePrismaService({
+            description: 'New Service 5',
+            ownerId: owner.id,
+            automobileId: car.id,
+        })
+        const serviceId = newService.id.toString()
+        const response = await request(app.getHttpServer())
+            .get(`/services/${serviceId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send()
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual({
+            service: expect.objectContaining({
+                description: 'New Service 5',
+                ownerId: owner.id.toString(),
+            })
+        })
+    })
+    test('[PUT] /service/:id', async () => {
+        const accessToken = jwt.sign({ sub: employee.id.toString() })
+        const newProduct1 = await productFactory.makePrismaProduct()
+        const newProduct2 = await productFactory.makePrismaProduct()
 
-    //     await Promise.all([
-    //         serviceFactory.makePrismaService({
-    //             name: 'New Service 4',
-    //             email: 'service4@example.com',
-    //             password: '123456',
-    //             phoneNumber: "21 99999 2121"
-    //         }),
-    //         serviceFactory.makePrismaService({
-    //             name: 'New Service 5',
-    //             email: 'service5@example.com',
-    //             password: '123456',
-    //             phoneNumber: "21 99999 2121"
-    //         }),
-    //         serviceFactory.makePrismaService({
-    //             name: 'New Service 6',
-    //             email: 'service6@example.com',
-    //             password: '123456',
-    //             phoneNumber: "21 99999 2121"
-    //         }),
-    //     ])
-    //     const response = await request(app.getHttpServer())
-    //         .get('/service')
-    //         .set('Authorization', `Bearer ${accessToken}`)
-    //         .send()
-    //     expect(response.statusCode).toBe(200)
-    //     expect(response.body).toEqual({
-    //         services: expect.arrayContaining([
-    //             expect.objectContaining({ name: 'New Service 4' }),
-    //             expect.objectContaining({ name: 'New Service 6' }),
-    //             expect.objectContaining({ name: 'New Service 5' }),
-    //         ]),
-    //     })
-    // })
-    // test('[GET] /service/:id', async () => {
-    //     const user = await employeeFactory.makePrismaEmployee()
+        const service = await serviceFactory.makePrismaService({
+            description: 'New Service To Edit',
+            ownerId: owner.id,
+            automobileId: car.id,
+            totalValue: 20
+        })
+        await serviceEmployeeFactory.makePrismaServiceEmployee({
+            serviceId: service.id,
+            employeeId: employee.id,
+        })
+        await serviceProductFactory.makePrismaServiceProduct({
+            serviceId: service.id,
+            productId: newProduct1.id,
+            quantity: 10
+        })
+        await serviceProductFactory.makePrismaServiceProduct({
+            serviceId: service.id,
+            productId: newProduct2.id,
+            quantity: 10
+        })
+        const newProduct3 = await productFactory.makePrismaProduct({})
+        const serviceId = service.id.toString()
 
-    //     const accessToken = jwt.sign({ sub: user.id.toString() })
-    //     const newService = await serviceFactory.makePrismaService({
-    //         name: 'New Service 1',
-    //         email: 'service1@example.com',
-    //         password: '123456',
-    //         phoneNumber: "21 99999 2121"
-    //     })
-    //     const serviceId = newService.id.toString()
-    //     const response = await request(app.getHttpServer())
-    //         .get(`/service/${serviceId}`)
-    //         .set('Authorization', `Bearer ${accessToken}`)
-    //         .send()
-    //     expect(response.statusCode).toBe(200)
-    //     expect(response.body).toEqual({
-    //         service: expect.objectContaining({
-    //             name: 'New Service 1',
-    //             email: 'service1@example.com',
-    //         })
-    //     })
-    // })
-    // test('[PUT] /service/:id', async () => {
-    //     const user = await employeeFactory.makePrismaEmployee()
-    //     const accessToken = jwt.sign({ sub: user.id.toString() })
 
-    //     const service = await serviceFactory.makePrismaService({
-    //         name: 'New Service To Edit',
-    //         email: 'service3@example.com',
-    //         password: '123456',
-    //         phoneNumber: "21 99999 2121"
-    //     })
-    //     const serviceId = service.id.toString()
-    //     const response = await request(app.getHttpServer())
-    //         .put(`/service/${serviceId}`)
-    //         .set('Authorization', `Bearer ${accessToken}`)
-    //         .send({
-    //             name: service.name,
-    //             email: service.email,
-    //             password: service.password,
-    //             phoneNumber: "21 88888 2121"
-    //         })
-    //     expect(response.statusCode).toBe(204)
-    //     const serviceOnDatabase = await prisma.service.findUnique({
-    //         where: {
-    //             id: serviceId,
-    //         },
-    //     })
+        const productAndQuantity1: ProductAndQuantity = {
+            productId: newProduct1.id.toString(),
+            quantity: 6
+        }
+        const productAndQuantity2: ProductAndQuantity = {
+            productId: newProduct2.id.toString(),
+            quantity: 9
+        }
+        const response = await request(app.getHttpServer())
+            .put(`/services/${serviceId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({
+                description: service.description,
+                ownerId: service.ownerId.toString(),
+                automobileId: service.automobileId.toString(),
+                totalValue: 2987,
+                status: ServiceStatus.InProgress,
+                employeesIds: [employee.id.toString()],
+                productsIds: [productAndQuantity1, productAndQuantity2]
+            })
+        console.log(response.body)
+        expect(response.statusCode).toBe(204)
+        const serviceOnDatabase = await prisma.service.findUnique({
+            where: {
+                id: serviceId,
+            },
+        })
         
-    //     expect(serviceOnDatabase).toBeTruthy()
-    //     expect(serviceOnDatabase?.phoneNumber).toBe("21 88888 2121")
-    // })
+        expect(serviceOnDatabase).toBeTruthy()
+        expect(serviceOnDatabase?.totalValue).toBe(2987)
+        const productsOnDatabase = await prisma.serviceProducts.findMany({
+            where: {
+              serviceId: serviceOnDatabase?.id,
+            },
+        })
+        expect(productsOnDatabase).toHaveLength(2)
+        expect(productsOnDatabase).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+            id: newProduct1.id.toString(),
+            }),
+            expect.objectContaining({
+            id: newProduct3.id.toString(),
+            }),
+        ]),
+        )
+    })
 })

@@ -5,8 +5,8 @@ export class ServicePresenter {
     return {
       id: service.id.toString(),
       totalValue: service.totalValue,
-      ownerId: service.ownerId,
-      automobileId: service.automobileId,
+      ownerId: service.ownerId.toString(),
+      automobileId: service.automobileId.toString(),
       description: service.description,
       status: service.status,
       createdAt: service.createdAt,

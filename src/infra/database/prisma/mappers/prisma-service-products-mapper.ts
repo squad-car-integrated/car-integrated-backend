@@ -9,10 +9,19 @@ export class PrismaServiceProductsMapper {
         }
         return ServiceProduct.create(
             {
-                productId: new UniqueEntityID(raw.id),
+                productId: new UniqueEntityID(raw.productId),
                 serviceId: new UniqueEntityID(raw.serviceId),
+                quantity: raw.quantity
             },
             new UniqueEntityID(raw.id),
         )
+    }
+    static toPrisma(service: ServiceProduct): Prisma.ServiceProductsUncheckedCreateInput {
+        return {
+            id: service.id.toString(),
+            serviceId: service.id.toString(),
+            productId: service.productId.toString(),
+            quantity: service.quantity
+        }
     }
 }

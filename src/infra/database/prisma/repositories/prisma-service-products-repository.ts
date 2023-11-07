@@ -26,4 +26,10 @@ export class PrismaServiceProductsRepository
             },
         })
     }
+    async create(serviceProduct: ServiceProduct): Promise<void> {
+        const data = PrismaServiceProductsMapper.toPrisma(serviceProduct)
+        await this.prisma.serviceProducts.create({
+          data,
+        })
+    }
 }

@@ -4,6 +4,9 @@ import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-e
 export class InMemoryServiceEmployeesRepository
   implements ServiceEmployeesRepository
 {
+  async create(serviceEmployee: ServiceEmployee): Promise<void> {
+    this.items.push(serviceEmployee)
+  }
   async deleteManyByServiceId(serviceId: string) {
     const serviceEmployees = this.items.filter(
       (item) => item.serviceId.toString() !== serviceId,

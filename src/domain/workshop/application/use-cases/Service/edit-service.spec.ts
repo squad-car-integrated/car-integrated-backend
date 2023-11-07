@@ -7,6 +7,7 @@ import { makeServiceProduct } from 'test/factories/make-service-product'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
 import { InMemoryServiceEmployeesRepository } from 'test/repositories/in-memory-service-employees-repository'
 import { makeServiceEmployee } from 'test/factories/make-service-employee'
+import { ProductAndQuantity } from './create-service'
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
@@ -40,16 +41,18 @@ describe('Edit Service', () => {
       new UniqueEntityID('service-1'),
     )
     await inMemoryServicesRepository.create(newService)
-    inMemoryServiceProductsRepository.items.push(
-      makeServiceProduct({
-        serviceId: newService.id,
-        productId: new UniqueEntityID('1'),
-      }),
-      makeServiceProduct({
-        serviceId: newService.id,
-        productId: new UniqueEntityID('2'),
-      }),
-    )
+    const product1 = makeServiceProduct({
+      serviceId: newService.id,
+      productId: new UniqueEntityID('1'),
+      quantity: 10
+    })
+    const product2 = makeServiceProduct({
+      serviceId: newService.id,
+      productId: new UniqueEntityID('2'),
+      quantity: 8
+    })
+    inMemoryServiceProductsRepository.create(product1)
+    inMemoryServiceProductsRepository.create(product2)
     inMemoryServiceEmployeesRepository.items.push(
       makeServiceEmployee({
         serviceId: newService.id,
@@ -60,6 +63,14 @@ describe('Edit Service', () => {
         employeeId: new UniqueEntityID('4'),
       }),
     )
+    const product1Quantity: ProductAndQuantity = {
+      productId: product1.productId.toString(),
+      quantity: 20,
+    }
+    const product2Quantity: ProductAndQuantity = {
+      productId: product2.productId.toString(),
+      quantity: 10,
+    }
     await sut.execute({
       automobileId: newService.automobileId.toString(),
       ownerId: newService.ownerId.toString(),
@@ -67,7 +78,7 @@ describe('Edit Service', () => {
       totalValue: 30,
       description: 'Descricao editada',
       status: ServiceStatus.Completed,
-      productsIds: ['1', '2'],
+      productsIds: [product1Quantity, product2Quantity],
       employeesIds: ["3", "4"]
     })
     expect(inMemoryServicesRepository.items[0]).toMatchObject({
@@ -79,10 +90,9 @@ describe('Edit Service', () => {
       inMemoryServicesRepository.items[0].products.currentItems,
     ).toHaveLength(2)
     expect(inMemoryServicesRepository.items[0].products.currentItems).toEqual([
-      expect.objectContaining({ productId: new UniqueEntityID('1') }),
-      expect.objectContaining({ productId: new UniqueEntityID('2') }),
+      expect.objectContaining({ productId: new UniqueEntityID("1") }),
+      expect.objectContaining({ productId: new UniqueEntityID("2")}),
     ])
-
     expect(
       inMemoryServicesRepository.items[0].employees.currentItems,
     ).toHaveLength(2)

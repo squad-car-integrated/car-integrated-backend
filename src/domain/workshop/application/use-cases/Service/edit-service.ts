@@ -12,6 +12,7 @@ import { ServiceEmployeeList } from '@/domain/workshop/enterprise/entities/servi
 import { Injectable } from '@nestjs/common'
 import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
 import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-employees'
+import { ProductAndQuantity } from './create-service'
 
 interface EditServiceUseCaseRequest {
   serviceId: string
@@ -20,7 +21,7 @@ interface EditServiceUseCaseRequest {
   totalValue: number
   description: string
   status: ServiceStatus
-  productsIds: string[]
+  productsIds: ProductAndQuantity[]
   employeesIds: string[]
 }
 type EditServiceUseCaseResponse = Either<
@@ -56,8 +57,9 @@ export class EditServiceUseCase {
 
     const serviceProducts = productsIds.map((productId) => {
       return ServiceProduct.create({
-        productId: new UniqueEntityID(productId),
+        productId: new UniqueEntityID(productId.productId),
         serviceId: service.id,
+        quantity: productId.quantity
       })
     })
     const serviceEmployees = employeesIds.map((employeeId) => {

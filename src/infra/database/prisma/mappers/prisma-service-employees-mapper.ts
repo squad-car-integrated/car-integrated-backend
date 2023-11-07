@@ -9,10 +9,17 @@ export class PrismaServiceEmployeesMapper {
         }
         return ServiceEmployee.create(
             {
-                employeeId: new UniqueEntityID(raw.id),
+                employeeId: new UniqueEntityID(raw.employeeId),
                 serviceId: new UniqueEntityID(raw.serviceId),
             },
             new UniqueEntityID(raw.id),
         )
+    }
+    static toPrisma(service: ServiceEmployee): Prisma.ServiceEmployeesUncheckedCreateInput {
+        return {
+            id: service.id.toString(),
+            serviceId: service.id.toString(),
+            employeeId: service.employeeId.toString(),
+        }
     }
 }

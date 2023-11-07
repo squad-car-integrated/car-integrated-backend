@@ -8,11 +8,15 @@ import { ServiceStatus } from '@/core/entities/service-status-enum'
 import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
 import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-employees'
 import { ServiceEmployeeList } from '@/domain/workshop/enterprise/entities/service-employee-list'
+export interface ProductAndQuantity {
+  productId: string
+  quantity: number
+}
 interface CreateServiceUseCaseRequest {
   automobileId: string
   ownerId: string
   employeesIds: string[]
-  productsIds: string[]
+  productsIds: ProductAndQuantity[]
   totalValue: number
   description: string
   status: ServiceStatus
@@ -44,8 +48,9 @@ export class CreateServiceUseCase {
     })
     const serviceProducts = productsIds.map((productId) => {
       return ServiceProduct.create({
-        productId: new UniqueEntityID(productId),
+        productId: new UniqueEntityID(productId.productId),
         serviceId: service.id,
+        quantity: productId.quantity
       })
     })
     const serviceEmployees = employeesIds.map((employeesId) => {

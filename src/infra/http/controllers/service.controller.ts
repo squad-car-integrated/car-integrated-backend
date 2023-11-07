@@ -17,12 +17,27 @@ import { FetchRecentServicesUseCase } from '@/domain/workshop/application/use-ca
 import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/Service/get-service-by-id'
 import { ServicePresenter } from '../presenters/service-presenter'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
-const serviceSchema = z.object({
+import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
+const serviceProducts = z.object({
+    productId: z.string().uuid(),
+    quantity: z.number().default(1)
+})
+const serviceCreateSchema = z.object({
+    automobileId: z.string().uuid(),
+    ownerId: z.string().uuid(),
+    description: z.string(),
+    totalValue: z.number().default(0),
+    employeesIds: z.array(z.string().uuid()),
+    productsIds: z.array(serviceProducts),
+})
+const serviceEditSchema = z.object({
     automobileId: z.string().uuid(),
     ownerId: z.string().uuid(),
     description: z.string(),
     status: z.nativeEnum(ServiceStatus),
-    totalValue: z.number().default(0)
+    totalValue: z.number().default(0),
+    employeesIds: z.array(z.string().uuid()),
+    productsIds: z.array(serviceProducts),
 })
 const pageQueryParamSchema = z
     .string()
@@ -32,7 +47,8 @@ const pageQueryParamSchema = z
     .pipe(z.number().min(1))
 const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
-type ServiceBodySchema = z.infer<typeof serviceSchema>
+type ServiceBodyCreateSchema = z.infer<typeof serviceCreateSchema>
+type ServiceBodyEditSchema = z.infer<typeof serviceEditSchema>
 @Controller('/services')
 export class ServiceController {
     constructor(
@@ -67,16 +83,16 @@ export class ServiceController {
     @Post()
     @HttpCode(201)
     async handlePostService(
-        @Body(new ZodValidationPipe(serviceSchema)) body: ServiceBodySchema,
+        @Body(new ZodValidationPipe(serviceCreateSchema)) body: ServiceBodyCreateSchema,
     ) {
-        const { automobileId, ownerId, description, status, totalValue } = body
+        const { automobileId, ownerId, description, totalValue, employeesIds, productsIds } = body
         const result = await this.createService.execute({
             automobileId,
             ownerId,
             description,
-            status,
-            employeesIds: [],
-            productsIds: [],
+            status: ServiceStatus.Created,
+            employeesIds,
+            productsIds,
             totalValue
         })
         if (result.isLeft()) {
@@ -86,18 +102,18 @@ export class ServiceController {
     @Put('/:id')
     @HttpCode(204)
     async handleEditService(
-        @Body(new ZodValidationPipe(serviceSchema)) body: ServiceBodySchema,
+        @Body(new ZodValidationPipe(serviceEditSchema)) body: ServiceBodyEditSchema,
         @Param('id') serviceId: string,
     ) {
-        const { automobileId, ownerId, description, status, totalValue } = body
+        const { automobileId, ownerId, description, status, totalValue, employeesIds, productsIds } = body
         const result = await this.editService.execute({
             serviceId,
             automobileId,
             ownerId,
             description,
             status,
-            employeesIds: [],
-            productsIds: [],
+            employeesIds,
+            productsIds,
             totalValue,
         })
         if (result.isLeft()) {

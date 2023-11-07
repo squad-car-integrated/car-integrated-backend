@@ -1,5 +1,5 @@
 import { InMemoryServicesRepository } from 'test/repositories/in-memory-services-repository'
-import { CreateServiceUseCase } from './create-service'
+import { CreateServiceUseCase, ProductAndQuantity } from './create-service'
 import { faker } from '@faker-js/faker'
 import { makeOwner } from 'test/factories/make-owner'
 import { makeEmployee } from 'test/factories/make-employee'
@@ -29,6 +29,10 @@ describe('Create Service', () => {
     const owner = makeOwner()
     const employee = makeEmployee()
     const automobile = makeAutomobile()
+    const product1: ProductAndQuantity = {
+      productId: "product1",
+      quantity: 12
+    } 
     const result = await sut.execute({
       totalValue: faker.number.int(),
       ownerId: owner.id.toString(),
@@ -36,7 +40,7 @@ describe('Create Service', () => {
       automobileId: automobile.id.toString(),
       description: faker.commerce.productDescription(),
       status: ServiceStatus.InProgress,
-      productsIds: ['1', '2'],
+      productsIds: [product1, product1],
     })
     expect(result.isRight()).toBe(true)
     expect(inMemoryServicesRepository.items[0]).toEqual(result.value?.service)
