@@ -19,7 +19,7 @@ export class PrismaServiceProductsMapper {
     static toPrisma(service: ServiceProduct): Prisma.ServiceProductsUncheckedCreateInput {
         return {
             id: service.id.toString(),
-            serviceId: service.id.toString(),
+            serviceId: service.serviceId.toString(),
             productId: service.productId.toString(),
             quantity: service.quantity
         }

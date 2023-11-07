@@ -3,6 +3,8 @@ import {
   ServiceEmployee,
   ServiceEmployeesProps,
 } from '@/domain/workshop/enterprise/entities/service-employees'
+import { PrismaServiceEmployeesMapper } from '@/infra/database/prisma/mappers/prisma-service-employees-mapper'
+import { PrismaServiceProductsMapper } from '@/infra/database/prisma/mappers/prisma-service-products-mapper'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 
@@ -28,15 +30,25 @@ export class ServiceEmployeeFactory {
     data: Partial<ServiceEmployeesProps> = {},
   ): Promise<ServiceEmployee> {
     const serviceEmployee = makeServiceEmployee(data)
-    await this.prisma.serviceEmployees.update({
+    const serviceEmployeeExists = await this.prisma.serviceEmployees.findUnique({
       where: {
-        id: serviceEmployee.id.toString(),
-      },
-      data: {
-        employeeId: serviceEmployee.employeeId.toString(),
-      },
+        id: serviceEmployee.id.toString()
+      }
     })
-
+    if(serviceEmployeeExists){
+      await this.prisma.serviceEmployees.update({
+        where: {
+          id: serviceEmployee.id.toString(),
+        },
+        data: {
+          employeeId: serviceEmployee.employeeId.toString(),
+        },
+      })
+    }else{
+      await this.prisma.serviceEmployees.create({
+        data: PrismaServiceEmployeesMapper.toPrisma(serviceEmployee),
+      })
+    }
     return serviceEmployee
   }
 }

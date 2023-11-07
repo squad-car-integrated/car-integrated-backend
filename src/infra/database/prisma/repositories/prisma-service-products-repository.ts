@@ -9,6 +9,26 @@ export class PrismaServiceProductsRepository
     implements ServiceProductsRepository
 {
     constructor(private prisma: PrismaService) {}
+    async save(serviceProduct: ServiceProduct): Promise<void> {
+        const serviceProductAlreadyExists = await this.prisma.serviceProducts.findUnique({
+            where:{
+                id: serviceProduct.id.toString()
+            }
+        })
+        if(serviceProductAlreadyExists){
+            const data = PrismaServiceProductsMapper.toPrisma(serviceProduct)
+            await this.prisma.serviceProducts.update({
+                where: {
+                    id: data.id,
+                },
+                data,
+            })
+        }else{
+            await this.create(serviceProduct)
+        }
+        
+    }
+
     async findManyByServiceId(
         serviceId: string,
     ): Promise<ServiceProduct[]> {

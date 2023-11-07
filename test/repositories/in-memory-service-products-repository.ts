@@ -4,6 +4,10 @@ import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-pr
 export class InMemoryServiceProductsRepository
   implements ServiceProductsRepository
 {
+  async save(serviceProduct: ServiceProduct): Promise<void> {
+    const itemIndex = this.items.findIndex((item) => item.id === serviceProduct.id)
+    this.items[itemIndex] = serviceProduct
+  }
   async create(serviceProduct: ServiceProduct): Promise<void> {
     this.items.push(serviceProduct)
   }

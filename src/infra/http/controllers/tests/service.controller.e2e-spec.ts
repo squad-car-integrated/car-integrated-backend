@@ -50,7 +50,7 @@ describe('Create service (E2E)', () => {
         productFactory = moduleRef.get(ProductFactory)
         serviceProductFactory = moduleRef.get(ServiceProductFactory)
         serviceEmployeeFactory = moduleRef.get(ServiceEmployeeFactory)
-        
+
         await app.init()
         employee = await employeeFactory.makePrismaEmployee()
         owner = await ownerFactory.makePrismaOwner()
@@ -60,7 +60,14 @@ describe('Create service (E2E)', () => {
     })
     test('[POST] /service', async () => {
         const accessToken = jwt.sign({ sub: employee.id.toString() })
-
+        const productAndQuantity1: ProductAndQuantity = {
+            productId: product1.id.toString(),
+            quantity: 6
+        }
+        const productAndQuantity2: ProductAndQuantity = {
+            productId: product2.id.toString(),
+            quantity: 9
+        }
         const response = await request(app.getHttpServer())
             .post('/services')
             .set('Authorization', `Bearer ${accessToken}`)
@@ -70,7 +77,7 @@ describe('Create service (E2E)', () => {
                 description: 'New car service',
                 totalValue: 0,
                 employeesIds: [employee.id.toString()],
-                productsIds: [product1.id.toString(), product2.id.toString()]
+                productsIds: [productAndQuantity1, productAndQuantity2]
             })
         expect(response.statusCode).toBe(201)
         const serviceOnDatabase = await prisma.service.findFirst({
@@ -137,7 +144,8 @@ describe('Create service (E2E)', () => {
         const accessToken = jwt.sign({ sub: employee.id.toString() })
         const newProduct1 = await productFactory.makePrismaProduct()
         const newProduct2 = await productFactory.makePrismaProduct()
-
+        const newProduct3 = await productFactory.makePrismaProduct({})
+        const newEmployee1 = await employeeFactory.makePrismaEmployee()
         const service = await serviceFactory.makePrismaService({
             description: 'New Service To Edit',
             ownerId: owner.id,
@@ -151,24 +159,32 @@ describe('Create service (E2E)', () => {
         await serviceProductFactory.makePrismaServiceProduct({
             serviceId: service.id,
             productId: newProduct1.id,
-            quantity: 10
+            quantity: 4
         })
         await serviceProductFactory.makePrismaServiceProduct({
             serviceId: service.id,
             productId: newProduct2.id,
-            quantity: 10
+            quantity: 6
         })
-        const newProduct3 = await productFactory.makePrismaProduct({})
+        await serviceProductFactory.makePrismaServiceProduct({
+            serviceId: service.id,
+            productId: newProduct3.id,
+            quantity: 8
+        })
         const serviceId = service.id.toString()
 
 
         const productAndQuantity1: ProductAndQuantity = {
             productId: newProduct1.id.toString(),
-            quantity: 6
+            quantity: 12
         }
         const productAndQuantity2: ProductAndQuantity = {
             productId: newProduct2.id.toString(),
-            quantity: 9
+            quantity: 14
+        }
+        const productAndQuantity3: ProductAndQuantity = {
+            productId: newProduct3.id.toString(),
+            quantity: 23
         }
         const response = await request(app.getHttpServer())
             .put(`/services/${serviceId}`)
@@ -179,34 +195,44 @@ describe('Create service (E2E)', () => {
                 automobileId: service.automobileId.toString(),
                 totalValue: 2987,
                 status: ServiceStatus.InProgress,
-                employeesIds: [employee.id.toString()],
-                productsIds: [productAndQuantity1, productAndQuantity2]
+                employeesIds: [employee.id.toString(), newEmployee1.id.toString()],
+                productsIds: [productAndQuantity1, productAndQuantity2, productAndQuantity3]
             })
-        console.log(response.body)
         expect(response.statusCode).toBe(204)
         const serviceOnDatabase = await prisma.service.findUnique({
             where: {
                 id: serviceId,
             },
         })
-        
         expect(serviceOnDatabase).toBeTruthy()
         expect(serviceOnDatabase?.totalValue).toBe(2987)
-        const productsOnDatabase = await prisma.serviceProducts.findMany({
+        const serviceProductsOnDatabase = await prisma.serviceProducts.findMany({
             where: {
               serviceId: serviceOnDatabase?.id,
             },
         })
-        expect(productsOnDatabase).toHaveLength(2)
-        expect(productsOnDatabase).toEqual(
+        expect(serviceProductsOnDatabase).toHaveLength(3)
+        expect(serviceProductsOnDatabase).toEqual(
         expect.arrayContaining([
             expect.objectContaining({
-            id: newProduct1.id.toString(),
+            productId: newProduct1.id.toString(),
+            quantity: 12
             }),
             expect.objectContaining({
-            id: newProduct3.id.toString(),
+            productId: newProduct2.id.toString(),
+            quantity: 14
+            }),
+            expect.objectContaining({
+            productId: newProduct3.id.toString(),
+            quantity: 23
             }),
         ]),
         )
+        const serviceEmployeesOnDatabase = await prisma.serviceEmployees.findMany({
+            where: {
+              serviceId: serviceOnDatabase?.id,
+            },
+        })
+        expect(serviceEmployeesOnDatabase).toHaveLength(2)
     })
 })

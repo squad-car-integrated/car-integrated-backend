@@ -9,6 +9,25 @@ export class PrismaServiceEmployeesRepository
     implements ServiceEmployeesRepository
 {
     constructor(private prisma: PrismaService) {}
+    async save(serviceEmployee: ServiceEmployee): Promise<void> {
+        const serviceEmployeeAlreadyExists = await this.prisma.serviceEmployees.findUnique({
+            where:{
+                id: serviceEmployee.id.toString()
+            }
+        })
+        if(serviceEmployeeAlreadyExists){
+            const data = PrismaServiceEmployeesMapper.toPrisma(serviceEmployee)
+            await this.prisma.serviceEmployees.update({
+                where: {
+                    id: data.id,
+                },
+                data,
+            })
+        }else{
+            await this.create(serviceEmployee)
+        }
+        
+    }
     async findManyByServiceId(
         serviceId: string,
     ): Promise<ServiceEmployee[]> {

@@ -18,7 +18,7 @@ export class PrismaServiceEmployeesMapper {
     static toPrisma(service: ServiceEmployee): Prisma.ServiceEmployeesUncheckedCreateInput {
         return {
             id: service.id.toString(),
-            serviceId: service.id.toString(),
+            serviceId: service.serviceId.toString(),
             employeeId: service.employeeId.toString(),
         }
     }

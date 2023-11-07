@@ -55,23 +55,25 @@ export class EditServiceUseCase {
     const serviceProductList = new ServiceProductList(currentServiceProducts)
     const serviceEmployeeList = new ServiceEmployeeList(currentServiceEmployees)
 
-    const serviceProducts = productsIds.map((productId) => {
+    const serviceProducts = productsIds.map((productAndQuantity) => {
+      const oldId = currentServiceProducts.find(product => product.productId.toString() == productAndQuantity.productId)?.id.toString()
+      const newId = oldId ? new UniqueEntityID(oldId) : new UniqueEntityID()  
       return ServiceProduct.create({
-        productId: new UniqueEntityID(productId.productId),
+        productId: new UniqueEntityID(productAndQuantity.productId),
         serviceId: service.id,
-        quantity: productId.quantity
-      })
+        quantity: productAndQuantity.quantity
+      },newId)
     })
     const serviceEmployees = employeesIds.map((employeeId) => {
+      const oldId = currentServiceEmployees.find(employee => employee.employeeId.toString() == employeeId)?.id.toString()
+      const newId = oldId ? new UniqueEntityID(oldId) : new UniqueEntityID()  
       return ServiceEmployee.create({
         employeeId: new UniqueEntityID(employeeId),
         serviceId: service.id,
-      })
+      }, newId)
     })
-
     serviceProductList.update(serviceProducts)
     serviceEmployeeList.update(serviceEmployees)
-    
     service.totalValue = totalValue
     service.description = description
     service.status = status
@@ -79,7 +81,18 @@ export class EditServiceUseCase {
     service.ownerId = new UniqueEntityID(ownerId)
     service.products = serviceProductList
     service.employees = serviceEmployeeList
+    
     await this.serviceRepository.save(service)
+    await Promise.all(
+      service.products.getItems().map(async (product) =>
+        this.serviceProductsRepository.save(product)
+      )
+    );
+    await Promise.all(
+      service.employees.getItems().map(async (employee) =>
+        this.serviceEmployeesRepository.save(employee)
+      )
+    );
     return right({ service })
   }
 }

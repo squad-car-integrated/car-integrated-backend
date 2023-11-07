@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import { faker } from '@faker-js/faker'
+import { PrismaServiceProductsMapper } from '@/infra/database/prisma/mappers/prisma-service-products-mapper'
 export function makeServiceProduct(
   override: Partial<ServiceProductsProps> = {},
   id?: UniqueEntityID,
@@ -29,15 +30,25 @@ export class ServiceProductFactory {
     data: Partial<ServiceProductsProps> = {},
   ): Promise<ServiceProduct> {
     const serviceProduct = makeServiceProduct(data)
-    await this.prisma.serviceProducts.update({
+    const serviceProductExists = await this.prisma.serviceProducts.findUnique({
       where: {
-        id: serviceProduct.id.toString(),
-      },
-      data: {
-        productId: serviceProduct.productId.toString(),
-      },
+        id: serviceProduct.id.toString()
+      }
     })
-
+    if(serviceProductExists){
+      await this.prisma.serviceProducts.update({
+        where: {
+          id: serviceProduct.id.toString(),
+        },
+        data: {
+          productId: serviceProduct.productId.toString(),
+        },
+      })
+    }else{
+      await this.prisma.serviceProducts.create({
+        data: PrismaServiceProductsMapper.toPrisma(serviceProduct),
+      })
+    }
     return serviceProduct
   }
 }
