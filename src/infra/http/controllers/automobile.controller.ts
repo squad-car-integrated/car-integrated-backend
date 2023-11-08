@@ -19,20 +19,20 @@ import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-case
 import { AutomobileAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/automobile-already-exists-error'
 import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use-cases/Automobile/fetch-recent-automobile'
 import { EditAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/edit-automobile'
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger'
+import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 const automobileSchema = z.object({
   model: z.string(),
   brand: z.string(),
   plate: z.string(),
   ownerId: z.string().uuid(),
 })
-const automobileIdSchema = z.object({
-  id: z.string().uuid(),
-})
 const pageQueryParamSchema = z.string().optional().default("1").transform(Number).pipe(z.number().min(1))
 const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 type AutomobileBodySchema = z.infer<typeof automobileSchema>
-type AutomobileIdBodySchema = z.infer<typeof automobileIdSchema>
+@ApiTags('CarIntegrated')
+@ApiBearerAuth('defaultBearerAuth')
 @Controller('/automobile')
 export class AutomobileController {
   constructor(
@@ -43,6 +43,7 @@ export class AutomobileController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Fetch cars by page' })
   @HttpCode(200)
   async handleFetchAutomobile(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
     const result = await this.fetchAutomobile.execute({page})
@@ -75,6 +76,20 @@ export class AutomobileController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create Car'})
+  @ApiResponse({
+    status: 201,
+    description: 'Created Car',
+    type: Automobile,
+  })
+  @ApiCreatedResponse({ description: 'Created Succesfully' })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiBody({
+    type: Automobile,
+    description: 'Json structure for user object'
+  })
+  @ApiHeader({name: "userToken"})
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(automobileSchema))
   async handleRegisterAutomobile(@Body() body: AutomobileBodySchema) {

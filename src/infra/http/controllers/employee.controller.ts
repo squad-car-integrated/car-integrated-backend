@@ -21,6 +21,8 @@ import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/
 import { Public } from '@/infra/auth/public'
 import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
 import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-cases/Employee/fetch-all-employees'
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger'
+import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 const employeeSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -32,6 +34,8 @@ const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
 
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 type EmployeeBodySchema = z.infer<typeof employeeSchema>
+@ApiTags('CarIntegrated')
+@ApiBearerAuth('defaultBearerAuth')
 @Controller('/employee')
 export class EmployeeController {
   constructor(
@@ -69,6 +73,10 @@ export class EmployeeController {
   }
   @Post()
   @Public()
+  @ApiBody({
+    type: Employee,
+    description: 'Json structure for user object'
+  })
   @HttpCode(201)
   async handleRegisterEmployee(@Body(new ZodValidationPipe(employeeSchema)) body: EmployeeBodySchema) {
     const { name, email, password, monthWorkedHours } = body

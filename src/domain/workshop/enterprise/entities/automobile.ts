@@ -1,7 +1,7 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root'
-import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
+import { ApiProperty } from '@nestjs/swagger'
 
 export interface AutomobileProps {
   model: string
@@ -12,15 +12,19 @@ export interface AutomobileProps {
   updatedAt?: Date
 }
 export class Automobile extends AggregateRoot<AutomobileProps> {
+  @ApiProperty({ example: "Civic", description: 'The model of the Car' })
   get model() {
     return this.props.model
   }
+  @ApiProperty({ example: "Honda", description: 'The brand of the Car' })
   get brand() {
     return this.props.brand
   }
+  @ApiProperty({ example: "KZA2121B", description: 'The plate of the Car' })
   get plate() {
     return this.props.plate
   }
+  @ApiProperty({ example: new UniqueEntityID().toString(), description: 'The ownerId of the Car' })
   get ownerId() {
     return this.props.ownerId
   }

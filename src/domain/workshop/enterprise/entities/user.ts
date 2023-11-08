@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { Entity } from '@/core/entities/entity'
+import { ApiProperty } from '@nestjs/swagger'
 export interface UserProps {
   name: string
   email: string
@@ -8,12 +9,15 @@ export interface UserProps {
   updatedAt?: Date | null
 }
 export abstract class User<Props extends UserProps> extends AggregateRoot<Props> {
+  @ApiProperty({ example: "natan borges", description: 'The name of the user' })
   get name() {
     return this.props.name
   }
+  @ApiProperty({ example: "natanemployee@gmail.com", description: 'The email of the user' })
   get email() {
     return this.props.email
   }
+  @ApiProperty({ example: "123123", description: 'The name of the user' })
   get password() {
     return this.props.password
   }
