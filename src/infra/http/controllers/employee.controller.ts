@@ -21,8 +21,9 @@ import { GetEmployeeByIdUseCase } from '@/domain/workshop/application/use-cases/
 import { Public } from '@/infra/auth/public'
 import { EditEmployeeUseCase } from '@/domain/workshop/application/use-cases/Employee/edit-employee'
 import { FetchAllEmployeesUseCase } from '@/domain/workshop/application/use-cases/Employee/fetch-all-employees'
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiTags, ApiOperation, ApiResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiUnprocessableEntityResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
+import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 const employeeSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -46,6 +47,7 @@ export class EmployeeController {
     private getAllEmployees: FetchAllEmployeesUseCase
   ) {}
   @Get()
+  @ApiOperation({ summary: 'Fetch employee by page' })
   @HttpCode(200)
   async handleFetchEmployee(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
     const result = await this.getAllEmployees.execute({page})
@@ -59,6 +61,14 @@ export class EmployeeController {
   }
   @Get("/:id")
   @HttpCode(200)
+  //Swagger
+  @ApiOperation({ summary: 'Find employee by id'})
+  @ApiResponse({
+    status: 200,
+    description: 'Car found',
+    type: Employee,
+  })
+  //Fim do Swagger
   async handleGetEmployeeById(@Param("id") employeeId: string) {
     const result = await this.getEmployeeById.execute({
       id: employeeId,
@@ -73,11 +83,22 @@ export class EmployeeController {
   }
   @Post()
   @Public()
+  @HttpCode(201)
+  //Swagger
+  @ApiOperation({ summary: 'Create Employee'})
+  @ApiResponse({
+    status: 201,
+    description: 'Created Employee',
+    type: Employee,
+  })
+  @ApiCreatedResponse({ description: 'Created Succesfully' })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiBody({
     type: Employee,
-    description: 'Json structure for user object'
+    description: 'Json structure for Employee object'
   })
-  @HttpCode(201)
+  //Fim do Swagger
   async handleRegisterEmployee(@Body(new ZodValidationPipe(employeeSchema)) body: EmployeeBodySchema) {
     const { name, email, password, monthWorkedHours } = body
 
@@ -98,6 +119,12 @@ export class EmployeeController {
   }
   @Delete("/:id")
   @HttpCode(204)
+  //Swagger
+  @ApiOperation({ summary: 'Delete Employee'})
+  @ApiOkResponse({ description: 'The resource was returned successfully' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  //Fim do Swagger
   async handleDeleteEmployee(@Param("id") employeeId: string) {
 
     const result = await this.deleteEmployee.execute({
@@ -114,6 +141,22 @@ export class EmployeeController {
   }
   @Put('/:id')
   @HttpCode(204)
+  //Swagger
+  @ApiOperation({ summary: 'Edit Employee by id'})
+  @ApiOkResponse({ description: 'The resource was updated successfully' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiBody({
+    type: Employee,
+    description: 'Json structure for user object'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Employee edited',
+    type: Employee,
+  })
+  //Fim do Swagger
   async handleEditEmployee(@Body(new ZodValidationPipe(employeeSchema)) body: EmployeeBodySchema, @Param("id") employeeId: string) {
     const { name, email, password, monthWorkedHours } = body
     const result = await this.editEmployee.execute({

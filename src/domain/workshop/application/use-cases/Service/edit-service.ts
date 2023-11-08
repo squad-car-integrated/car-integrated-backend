@@ -21,8 +21,8 @@ interface EditServiceUseCaseRequest {
   totalValue: number
   description: string
   status: ServiceStatus
-  productsIds: ProductAndQuantity[]
-  employeesIds: string[]
+  products: ProductAndQuantity[]
+  employees: string[]
 }
 type EditServiceUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
@@ -42,8 +42,8 @@ export class EditServiceUseCase {
     totalValue,
     description,
     status,
-    productsIds,
-    employeesIds,
+    products,
+    employees,
   }: EditServiceUseCaseRequest): Promise<EditServiceUseCaseResponse> {
     const service = await this.serviceRepository.findById(serviceId)
     if (!service) {
@@ -55,7 +55,7 @@ export class EditServiceUseCase {
     const serviceProductList = new ServiceProductList(currentServiceProducts)
     const serviceEmployeeList = new ServiceEmployeeList(currentServiceEmployees)
 
-    const serviceProducts = productsIds.map((productAndQuantity) => {
+    const serviceProducts = products.map((productAndQuantity) => {
       const oldId = currentServiceProducts.find(product => product.productId.toString() == productAndQuantity.productId)?.id.toString()
       const newId = oldId ? new UniqueEntityID(oldId) : new UniqueEntityID()  
       return ServiceProduct.create({
@@ -64,7 +64,7 @@ export class EditServiceUseCase {
         quantity: productAndQuantity.quantity
       },newId)
     })
-    const serviceEmployees = employeesIds.map((employeeId) => {
+    const serviceEmployees = employees.map((employeeId) => {
       const oldId = currentServiceEmployees.find(employee => employee.employeeId.toString() == employeeId)?.id.toString()
       const newId = oldId ? new UniqueEntityID(oldId) : new UniqueEntityID()  
       return ServiceEmployee.create({

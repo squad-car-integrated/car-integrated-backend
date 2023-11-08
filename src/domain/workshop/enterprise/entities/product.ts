@@ -2,6 +2,7 @@ import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
+import { ApiProperty } from '@nestjs/swagger'
 
 export interface ProductProps {
   name: string
@@ -13,18 +14,23 @@ export interface ProductProps {
   updatedAt?: Date
 }
 export class Product extends AggregateRoot<ProductProps> {
+  @ApiProperty({ example: "Oleo Motul", description: 'Product name' })
   get name() {
     return this.props.name
   }
+  @ApiProperty({ example: 89.99, description: 'Unitary product value' })
   get unitValue() {
     return this.props.unitValue
   }
+  @ApiProperty({ example: 100, description: 'Stock product quantity' })
   get productAmount() {
     return this.props.productAmount
   }
+  @ApiProperty({ example: "Oleo para motores honda etc", description: 'Description for the product' })
   get description() {
     return this.props.description
   }
+  @ApiProperty({ example: "https://img.uri", description: 'Uri for the photo' })
   get photo() {
     return this.props.photo
   }

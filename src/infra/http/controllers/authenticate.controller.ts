@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { AuthenticateUserUseCase } from '@/domain/workshop/application/use-cases/Authenticate/authenticate-user'
 import { WrongCredentialsError } from '@/domain/workshop/application/use-cases/errors/wrong-credentials-error'
 import { Public } from '@/infra/auth/public'
-import { ApiBody, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { UserSwaggerDTO } from '@/core/entities/user-swagger-dto'
 const AuthenticateSchema = z.object({
   email: z.string().email(),
@@ -25,6 +25,7 @@ export class AuthenticateController {
   
   @Post()
   @Public()
+  @ApiOperation({ summary: 'Login user'})
   @ApiBody({
     type: UserSwaggerDTO,
     description: 'Json structure for user object'

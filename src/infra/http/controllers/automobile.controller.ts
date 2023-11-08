@@ -19,7 +19,7 @@ import { GetAutomobileByIdUseCase } from '@/domain/workshop/application/use-case
 import { AutomobileAlreadyExistsError } from '@/domain/workshop/application/use-cases/errors/automobile-already-exists-error'
 import { FetchRecentAutomobilesUseCase } from '@/domain/workshop/application/use-cases/Automobile/fetch-recent-automobile'
 import { EditAutomobileUseCase } from '@/domain/workshop/application/use-cases/Automobile/edit-automobile'
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger'
 import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 const automobileSchema = z.object({
   model: z.string(),
@@ -62,7 +62,15 @@ export class AutomobileController {
 
   @Get("/:id")
   @HttpCode(200)
-  async handleGetAutomobileById(@Param() automobileId: string) {
+  //Swagger
+  @ApiOperation({ summary: 'Find Car by id'})
+  @ApiResponse({
+    status: 200,
+    description: 'Car found',
+    type: Automobile,
+  })
+  //Fim do Swagger
+  async handleGetAutomobileById(@Param("id") automobileId: string) {
     const result = await this.getAutomobileById.execute({
       id: automobileId,
     })
@@ -76,6 +84,7 @@ export class AutomobileController {
   }
 
   @Post()
+  //Swagger
   @ApiOperation({ summary: 'Create Car'})
   @ApiResponse({
     status: 201,
@@ -89,7 +98,7 @@ export class AutomobileController {
     type: Automobile,
     description: 'Json structure for user object'
   })
-  @ApiHeader({name: "userToken"})
+  //Fim do Swagger
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(automobileSchema))
   async handleRegisterAutomobile(@Body() body: AutomobileBodySchema) {
@@ -112,6 +121,22 @@ export class AutomobileController {
   }
   @Put("/:id")
   @HttpCode(204)
+  //Swagger
+  @ApiOperation({ summary: 'Edit Car by id'})
+  @ApiOkResponse({ description: 'The resource was updated successfully' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @ApiBody({
+    type: Automobile,
+    description: 'Json structure for user object'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Car edited',
+    type: Automobile,
+  })
+  //Fim do Swagger
   @UsePipes(new ZodValidationPipe(automobileSchema))
   async handleEditAutomobile(@Body() body: AutomobileBodySchema, @Param("id") automobileId: string) {
     const { model, brand, plate, ownerId } = body

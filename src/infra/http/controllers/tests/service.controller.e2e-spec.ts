@@ -76,8 +76,8 @@ describe('Create service (E2E)', () => {
                 automobileId: car.id.toString(),
                 description: 'New car service',
                 totalValue: 0,
-                employeesIds: [employee.id.toString()],
-                productsIds: [productAndQuantity1, productAndQuantity2]
+                employees: [employee.id.toString()],
+                products: [productAndQuantity1, productAndQuantity2]
             })
         expect(response.statusCode).toBe(201)
         const serviceOnDatabase = await prisma.service.findFirst({
@@ -195,8 +195,8 @@ describe('Create service (E2E)', () => {
                 automobileId: service.automobileId.toString(),
                 totalValue: 2987,
                 status: ServiceStatus.InProgress,
-                employeesIds: [employee.id.toString(), newEmployee1.id.toString()],
-                productsIds: [productAndQuantity1, productAndQuantity2, productAndQuantity3]
+                employees: [employee.id.toString(), newEmployee1.id.toString()],
+                products: [productAndQuantity1, productAndQuantity2, productAndQuantity3]
             })
         expect(response.statusCode).toBe(204)
         const serviceOnDatabase = await prisma.service.findUnique({

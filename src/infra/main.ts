@@ -36,7 +36,7 @@ async function bootstrap() {
             scheme: 'bearer',
             bearerFormat: 'JWT',
           },
-          value: 'thisIsASampleBearerAuthToken123',
+          value: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjZlZDEwNi04ZDIxLTQzMmUtOWNjYS05NTJmZjdlODhiYTQiLCJpYXQiOjE2OTk0NjYwMzl9.T0GsECw_PgqAU7LrSfFPGEqjwUg1hWNAJ_uEIH8hxMOoz9BcIn-Q8C13cRYfjuaCOC3DvzCzoyESZDIK7jUMNkqamDQIdWMJO7dvXRY8JTnAYPn79PGOLF94netBlFT9znjYMfA0dy0LW5tmcCUrQRlGjJqhGrrjmSCgeV-eLdbPMISgeCGVbPsoW4HgrsUQsIV2ZT26ThrVEHTFbET_9CWDlDOcoUFbtKIL7EN2QyrtH5MwOsyUzc6RDDXcAgDqlf-C408CxZ90vuL5pxywihzFp7RPReK-CXbEVvKM-UfYtoA1yoOYWGGinD_XhXVPEcJ652NlEkfqbmuJhaI9xA',
         },
       },
     },

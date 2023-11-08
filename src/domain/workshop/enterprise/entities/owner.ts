@@ -1,11 +1,13 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { User, UserProps } from './user'
 import { Optional } from '@/core/types/optional'
+import { ApiProperty } from '@nestjs/swagger'
 export interface OwnerProps extends UserProps {
   phoneNumber: string
 }
 
 export class Owner extends User<OwnerProps> {
+  @ApiProperty({ example: "21 99999-8888", description: 'Owner phone number' })
   get phoneNumber() {
     return this.props.phoneNumber
   }
