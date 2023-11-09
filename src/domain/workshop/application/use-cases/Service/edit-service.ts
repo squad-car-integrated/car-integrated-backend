@@ -13,6 +13,7 @@ import { Injectable } from '@nestjs/common'
 import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
 import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-employees'
 import { ProductAndQuantity } from './create-service'
+import { ProductsRepository } from '../../repositories/products-repository'
 
 interface EditServiceUseCaseRequest {
   serviceId: string
@@ -33,7 +34,8 @@ export class EditServiceUseCase {
   constructor(
     private serviceRepository: ServicesRepository,
     private serviceProductsRepository: ServiceProductsRepository,
-    private serviceEmployeesRepository: ServiceEmployeesRepository
+    private serviceEmployeesRepository: ServiceEmployeesRepository,
+    private productRepository: ProductsRepository
   ) {}
   async execute({
     automobileId,
@@ -84,13 +86,19 @@ export class EditServiceUseCase {
     
     await this.serviceRepository.save(service)
     await Promise.all(
-      service.products.getItems().map(async (product) =>
-        this.serviceProductsRepository.save(product)
+      service.products.getItems().map(async (product) => {
+        await this.serviceProductsRepository.save(product)
+        const productOnDb = await this.productRepository.findById(product.productId.toString())
+        if(productOnDb){
+          productOnDb.productAmount -= product.quantity
+          await this.productRepository.save(productOnDb)
+        }
+      }
       )
     );
     await Promise.all(
       service.employees.getItems().map(async (employee) =>
-        this.serviceEmployeesRepository.save(employee)
+        await this.serviceEmployeesRepository.save(employee)
       )
     );
     return right({ service })

@@ -30,7 +30,6 @@ export class GetServiceByIdUseCase {
       return left(new ResourceNotFoundError())
     }
     const serviceProducts = await this.serviceProductsRepository.findManyByServiceId(service.id.toString())
-    console.log(serviceProducts)
     service.products = new ServiceProductList(serviceProducts)
     const serviceEmployees = await this.serviceEmployeesRepository.findManyByServiceId(service.id.toString())
     service.employees = new ServiceEmployeeList(serviceEmployees)

@@ -142,7 +142,7 @@ describe('Create service (E2E)', () => {
     })
     test('[PUT] /service/:id', async () => {
         const accessToken = jwt.sign({ sub: employee.id.toString() })
-        const newProduct1 = await productFactory.makePrismaProduct()
+        const newProduct1 = await productFactory.makePrismaProduct({productAmount: 50})
         const newProduct2 = await productFactory.makePrismaProduct()
         const newProduct3 = await productFactory.makePrismaProduct({})
         const newEmployee1 = await employeeFactory.makePrismaEmployee()
@@ -213,5 +213,13 @@ describe('Create service (E2E)', () => {
             },
         })
         expect(serviceEmployeesOnDatabase).toHaveLength(2)
+        const productsOnDatabase = await prisma.product.findUnique({
+            where: {
+              id: newProduct1?.id.toString(),
+            },
+        })
+        expect(productsOnDatabase).toEqual(expect.objectContaining({
+            productAmount: 38
+        }))
     })
 })

@@ -145,7 +145,7 @@ export class CreateServiceUseCase {
     try {
       await Promise.all(
         service.employees.getItems().map(async (employee) =>
-          this.serviceEmployeesRepository.create(employee)
+          await this.serviceEmployeesRepository.create(employee)
         )
       );
     } catch (error) {
