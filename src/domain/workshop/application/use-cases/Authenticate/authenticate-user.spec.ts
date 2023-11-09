@@ -31,21 +31,21 @@ describe('Authenticate User', () => {
         const password = faker.internet.password()
         const userOwner = makeOwner({
             email: 'johndoeowner@example.com',
-            password: await fakeHasher.hash(password), // sensitive
+            password: await fakeHasher.hash(password),
         })
         const userEmployee = makeEmployee({
             email: 'johndoeempolyee@example.com',
-            password: await fakeHasher.hash(password), // sensitive
+            password: await fakeHasher.hash(password),
         })
         await inMemoryOwnersRepository.create(userOwner)
         await inMemoryEmployeesRepository.create(userEmployee)
         const result = await sut.execute({
             email: 'johndoeowner@example.com',
-            password: password, // sensitive
+            password: password,
         })
         const result2 = await sut.execute({
             email: 'johndoeowner@example.com',
-            password: password, // sensitive
+            password: password,
         })
         expect(result.isRight()).toBe(true)
         expect(result.value).toEqual({
