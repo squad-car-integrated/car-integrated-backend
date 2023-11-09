@@ -9,15 +9,15 @@ export class ServiceEmployeeList extends WatchedList<ServiceEmployee> {
     compareItems(a: ServiceEmployee, b: ServiceEmployee): boolean {
         return a.employeeId === b.employeeId
     }
-    listToString() {
+    listToString(): ServiceEmployeeString[] {
         const newList: ServiceEmployeeString[] = []
-        this.currentItems.map((item) => {
+        this.currentItems.forEach(employee => {
             newList.push({
-                id: item.id.toString(),
-                serviceId: item.serviceId.toString(),
-                employeeId: item.employeeId.toString(),
+                id: employee.id.toString(),
+                serviceId: employee.serviceId.toString(),
+                employeeId: employee.employeeId.toString(),
             })
-        })
+        });
         return newList
     }
 }
