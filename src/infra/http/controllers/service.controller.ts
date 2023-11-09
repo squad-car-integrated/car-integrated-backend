@@ -17,7 +17,6 @@ import { FetchRecentServicesUseCase } from '@/domain/workshop/application/use-ca
 import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/Service/get-service-by-id'
 import { ServicePresenter } from '../presenters/service-presenter'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
-import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
 import {
     ApiBearerAuth,
     ApiTags,

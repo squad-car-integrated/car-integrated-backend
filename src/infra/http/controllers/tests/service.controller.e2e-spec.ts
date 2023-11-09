@@ -27,8 +27,6 @@ describe('Create service (E2E)', () => {
     let serviceFactory: ServiceFactory
     let automobileFactory: AutomobileFactory
     let productFactory: ProductFactory
-    let serviceProductFactory: ServiceProductFactory
-    let serviceEmployeeFactory: ServiceEmployeeFactory
     let employee: Employee
     let owner: Owner
     let car: Automobile
@@ -56,9 +54,6 @@ describe('Create service (E2E)', () => {
         automobileFactory = moduleRef.get(AutomobileFactory)
         employeeFactory = moduleRef.get(EmployeeFactory)
         productFactory = moduleRef.get(ProductFactory)
-        serviceProductFactory = moduleRef.get(ServiceProductFactory)
-        serviceEmployeeFactory = moduleRef.get(ServiceEmployeeFactory)
-
         await app.init()
         employee = await employeeFactory.makePrismaEmployee()
         owner = await ownerFactory.makePrismaOwner()

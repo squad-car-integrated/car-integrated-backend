@@ -4,7 +4,6 @@ import {
     ServiceEmployeesProps,
 } from '@/domain/workshop/enterprise/entities/service-employees'
 import { PrismaServiceEmployeesMapper } from '@/infra/database/prisma/mappers/prisma-service-employees-mapper'
-import { PrismaServiceProductsMapper } from '@/infra/database/prisma/mappers/prisma-service-products-mapper'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 

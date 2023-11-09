@@ -1,5 +1,4 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root'
-import { Entity } from '@/core/entities/entity'
 import { ApiProperty } from '@nestjs/swagger'
 export interface UserProps {
     name: string

@@ -156,37 +156,30 @@ export class CreateServiceUseCase {
         return serviceEmployees
     }
     private async registerServiceEmployees(service: Service) {
-        try {
-            await Promise.all(
-                service.employees
-                    .getItems()
-                    .map(
-                        async (employee) =>
-                            await this.serviceEmployeesRepository.create(
-                                employee,
-                            ),
-                    ),
-            )
-        } catch (error) {
-            throw error
-        }
+        await Promise.all(
+            service.employees
+                .getItems()
+                .map(
+                    async (employee) =>
+                        await this.serviceEmployeesRepository.create(
+                            employee,
+                        ),
+                ),
+        )
     }
     private async registerServiceProducts(service: Service) {
-        try {
-            await Promise.all(
-                service.products.getItems().map(async (product) => {
-                    await this.serviceProductsRepository.create(product)
-                    const productOnDb = await this.productRepository.findById(
-                        product.productId.toString(),
-                    )
-                    if (productOnDb) {
-                        productOnDb.productAmount -= product.quantity
-                        await this.productRepository.save(productOnDb)
-                    }
-                }),
-            )
-        } catch (error) {
-            throw error
-        }
+        await Promise.all(
+            service.products.getItems().map(async (product) => {
+                await this.serviceProductsRepository.create(product)
+                const productOnDb = await this.productRepository.findById(
+                    product.productId.toString(),
+                )
+                if (productOnDb) {
+                    productOnDb.productAmount -= product.quantity
+                    await this.productRepository.save(productOnDb)
+                }
+            }),
+        )
+
     }
 }

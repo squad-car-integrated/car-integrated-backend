@@ -4,7 +4,6 @@ import { OwnersRepository } from '../../repositories/owners-repository'
 import { Owner } from '../../../enterprise/entities/owner'
 import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
 import { HashGenerator } from '../../cryptography/hasher-generator'
-import { UserRole } from '@/core/entities/user-role-enum'
 interface CreateOwnerUseCaseRequest {
     phoneNumber: string
     name: string

@@ -1,4 +1,3 @@
-import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
 import { ServiceProductList } from './service-product-list'
@@ -6,7 +5,6 @@ import { ServiceStatus } from '@/core/entities/service-status-enum'
 import { ServiceEmployeeList } from './service-employee-list'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { ApiProperty } from '@nestjs/swagger'
-import { ServiceProduct } from './service-products'
 
 export interface ServiceProps {
     automobileId: UniqueEntityID

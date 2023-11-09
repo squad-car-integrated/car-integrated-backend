@@ -8,7 +8,7 @@ export class ServicePresenter {
             ownerId: service.ownerId.toString(),
             automobileId: service.automobileId.toString(),
             employees: service.employees.listToString(),
-            products: service.products.currentItems.toString(),
+            products: service.products.listToString(),
             description: service.description,
             status: service.status,
             createdAt: service.createdAt,

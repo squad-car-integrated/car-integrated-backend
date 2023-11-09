@@ -4,7 +4,6 @@ import { EmployeesRepository } from '../../repositories/employees-repository'
 import { Employee } from '../../../enterprise/entities/employee'
 import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
 import { HashGenerator } from '../../cryptography/hasher-generator'
-import { UserRole } from '@/core/entities/user-role-enum'
 interface CreateEmployeeUseCaseRequest {
     monthWorkedHours: number
     name: string

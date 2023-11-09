@@ -34,7 +34,6 @@ import {
     ApiNotFoundResponse,
 } from '@nestjs/swagger'
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
-import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 const employeeSchema = z.object({
     name: z.string(),
     email: z.string().email(),
