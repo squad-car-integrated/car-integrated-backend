@@ -7,23 +7,23 @@ let inMemoryOwnersRepository: InMemoryOwnersRepository
 let sut: EditOwnerUseCase
 
 describe('Edit Owner', () => {
-  beforeEach(() => {
-    inMemoryOwnersRepository = new InMemoryOwnersRepository()
-    sut = new EditOwnerUseCase(inMemoryOwnersRepository)
-  })
+    beforeEach(() => {
+        inMemoryOwnersRepository = new InMemoryOwnersRepository()
+        sut = new EditOwnerUseCase(inMemoryOwnersRepository)
+    })
 
-  it('Should be able to edit a owner', async () => {
-    const newOwner = makeOwner({}, new UniqueEntityID('owner-1'))
-    await inMemoryOwnersRepository.create(newOwner)
-    await sut.execute({
-      ownerId: newOwner.id.toString(),
-      email: newOwner.email,
-      name: 'Nome editado',
-      password: newOwner.password,
-      phoneNumber: newOwner.phoneNumber,
+    it('Should be able to edit a owner', async () => {
+        const newOwner = makeOwner({}, new UniqueEntityID('owner-1'))
+        await inMemoryOwnersRepository.create(newOwner)
+        await sut.execute({
+            ownerId: newOwner.id.toString(),
+            email: newOwner.email,
+            name: 'Nome editado',
+            password: newOwner.password,
+            phoneNumber: newOwner.phoneNumber,
+        })
+        expect(inMemoryOwnersRepository.items[0]).toMatchObject({
+            name: 'Nome editado',
+        })
     })
-    expect(inMemoryOwnersRepository.items[0]).toMatchObject({
-      name: 'Nome editado',
-    })
-  })
 })

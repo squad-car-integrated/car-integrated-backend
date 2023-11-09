@@ -16,46 +16,46 @@ import { ServiceEmployeesRepository } from '@/domain/workshop/application/reposi
 import { PrismaServiceEmployeesRepository } from './prisma/repositories/prisma-service-employees-repository'
 
 @Module({
-  providers: [
-    PrismaService,
-    {
-      provide: OwnersRepository,
-      useClass: PrismaOwnersRepository,
-    },
-    {
-      provide: EmployeesRepository,
-      useClass: PrismaEmployeesRepository,
-    },
-    {
-      provide: AutomobilesRepository,
-      useClass: PrismaAutomobilesRepository,
-    },
-    {
-      provide: ProductsRepository,
-      useClass: PrismaProductsRepository,
-    },
-    {
-      provide: ServicesRepository,
-      useClass: PrismaServicesRepository
-    },
-    {
-      provide: ServiceProductsRepository,
-      useClass: PrismaServiceProductsRepository
-    },
-    {
-      provide: ServiceEmployeesRepository,
-      useClass: PrismaServiceEmployeesRepository
-    }
-  ],
-  exports: [
-    PrismaService,
-    EmployeesRepository,
-    OwnersRepository,
-    AutomobilesRepository,
-    ProductsRepository,
-    ServicesRepository,
-    ServiceProductsRepository,
-    ServiceEmployeesRepository
-  ],
+    providers: [
+        PrismaService,
+        {
+            provide: OwnersRepository,
+            useClass: PrismaOwnersRepository,
+        },
+        {
+            provide: EmployeesRepository,
+            useClass: PrismaEmployeesRepository,
+        },
+        {
+            provide: AutomobilesRepository,
+            useClass: PrismaAutomobilesRepository,
+        },
+        {
+            provide: ProductsRepository,
+            useClass: PrismaProductsRepository,
+        },
+        {
+            provide: ServicesRepository,
+            useClass: PrismaServicesRepository,
+        },
+        {
+            provide: ServiceProductsRepository,
+            useClass: PrismaServiceProductsRepository,
+        },
+        {
+            provide: ServiceEmployeesRepository,
+            useClass: PrismaServiceEmployeesRepository,
+        },
+    ],
+    exports: [
+        PrismaService,
+        EmployeesRepository,
+        OwnersRepository,
+        AutomobilesRepository,
+        ProductsRepository,
+        ServicesRepository,
+        ServiceProductsRepository,
+        ServiceEmployeesRepository,
+    ],
 })
 export class DatabaseModule {}

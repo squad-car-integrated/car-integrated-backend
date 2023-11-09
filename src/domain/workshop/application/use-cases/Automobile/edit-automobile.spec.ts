@@ -7,23 +7,26 @@ let inMemoryAutomobilesRepository: InMemoryAutomobilesRepository
 let sut: EditAutomobileUseCase
 
 describe('Edit Automobile', () => {
-  beforeEach(() => {
-    inMemoryAutomobilesRepository = new InMemoryAutomobilesRepository()
-    sut = new EditAutomobileUseCase(inMemoryAutomobilesRepository)
-  })
+    beforeEach(() => {
+        inMemoryAutomobilesRepository = new InMemoryAutomobilesRepository()
+        sut = new EditAutomobileUseCase(inMemoryAutomobilesRepository)
+    })
 
-  it('Should be able to edit a automobile', async () => {
-    const newAutomobile = makeAutomobile({}, new UniqueEntityID('automobile-1'))
-    await inMemoryAutomobilesRepository.create(newAutomobile)
-    await sut.execute({
-      brand: newAutomobile.brand,
-      plate: "kza212121",
-      model: newAutomobile.model,
-      ownerId: "ownerid",
-      automobileId: newAutomobile.id.toString()
+    it('Should be able to edit a automobile', async () => {
+        const newAutomobile = makeAutomobile(
+            {},
+            new UniqueEntityID('automobile-1'),
+        )
+        await inMemoryAutomobilesRepository.create(newAutomobile)
+        await sut.execute({
+            brand: newAutomobile.brand,
+            plate: 'kza212121',
+            model: newAutomobile.model,
+            ownerId: 'ownerid',
+            automobileId: newAutomobile.id.toString(),
+        })
+        expect(inMemoryAutomobilesRepository.items[0]).toMatchObject({
+            plate: 'kza212121',
+        })
     })
-    expect(inMemoryAutomobilesRepository.items[0]).toMatchObject({
-      plate: 'kza212121',
-    })
-  })
 })

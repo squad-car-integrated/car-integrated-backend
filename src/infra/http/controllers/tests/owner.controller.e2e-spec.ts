@@ -16,7 +16,7 @@ describe('Create owner (E2E)', () => {
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule, DatabaseModule],
-            providers: [EmployeeFactory, OwnerFactory]
+            providers: [EmployeeFactory, OwnerFactory],
         }).compile()
 
         app = moduleRef.createNestApplication()
@@ -36,7 +36,7 @@ describe('Create owner (E2E)', () => {
             .send({
                 name: 'John Doe',
                 email: 'johndoeowner@example.com',
-                phoneNumber: "21 99999-2121",
+                phoneNumber: '21 99999-2121',
                 password: '123456',
             })
         expect(response.statusCode).toBe(201)
@@ -57,19 +57,19 @@ describe('Create owner (E2E)', () => {
                 name: 'New Owner 4',
                 email: 'owner4@example.com',
                 password: '123456',
-                phoneNumber: "21 99999 2121"
+                phoneNumber: '21 99999 2121',
             }),
             ownerFactory.makePrismaOwner({
                 name: 'New Owner 5',
                 email: 'owner5@example.com',
                 password: '123456',
-                phoneNumber: "21 99999 2121"
+                phoneNumber: '21 99999 2121',
             }),
             ownerFactory.makePrismaOwner({
                 name: 'New Owner 6',
                 email: 'owner6@example.com',
                 password: '123456',
-                phoneNumber: "21 99999 2121"
+                phoneNumber: '21 99999 2121',
             }),
         ])
         const response = await request(app.getHttpServer())
@@ -93,7 +93,7 @@ describe('Create owner (E2E)', () => {
             name: 'New Owner 1',
             email: 'owner1@example.com',
             password: '123456',
-            phoneNumber: "21 99999 2121"
+            phoneNumber: '21 99999 2121',
         })
         const ownerId = newOwner.id.toString()
         const response = await request(app.getHttpServer())
@@ -105,7 +105,7 @@ describe('Create owner (E2E)', () => {
             owner: expect.objectContaining({
                 name: 'New Owner 1',
                 email: 'owner1@example.com',
-            })
+            }),
         })
     })
     test('[PUT] /owner/:id', async () => {
@@ -116,7 +116,7 @@ describe('Create owner (E2E)', () => {
             name: 'New Owner To Edit',
             email: 'owner3@example.com',
             password: '123456',
-            phoneNumber: "21 99999 2121"
+            phoneNumber: '21 99999 2121',
         })
         const ownerId = owner.id.toString()
         const response = await request(app.getHttpServer())
@@ -126,7 +126,7 @@ describe('Create owner (E2E)', () => {
                 name: owner.name,
                 email: owner.email,
                 password: owner.password,
-                phoneNumber: "21 88888 2121"
+                phoneNumber: '21 88888 2121',
             })
         expect(response.statusCode).toBe(204)
         const ownerOnDatabase = await prisma.owner.findUnique({
@@ -134,8 +134,8 @@ describe('Create owner (E2E)', () => {
                 id: ownerId,
             },
         })
-        
+
         expect(ownerOnDatabase).toBeTruthy()
-        expect(ownerOnDatabase?.phoneNumber).toBe("21 88888 2121")
+        expect(ownerOnDatabase?.phoneNumber).toBe('21 88888 2121')
     })
 })

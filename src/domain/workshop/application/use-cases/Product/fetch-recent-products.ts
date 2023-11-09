@@ -4,18 +4,18 @@ import { Injectable } from '@nestjs/common'
 import { ProductsRepository } from '../../repositories/products-repository'
 
 interface FetchRecentProductsUseCaseRequest {
-  page: number
+    page: number
 }
 type FetchRecentProductsUseCaseResponse = Either<null, { products: Product[] }>
 @Injectable()
 export class FetchRecentProductsUseCase {
-  constructor(private productRepository: ProductsRepository) {}
-  async execute({
-    page,
-  }: FetchRecentProductsUseCaseRequest): Promise<FetchRecentProductsUseCaseResponse> {
-    const products = await this.productRepository.findManyRecent({ page })
-    return right({
-      products,
-    })
-  }
+    constructor(private productRepository: ProductsRepository) {}
+    async execute({
+        page,
+    }: FetchRecentProductsUseCaseRequest): Promise<FetchRecentProductsUseCaseResponse> {
+        const products = await this.productRepository.findManyRecent({ page })
+        return right({
+            products,
+        })
+    }
 }

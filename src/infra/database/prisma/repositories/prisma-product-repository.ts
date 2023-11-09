@@ -7,49 +7,49 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 
 @Injectable()
 export class PrismaProductsRepository implements ProductsRepository {
-  constructor(private prisma: PrismaService) {}
-  async findManyRecent(params: PaginationParams): Promise<Product[]> {
-    const products = await this.prisma.product.findMany({
-      take: 20,
-      skip: (params.page - 1) * 20,
-      orderBy: {
-        name: "desc"
-      }
-    })
-    return products.map(PrismaProductMapper.toDomain)
-  }
-  async findById(id: string): Promise<Product | null> {
-    const product = await this.prisma.product.findUnique({
-      where: {
-        id,
-      },
-    })
-    if (!product) {
-      return null
+    constructor(private prisma: PrismaService) {}
+    async findManyRecent(params: PaginationParams): Promise<Product[]> {
+        const products = await this.prisma.product.findMany({
+            take: 20,
+            skip: (params.page - 1) * 20,
+            orderBy: {
+                name: 'desc',
+            },
+        })
+        return products.map(PrismaProductMapper.toDomain)
     }
-    return PrismaProductMapper.toDomain(product)
-  }
-  async save(product: Product): Promise<void> {
-    const data = PrismaProductMapper.toPrisma(product)
+    async findById(id: string): Promise<Product | null> {
+        const product = await this.prisma.product.findUnique({
+            where: {
+                id,
+            },
+        })
+        if (!product) {
+            return null
+        }
+        return PrismaProductMapper.toDomain(product)
+    }
+    async save(product: Product): Promise<void> {
+        const data = PrismaProductMapper.toPrisma(product)
 
-    await this.prisma.product.update({
-      where: {
-        id: data.id,
-      },
-      data,
-    })
-  }
-  async delete(product: Product): Promise<void> {
-    await this.prisma.product.delete({
-      where: {
-        id: product.id.toString(),
-      },
-    })
-  }
-  async create(product: Product): Promise<void> {
-    const data = PrismaProductMapper.toPrisma(product)
-    await this.prisma.product.create({
-      data,
-    })
-  }
+        await this.prisma.product.update({
+            where: {
+                id: data.id,
+            },
+            data,
+        })
+    }
+    async delete(product: Product): Promise<void> {
+        await this.prisma.product.delete({
+            where: {
+                id: product.id.toString(),
+            },
+        })
+    }
+    async create(product: Product): Promise<void> {
+        const data = PrismaProductMapper.toPrisma(product)
+        await this.prisma.product.create({
+            data,
+        })
+    }
 }

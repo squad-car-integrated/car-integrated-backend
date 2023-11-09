@@ -32,44 +32,44 @@ import { FetchRecentServicesUseCase } from '@/domain/workshop/application/use-ca
 import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/Service/get-service-by-id'
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
-  controllers: [
-    AuthenticateController,
-    EmployeeController,
-    OwnerController,
-    AutomobileController,
-    ProductController,
-    ServiceController
-  ],
-  providers: [
-    AuthenticateUserUseCase,
+    imports: [DatabaseModule, CryptographyModule],
+    controllers: [
+        AuthenticateController,
+        EmployeeController,
+        OwnerController,
+        AutomobileController,
+        ProductController,
+        ServiceController,
+    ],
+    providers: [
+        AuthenticateUserUseCase,
 
-    FetchAllOwnersUseCase,
-    CreateOwnerUseCase,
-    GetOwnerByIdUseCase,
-    DeleteOwnerUseCase,
-    EditOwnerUseCase,
+        FetchAllOwnersUseCase,
+        CreateOwnerUseCase,
+        GetOwnerByIdUseCase,
+        DeleteOwnerUseCase,
+        EditOwnerUseCase,
 
-    FetchAllEmployeesUseCase,
-    CreateEmployeeUseCase,
-    GetEmployeeByIdUseCase,
-    DeleteEmployeeUseCase,
-    EditEmployeeUseCase,
+        FetchAllEmployeesUseCase,
+        CreateEmployeeUseCase,
+        GetEmployeeByIdUseCase,
+        DeleteEmployeeUseCase,
+        EditEmployeeUseCase,
 
-    CreateAutomobileUseCase,
-    GetAutomobileByIdUseCase,
-    FetchRecentAutomobilesUseCase,
-    EditAutomobileUseCase,
+        CreateAutomobileUseCase,
+        GetAutomobileByIdUseCase,
+        FetchRecentAutomobilesUseCase,
+        EditAutomobileUseCase,
 
-    CreateProductUseCase,
-    GetProductByIdUseCase,
-    FetchRecentProductsUseCase,
-    EditProductUseCase,
+        CreateProductUseCase,
+        GetProductByIdUseCase,
+        FetchRecentProductsUseCase,
+        EditProductUseCase,
 
-    CreateServiceUseCase,
-    GetServiceByIdUseCase,
-    FetchRecentServicesUseCase,
-    EditServiceUseCase
-  ],
+        CreateServiceUseCase,
+        GetServiceByIdUseCase,
+        FetchRecentServicesUseCase,
+        EditServiceUseCase,
+    ],
 })
 export class HttpModule {}

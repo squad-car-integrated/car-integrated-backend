@@ -5,23 +5,23 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
 
 interface DeleteProductUseCaseRequest {
-  productId: string
+    productId: string
 }
 type DeleteProductUseCaseResponse = Either<
-  ResourceNotFoundError | NotAllowedError,
-  {}
+    ResourceNotFoundError | NotAllowedError,
+    {}
 >
 @Injectable()
 export class DeleteProductUseCase {
-  constructor(private productRepository: ProductsRepository) {}
-  async execute({
-    productId,
-  }: DeleteProductUseCaseRequest): Promise<DeleteProductUseCaseResponse> {
-    const product = await this.productRepository.findById(productId)
-    if (!product) {
-      return left(new ResourceNotFoundError())
+    constructor(private productRepository: ProductsRepository) {}
+    async execute({
+        productId,
+    }: DeleteProductUseCaseRequest): Promise<DeleteProductUseCaseResponse> {
+        const product = await this.productRepository.findById(productId)
+        if (!product) {
+            return left(new ResourceNotFoundError())
+        }
+        await this.productRepository.delete(product)
+        return right({})
     }
-    await this.productRepository.delete(product)
-    return right({})
-  }
 }

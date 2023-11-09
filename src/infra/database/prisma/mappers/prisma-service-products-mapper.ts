@@ -11,17 +11,19 @@ export class PrismaServiceProductsMapper {
             {
                 productId: new UniqueEntityID(raw.productId),
                 serviceId: new UniqueEntityID(raw.serviceId),
-                quantity: raw.quantity
+                quantity: raw.quantity,
             },
             new UniqueEntityID(raw.id),
         )
     }
-    static toPrisma(service: ServiceProduct): Prisma.ServiceProductsUncheckedCreateInput {
+    static toPrisma(
+        service: ServiceProduct,
+    ): Prisma.ServiceProductsUncheckedCreateInput {
         return {
             id: service.id.toString(),
             serviceId: service.serviceId.toString(),
             productId: service.productId.toString(),
-            quantity: service.quantity
+            quantity: service.quantity,
         }
     }
 }

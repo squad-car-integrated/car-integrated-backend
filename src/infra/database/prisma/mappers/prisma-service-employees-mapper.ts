@@ -15,7 +15,9 @@ export class PrismaServiceEmployeesMapper {
             new UniqueEntityID(raw.id),
         )
     }
-    static toPrisma(service: ServiceEmployee): Prisma.ServiceEmployeesUncheckedCreateInput {
+    static toPrisma(
+        service: ServiceEmployee,
+    ): Prisma.ServiceEmployeesUncheckedCreateInput {
         return {
             id: service.id.toString(),
             serviceId: service.serviceId.toString(),

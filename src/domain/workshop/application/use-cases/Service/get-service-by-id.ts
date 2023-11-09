@@ -9,32 +9,38 @@ import { ServiceEmployeesRepository } from '../../repositories/service-employees
 import { ServiceEmployeeList } from '@/domain/workshop/enterprise/entities/service-employee-list'
 
 interface GetServiceByIdUseCaseRequest {
-  id: string
+    id: string
 }
 type GetServiceByIdUseCaseResponse = Either<
-  ResourceNotFoundError,
-  { service: Service }
+    ResourceNotFoundError,
+    { service: Service }
 >
 @Injectable()
 export class GetServiceByIdUseCase {
-  constructor(
-    private serviceRepository: ServicesRepository,
-    private serviceProductsRepository: ServiceProductsRepository,
-    private serviceEmployeesRepository: ServiceEmployeesRepository
-    ){}
-  async execute({
-    id,
-  }: GetServiceByIdUseCaseRequest): Promise<GetServiceByIdUseCaseResponse> {
-    const service = await this.serviceRepository.findById(id)
-    if (!service) {
-      return left(new ResourceNotFoundError())
+    constructor(
+        private serviceRepository: ServicesRepository,
+        private serviceProductsRepository: ServiceProductsRepository,
+        private serviceEmployeesRepository: ServiceEmployeesRepository,
+    ) {}
+    async execute({
+        id,
+    }: GetServiceByIdUseCaseRequest): Promise<GetServiceByIdUseCaseResponse> {
+        const service = await this.serviceRepository.findById(id)
+        if (!service) {
+            return left(new ResourceNotFoundError())
+        }
+        const serviceProducts =
+            await this.serviceProductsRepository.findManyByServiceId(
+                service.id.toString(),
+            )
+        service.products = new ServiceProductList(serviceProducts)
+        const serviceEmployees =
+            await this.serviceEmployeesRepository.findManyByServiceId(
+                service.id.toString(),
+            )
+        service.employees = new ServiceEmployeeList(serviceEmployees)
+        return right({
+            service,
+        })
     }
-    const serviceProducts = await this.serviceProductsRepository.findManyByServiceId(service.id.toString())
-    service.products = new ServiceProductList(serviceProducts)
-    const serviceEmployees = await this.serviceEmployeesRepository.findManyByServiceId(service.id.toString())
-    service.employees = new ServiceEmployeeList(serviceEmployees)
-    return right({
-      service,
-    })
-  }
 }

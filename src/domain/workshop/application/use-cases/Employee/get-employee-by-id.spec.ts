@@ -6,17 +6,17 @@ let inMemoryEmployeesRepository: InMemoryEmployeesRepository
 let sut: GetEmployeeByIdUseCase
 
 describe('Get Employee By Id', () => {
-  beforeEach(() => {
-    inMemoryEmployeesRepository = new InMemoryEmployeesRepository()
-    sut = new GetEmployeeByIdUseCase(inMemoryEmployeesRepository)
-  })
-
-  it('Should be able to get a employee by Id', async () => {
-    const newEmployee = makeEmployee({})
-    await inMemoryEmployeesRepository.create(newEmployee)
-    const result = await sut.execute({
-      id: newEmployee.id.toString(),
+    beforeEach(() => {
+        inMemoryEmployeesRepository = new InMemoryEmployeesRepository()
+        sut = new GetEmployeeByIdUseCase(inMemoryEmployeesRepository)
     })
-    expect(result.value).toBeTruthy()
-  })
+
+    it('Should be able to get a employee by Id', async () => {
+        const newEmployee = makeEmployee({})
+        await inMemoryEmployeesRepository.create(newEmployee)
+        const result = await sut.execute({
+            id: newEmployee.id.toString(),
+        })
+        expect(result.value).toBeTruthy()
+    })
 })

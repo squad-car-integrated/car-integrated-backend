@@ -7,35 +7,36 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Injectable } from '@nestjs/common'
 
 interface EditAutomobileUseCaseRequest {
-  model: string
-  automobileId: string
-  brand: string
-  plate: string
-  ownerId: string
+    model: string
+    automobileId: string
+    brand: string
+    plate: string
+    ownerId: string
 }
 type EditAutomobileUseCaseResponse = Either<
-  ResourceNotFoundError | NotAllowedError,
-  { automobile: Automobile }
+    ResourceNotFoundError | NotAllowedError,
+    { automobile: Automobile }
 >
 @Injectable()
 export class EditAutomobileUseCase {
-  constructor(private automobileRepository: AutomobilesRepository) {}
-  async execute({
-    model,
-    brand,
-    plate,
-    ownerId,
-    automobileId,
-  }: EditAutomobileUseCaseRequest): Promise<EditAutomobileUseCaseResponse> {
-    const automobile = await this.automobileRepository.findById(automobileId)
-    if (!automobile) {
-      return left(new ResourceNotFoundError())
+    constructor(private automobileRepository: AutomobilesRepository) {}
+    async execute({
+        model,
+        brand,
+        plate,
+        ownerId,
+        automobileId,
+    }: EditAutomobileUseCaseRequest): Promise<EditAutomobileUseCaseResponse> {
+        const automobile =
+            await this.automobileRepository.findById(automobileId)
+        if (!automobile) {
+            return left(new ResourceNotFoundError())
+        }
+        automobile.model = model
+        automobile.brand = brand
+        automobile.plate = plate
+        automobile.ownerId = new UniqueEntityID(ownerId)
+        await this.automobileRepository.save(automobile)
+        return right({ automobile })
     }
-    automobile.model = model
-    automobile.brand = brand
-    automobile.plate = plate
-    automobile.ownerId = new UniqueEntityID(ownerId)
-    await this.automobileRepository.save(automobile)
-    return right({ automobile })
-  }
 }

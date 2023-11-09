@@ -5,24 +5,24 @@ import { EmployeesRepository } from '../../repositories/employees-repository'
 import { Injectable } from '@nestjs/common'
 
 interface GetEmployeeByIdUseCaseRequest {
-  id: string
+    id: string
 }
 type GetEmployeeByIdUseCaseResponse = Either<
-  ResourceNotFoundError,
-  { employee: Employee }
+    ResourceNotFoundError,
+    { employee: Employee }
 >
 @Injectable()
 export class GetEmployeeByIdUseCase {
-  constructor(private employeeRepository: EmployeesRepository) {}
-  async execute({
-    id,
-  }: GetEmployeeByIdUseCaseRequest): Promise<GetEmployeeByIdUseCaseResponse> {
-    const employee = await this.employeeRepository.findById(id)
-    if (!employee) {
-      return left(new ResourceNotFoundError())
+    constructor(private employeeRepository: EmployeesRepository) {}
+    async execute({
+        id,
+    }: GetEmployeeByIdUseCaseRequest): Promise<GetEmployeeByIdUseCaseResponse> {
+        const employee = await this.employeeRepository.findById(id)
+        if (!employee) {
+            return left(new ResourceNotFoundError())
+        }
+        return right({
+            employee,
+        })
     }
-    return right({
-      employee,
-    })
-  }
 }

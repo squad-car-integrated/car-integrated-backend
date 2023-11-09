@@ -11,22 +11,24 @@ let inMemoryServiceEmployeesRepository: InMemoryServiceEmployeesRepository
 let sut: DeleteServiceUseCase
 
 describe('Delete Service', () => {
-  beforeEach(() => {
-    inMemoryServiceProductsRepository = new InMemoryServiceProductsRepository()
-    inMemoryServiceEmployeesRepository = new InMemoryServiceEmployeesRepository()
-    inMemoryServicesRepository = new InMemoryServicesRepository(
-      inMemoryServiceProductsRepository,
-      inMemoryServiceEmployeesRepository
-    )
-    sut = new DeleteServiceUseCase(inMemoryServicesRepository)
-  })
-
-  it('Should be able to delete a service', async () => {
-    const newService = makeService({}, new UniqueEntityID('service-1'))
-    await inMemoryServicesRepository.create(newService)
-    await sut.execute({
-      serviceId: 'service-1',
+    beforeEach(() => {
+        inMemoryServiceProductsRepository =
+            new InMemoryServiceProductsRepository()
+        inMemoryServiceEmployeesRepository =
+            new InMemoryServiceEmployeesRepository()
+        inMemoryServicesRepository = new InMemoryServicesRepository(
+            inMemoryServiceProductsRepository,
+            inMemoryServiceEmployeesRepository,
+        )
+        sut = new DeleteServiceUseCase(inMemoryServicesRepository)
     })
-    expect(inMemoryServicesRepository.items).toHaveLength(0)
-  })
+
+    it('Should be able to delete a service', async () => {
+        const newService = makeService({}, new UniqueEntityID('service-1'))
+        await inMemoryServicesRepository.create(newService)
+        await sut.execute({
+            serviceId: 'service-1',
+        })
+        expect(inMemoryServicesRepository.items).toHaveLength(0)
+    })
 })

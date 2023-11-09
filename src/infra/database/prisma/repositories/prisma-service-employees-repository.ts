@@ -10,12 +10,13 @@ export class PrismaServiceEmployeesRepository
 {
     constructor(private prisma: PrismaService) {}
     async save(serviceEmployee: ServiceEmployee): Promise<void> {
-        const serviceEmployeeAlreadyExists = await this.prisma.serviceEmployees.findUnique({
-            where:{
-                id: serviceEmployee.id.toString()
-            }
-        })
-        if(serviceEmployeeAlreadyExists){
+        const serviceEmployeeAlreadyExists =
+            await this.prisma.serviceEmployees.findUnique({
+                where: {
+                    id: serviceEmployee.id.toString(),
+                },
+            })
+        if (serviceEmployeeAlreadyExists) {
             const data = PrismaServiceEmployeesMapper.toPrisma(serviceEmployee)
             await this.prisma.serviceEmployees.update({
                 where: {
@@ -23,14 +24,11 @@ export class PrismaServiceEmployeesRepository
                 },
                 data,
             })
-        }else{
+        } else {
             await this.create(serviceEmployee)
         }
-        
     }
-    async findManyByServiceId(
-        serviceId: string,
-    ): Promise<ServiceEmployee[]> {
+    async findManyByServiceId(serviceId: string): Promise<ServiceEmployee[]> {
         const serviceEmployees = await this.prisma.serviceEmployees.findMany({
             where: {
                 serviceId,
@@ -48,7 +46,7 @@ export class PrismaServiceEmployeesRepository
     async create(serviceEmployee: ServiceEmployee): Promise<void> {
         const data = PrismaServiceEmployeesMapper.toPrisma(serviceEmployee)
         await this.prisma.serviceEmployees.create({
-          data,
+            data,
         })
     }
 }

@@ -7,17 +7,17 @@ let inMemoryOwnersRepository: InMemoryOwnersRepository
 let sut: DeleteOwnerUseCase
 
 describe('Delete Owner', () => {
-  beforeEach(() => {
-    inMemoryOwnersRepository = new InMemoryOwnersRepository()
-    sut = new DeleteOwnerUseCase(inMemoryOwnersRepository)
-  })
-
-  it('Should be able to delete a owner', async () => {
-    const newOwner = makeOwner({}, new UniqueEntityID('owner-1'))
-    await inMemoryOwnersRepository.create(newOwner)
-    await sut.execute({
-      ownerId: 'owner-1',
+    beforeEach(() => {
+        inMemoryOwnersRepository = new InMemoryOwnersRepository()
+        sut = new DeleteOwnerUseCase(inMemoryOwnersRepository)
     })
-    expect(inMemoryOwnersRepository.items).toHaveLength(0)
-  })
+
+    it('Should be able to delete a owner', async () => {
+        const newOwner = makeOwner({}, new UniqueEntityID('owner-1'))
+        await inMemoryOwnersRepository.create(newOwner)
+        await sut.execute({
+            ownerId: 'owner-1',
+        })
+        expect(inMemoryOwnersRepository.items).toHaveLength(0)
+    })
 })

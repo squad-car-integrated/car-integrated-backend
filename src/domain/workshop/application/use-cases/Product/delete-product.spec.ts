@@ -7,17 +7,17 @@ let inMemoryProductsRepository: InMemoryProductsRepository
 let sut: DeleteProductUseCase
 
 describe('Delete Product', () => {
-  beforeEach(() => {
-    inMemoryProductsRepository = new InMemoryProductsRepository()
-    sut = new DeleteProductUseCase(inMemoryProductsRepository)
-  })
-
-  it('Should be able to delete a product', async () => {
-    const newProduct = makeProduct({}, new UniqueEntityID('product-1'))
-    await inMemoryProductsRepository.create(newProduct)
-    await sut.execute({
-      productId: 'product-1',
+    beforeEach(() => {
+        inMemoryProductsRepository = new InMemoryProductsRepository()
+        sut = new DeleteProductUseCase(inMemoryProductsRepository)
     })
-    expect(inMemoryProductsRepository.items).toHaveLength(0)
-  })
+
+    it('Should be able to delete a product', async () => {
+        const newProduct = makeProduct({}, new UniqueEntityID('product-1'))
+        await inMemoryProductsRepository.create(newProduct)
+        await sut.execute({
+            productId: 'product-1',
+        })
+        expect(inMemoryProductsRepository.items).toHaveLength(0)
+    })
 })

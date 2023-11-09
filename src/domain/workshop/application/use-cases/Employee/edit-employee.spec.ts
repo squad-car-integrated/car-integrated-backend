@@ -7,23 +7,23 @@ let inMemoryEmployeesRepository: InMemoryEmployeesRepository
 let sut: EditEmployeeUseCase
 
 describe('Edit Employee', () => {
-  beforeEach(() => {
-    inMemoryEmployeesRepository = new InMemoryEmployeesRepository()
-    sut = new EditEmployeeUseCase(inMemoryEmployeesRepository)
-  })
+    beforeEach(() => {
+        inMemoryEmployeesRepository = new InMemoryEmployeesRepository()
+        sut = new EditEmployeeUseCase(inMemoryEmployeesRepository)
+    })
 
-  it('Should be able to edit a employee', async () => {
-    const newEmployee = makeEmployee({}, new UniqueEntityID('employee-1'))
-    await inMemoryEmployeesRepository.create(newEmployee)
-    await sut.execute({
-      employeeId: newEmployee.id.toString(),
-      email: newEmployee.email,
-      name: 'Nome editado',
-      password: newEmployee.password,
-      monthWorkedHours: newEmployee.monthWorkedHours,
+    it('Should be able to edit a employee', async () => {
+        const newEmployee = makeEmployee({}, new UniqueEntityID('employee-1'))
+        await inMemoryEmployeesRepository.create(newEmployee)
+        await sut.execute({
+            employeeId: newEmployee.id.toString(),
+            email: newEmployee.email,
+            name: 'Nome editado',
+            password: newEmployee.password,
+            monthWorkedHours: newEmployee.monthWorkedHours,
+        })
+        expect(inMemoryEmployeesRepository.items[0]).toMatchObject({
+            name: 'Nome editado',
+        })
     })
-    expect(inMemoryEmployeesRepository.items[0]).toMatchObject({
-      name: 'Nome editado',
-    })
-  })
 })

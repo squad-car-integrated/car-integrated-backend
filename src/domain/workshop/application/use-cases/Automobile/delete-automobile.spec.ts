@@ -7,22 +7,22 @@ let inMemoryAutomobilesRepository: InMemoryAutomobilesRepository
 let sut: DeleteAutomobileUseCase
 
 describe('Delete Automobile', () => {
-  beforeEach(() => {
-    inMemoryAutomobilesRepository = new InMemoryAutomobilesRepository()
-    sut = new DeleteAutomobileUseCase(inMemoryAutomobilesRepository)
-  })
-
-  it('Should be able to delete a automobile', async () => {
-    const newAutomobile = makeAutomobile(
-      {
-        ownerId: new UniqueEntityID('owner-1'),
-      },
-      new UniqueEntityID('automobile-1'),
-    )
-    await inMemoryAutomobilesRepository.create(newAutomobile)
-    await sut.execute({
-      automobileId: 'automobile-1',
+    beforeEach(() => {
+        inMemoryAutomobilesRepository = new InMemoryAutomobilesRepository()
+        sut = new DeleteAutomobileUseCase(inMemoryAutomobilesRepository)
     })
-    expect(inMemoryAutomobilesRepository.items).toHaveLength(0)
-  })
+
+    it('Should be able to delete a automobile', async () => {
+        const newAutomobile = makeAutomobile(
+            {
+                ownerId: new UniqueEntityID('owner-1'),
+            },
+            new UniqueEntityID('automobile-1'),
+        )
+        await inMemoryAutomobilesRepository.create(newAutomobile)
+        await sut.execute({
+            automobileId: 'automobile-1',
+        })
+        expect(inMemoryAutomobilesRepository.items).toHaveLength(0)
+    })
 })

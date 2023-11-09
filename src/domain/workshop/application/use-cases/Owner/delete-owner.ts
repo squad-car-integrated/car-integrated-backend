@@ -5,23 +5,23 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
 
 interface DeleteOwnerUseCaseRequest {
-  ownerId: string
+    ownerId: string
 }
 type DeleteOwnerUseCaseResponse = Either<
-  ResourceNotFoundError | NotAllowedError,
-  {}
+    ResourceNotFoundError | NotAllowedError,
+    {}
 >
 @Injectable()
 export class DeleteOwnerUseCase {
-  constructor(private ownerRepository: OwnersRepository) {}
-  async execute({
-    ownerId,
-  }: DeleteOwnerUseCaseRequest): Promise<DeleteOwnerUseCaseResponse> {
-    const owner = await this.ownerRepository.findById(ownerId)
-    if (!owner) {
-      return left(new ResourceNotFoundError())
+    constructor(private ownerRepository: OwnersRepository) {}
+    async execute({
+        ownerId,
+    }: DeleteOwnerUseCaseRequest): Promise<DeleteOwnerUseCaseResponse> {
+        const owner = await this.ownerRepository.findById(ownerId)
+        if (!owner) {
+            return left(new ResourceNotFoundError())
+        }
+        await this.ownerRepository.delete(owner)
+        return right({})
     }
-    await this.ownerRepository.delete(owner)
-    return right({})
-  }
 }

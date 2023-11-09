@@ -30,5 +30,4 @@ export class PrismaServiceMapper {
             updatedAt: service.updatedAt,
         }
     }
-      
 }

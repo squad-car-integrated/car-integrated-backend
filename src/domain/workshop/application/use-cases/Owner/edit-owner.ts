@@ -6,35 +6,35 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
 
 interface EditOwnerUseCaseRequest {
-  ownerId: string
-  name: string
-  email: string
-  password: string
-  phoneNumber: string
+    ownerId: string
+    name: string
+    email: string
+    password: string
+    phoneNumber: string
 }
 type EditOwnerUseCaseResponse = Either<
-  ResourceNotFoundError | NotAllowedError,
-  { owner: Owner }
+    ResourceNotFoundError | NotAllowedError,
+    { owner: Owner }
 >
 @Injectable()
 export class EditOwnerUseCase {
-  constructor(private ownerRepository: OwnersRepository) {}
-  async execute({
-    ownerId,
-    name,
-    email,
-    password,
-    phoneNumber,
-  }: EditOwnerUseCaseRequest): Promise<EditOwnerUseCaseResponse> {
-    const owner = await this.ownerRepository.findById(ownerId)
-    if (!owner) {
-      return left(new ResourceNotFoundError())
+    constructor(private ownerRepository: OwnersRepository) {}
+    async execute({
+        ownerId,
+        name,
+        email,
+        password,
+        phoneNumber,
+    }: EditOwnerUseCaseRequest): Promise<EditOwnerUseCaseResponse> {
+        const owner = await this.ownerRepository.findById(ownerId)
+        if (!owner) {
+            return left(new ResourceNotFoundError())
+        }
+        owner.name = name
+        owner.email = email
+        owner.password = password
+        owner.phoneNumber = phoneNumber
+        await this.ownerRepository.save(owner)
+        return right({ owner })
     }
-    owner.name = name
-    owner.email = email
-    owner.password = password
-    owner.phoneNumber = phoneNumber
-    await this.ownerRepository.save(owner)
-    return right({ owner })
-  }
 }

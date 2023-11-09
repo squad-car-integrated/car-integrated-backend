@@ -5,24 +5,24 @@ import { OwnersRepository } from '../../repositories/owners-repository'
 import { Injectable } from '@nestjs/common'
 
 interface GetOwnerByIdUseCaseRequest {
-  id: string
+    id: string
 }
 type GetOwnerByIdUseCaseResponse = Either<
-  ResourceNotFoundError,
-  { owner: Owner }
+    ResourceNotFoundError,
+    { owner: Owner }
 >
 @Injectable()
 export class GetOwnerByIdUseCase {
-  constructor(private ownerRepository: OwnersRepository) {}
-  async execute({
-    id,
-  }: GetOwnerByIdUseCaseRequest): Promise<GetOwnerByIdUseCaseResponse> {
-    const owner = await this.ownerRepository.findById(id)
-    if (!owner) {
-      return left(new ResourceNotFoundError())
+    constructor(private ownerRepository: OwnersRepository) {}
+    async execute({
+        id,
+    }: GetOwnerByIdUseCaseRequest): Promise<GetOwnerByIdUseCaseResponse> {
+        const owner = await this.ownerRepository.findById(id)
+        if (!owner) {
+            return left(new ResourceNotFoundError())
+        }
+        return right({
+            owner,
+        })
     }
-    return right({
-      owner,
-    })
-  }
 }

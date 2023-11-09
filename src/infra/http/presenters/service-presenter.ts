@@ -1,18 +1,18 @@
 import { Service } from '@/domain/workshop/enterprise/entities/service'
 
 export class ServicePresenter {
-  static toHTTP(service: Service) {
-    return {
-      id: service.id.toString(),
-      totalValue: service.totalValue,
-      ownerId: service.ownerId.toString(),
-      automobileId: service.automobileId.toString(),
-      employees: service.employees.listToString(),
-      products: service.products.currentItems.toString(),
-      description: service.description,
-      status: service.status,
-      createdAt: service.createdAt,
-      updatedAt: service.updatedAt,
+    static toHTTP(service: Service) {
+        return {
+            id: service.id.toString(),
+            totalValue: service.totalValue,
+            ownerId: service.ownerId.toString(),
+            automobileId: service.automobileId.toString(),
+            employees: service.employees.listToString(),
+            products: service.products.currentItems.toString(),
+            description: service.description,
+            status: service.status,
+            createdAt: service.createdAt,
+            updatedAt: service.updatedAt,
+        }
     }
-  }
 }

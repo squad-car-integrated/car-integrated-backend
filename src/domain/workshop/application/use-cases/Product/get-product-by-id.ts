@@ -5,24 +5,24 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
 
 interface GetProductByIdUseCaseRequest {
-  id: string
+    id: string
 }
 type GetProductByIdUseCaseResponse = Either<
-  ResourceNotFoundError,
-  { product: Product }
+    ResourceNotFoundError,
+    { product: Product }
 >
 @Injectable()
 export class GetProductByIdUseCase {
-  constructor(private productRepository: ProductsRepository) {}
-  async execute({
-    id,
-  }: GetProductByIdUseCaseRequest): Promise<GetProductByIdUseCaseResponse> {
-    const product = await this.productRepository.findById(id)
-    if (!product) {
-      return left(new ResourceNotFoundError())
+    constructor(private productRepository: ProductsRepository) {}
+    async execute({
+        id,
+    }: GetProductByIdUseCaseRequest): Promise<GetProductByIdUseCaseResponse> {
+        const product = await this.productRepository.findById(id)
+        if (!product) {
+            return left(new ResourceNotFoundError())
+        }
+        return right({
+            product,
+        })
     }
-    return right({
-      product,
-    })
-  }
 }

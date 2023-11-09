@@ -6,17 +6,17 @@ let inMemoryProductsRepository: InMemoryProductsRepository
 let sut: GetProductByIdUseCase
 
 describe('Get Product By Id', () => {
-  beforeEach(() => {
-    inMemoryProductsRepository = new InMemoryProductsRepository()
-    sut = new GetProductByIdUseCase(inMemoryProductsRepository)
-  })
-
-  it('Should be able to get a product by id', async () => {
-    const newProduct = makeProduct({})
-    await inMemoryProductsRepository.create(newProduct)
-    const result = await sut.execute({
-      id: newProduct.id.toString(),
+    beforeEach(() => {
+        inMemoryProductsRepository = new InMemoryProductsRepository()
+        sut = new GetProductByIdUseCase(inMemoryProductsRepository)
     })
-    expect(result.value).toBeTruthy()
-  })
+
+    it('Should be able to get a product by id', async () => {
+        const newProduct = makeProduct({})
+        await inMemoryProductsRepository.create(newProduct)
+        const result = await sut.execute({
+            id: newProduct.id.toString(),
+        })
+        expect(result.value).toBeTruthy()
+    })
 })

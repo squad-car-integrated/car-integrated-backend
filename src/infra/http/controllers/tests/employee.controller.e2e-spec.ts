@@ -14,7 +14,7 @@ describe('Create employee (E2E)', () => {
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule, DatabaseModule],
-            providers: [EmployeeFactory]
+            providers: [EmployeeFactory],
         }).compile()
 
         app = moduleRef.createNestApplication()
@@ -30,7 +30,7 @@ describe('Create employee (E2E)', () => {
                 name: 'John Doe',
                 email: 'johndoe@example.com',
                 password: '123456',
-                monthWorkedHours: 0
+                monthWorkedHours: 0,
             })
         expect(response.statusCode).toBe(201)
         const userOnDatabase = await prisma.employee.findUnique({
@@ -49,19 +49,19 @@ describe('Create employee (E2E)', () => {
                 name: 'New Employee 4',
                 email: 'employee4@example.com',
                 password: '123456',
-                monthWorkedHours: 12
+                monthWorkedHours: 12,
             }),
             employeeFactory.makePrismaEmployee({
                 name: 'New Employee 5',
                 email: 'employee5@example.com',
                 password: '123456',
-                monthWorkedHours: 4
+                monthWorkedHours: 4,
             }),
             employeeFactory.makePrismaEmployee({
                 name: 'New Employee 6',
                 email: 'employee6@example.com',
                 password: '123456',
-                monthWorkedHours: 30
+                monthWorkedHours: 30,
             }),
         ])
         const response = await request(app.getHttpServer())
@@ -84,7 +84,7 @@ describe('Create employee (E2E)', () => {
             name: 'New Employee 1',
             email: 'employee1@example.com',
             password: '123456',
-            monthWorkedHours: 10
+            monthWorkedHours: 10,
         })
         const employeeId = newEmployee.id.toString()
         const response = await request(app.getHttpServer())
@@ -96,7 +96,7 @@ describe('Create employee (E2E)', () => {
             employee: expect.objectContaining({
                 name: 'New Employee 1',
                 email: 'employee1@example.com',
-            })
+            }),
         })
     })
     test('[PUT] /employee/:id', async () => {
@@ -108,7 +108,7 @@ describe('Create employee (E2E)', () => {
             name: 'New Employee To Edit',
             email: 'employee3@example.com',
             password: '123456',
-            monthWorkedHours: 0
+            monthWorkedHours: 0,
         })
         const employeeId = employee.id.toString()
         const response = await request(app.getHttpServer())
@@ -118,7 +118,7 @@ describe('Create employee (E2E)', () => {
                 name: employee.name,
                 email: employee.email,
                 password: employee.password,
-                monthWorkedHours: 20
+                monthWorkedHours: 20,
             })
         expect(response.statusCode).toBe(204)
         const employeeOnDatabase = await prisma.employee.findUnique({
@@ -126,7 +126,7 @@ describe('Create employee (E2E)', () => {
                 id: employeeId,
             },
         })
-        
+
         expect(employeeOnDatabase).toBeTruthy()
         expect(employeeOnDatabase?.monthWorkedHours).toBe(20)
     })

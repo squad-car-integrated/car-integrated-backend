@@ -16,7 +16,7 @@ describe('Create products (E2E)', () => {
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule, DatabaseModule],
-            providers: [EmployeeFactory, ProductFactory]
+            providers: [EmployeeFactory, ProductFactory],
         }).compile()
 
         app = moduleRef.createNestApplication()
@@ -37,13 +37,13 @@ describe('Create products (E2E)', () => {
                 unitValue: 90,
                 productAmount: 20,
                 description: '1L w40',
-                photo: "uri da photo"
+                photo: 'uri da photo',
             })
         expect(response.statusCode).toBe(201)
         const productsOnDatabase = await prisma.product.findFirst({
             where: {
                 name: 'Oleo Motul',
-                unitValue: 90
+                unitValue: 90,
             },
         })
         expect(productsOnDatabase).toBeTruthy()
@@ -55,21 +55,21 @@ describe('Create products (E2E)', () => {
         await Promise.all([
             productFactory.makePrismaProduct({
                 name: 'New product 01',
-                unitValue: 10.50,
+                unitValue: 10.5,
                 productAmount: 25,
-                description: "Product 01 description"
+                description: 'Product 01 description',
             }),
             productFactory.makePrismaProduct({
                 name: 'New product 02',
-                unitValue: 10.50,
+                unitValue: 10.5,
                 productAmount: 25,
-                description: "Product 01 description"
+                description: 'Product 01 description',
             }),
             productFactory.makePrismaProduct({
                 name: 'New product 03',
-                unitValue: 10.50,
+                unitValue: 10.5,
                 productAmount: 25,
-                description: "Product 01 description"
+                description: 'Product 01 description',
             }),
         ])
         const response = await request(app.getHttpServer())
@@ -92,10 +92,10 @@ describe('Create products (E2E)', () => {
 
         const product = await productFactory.makePrismaProduct({
             name: 'WD-40',
-            unitValue: 24.50,
+            unitValue: 24.5,
             productAmount: 25,
-            description: "WD-40 MELHOR LUB",
-            photo: "url photo"
+            description: 'WD-40 MELHOR LUB',
+            photo: 'url photo',
         })
         const productId = product.id.toString()
         const response = await request(app.getHttpServer())
@@ -103,10 +103,10 @@ describe('Create products (E2E)', () => {
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
                 name: product.name,
-                unitValue: 27.50,
+                unitValue: 27.5,
                 productAmount: 22,
                 description: product.description,
-                photo: product.photo
+                photo: product.photo,
             })
         expect(response.statusCode).toBe(204)
         const productsOnDatabase = await prisma.product.findUnique({
@@ -115,7 +115,7 @@ describe('Create products (E2E)', () => {
             },
         })
         expect(productsOnDatabase).toBeTruthy()
-        expect(productsOnDatabase?.unitValue).toBe(27.50)
+        expect(productsOnDatabase?.unitValue).toBe(27.5)
         expect(productsOnDatabase?.productAmount).toBe(22)
     })
 })

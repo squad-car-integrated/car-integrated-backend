@@ -3,13 +3,13 @@ import { HashGenerator } from '@/domain/workshop/application/cryptography/hasher
 import { hash, compare } from 'bcryptjs'
 
 export class BcryptHasher implements HashGenerator, HashComparer {
-  private HASH_SALT_LENGTH = 8
+    private HASH_SALT_LENGTH = 8
 
-  hash(plain: string): Promise<string> {
-    return hash(plain, this.HASH_SALT_LENGTH)
-  }
+    hash(plain: string): Promise<string> {
+        return hash(plain, this.HASH_SALT_LENGTH)
+    }
 
-  compare(plain: string, hash: string): Promise<boolean> {
-    return compare(plain, hash)
-  }
+    compare(plain: string, hash: string): Promise<boolean> {
+        return compare(plain, hash)
+    }
 }

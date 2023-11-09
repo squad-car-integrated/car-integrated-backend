@@ -18,11 +18,22 @@ import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/S
 import { ServicePresenter } from '../presenters/service-presenter'
 import { ServiceStatus } from '@/core/entities/service-status-enum'
 import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-products'
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiUnprocessableEntityResponse, ApiBody, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger'
+import {
+    ApiBearerAuth,
+    ApiTags,
+    ApiOperation,
+    ApiResponse,
+    ApiCreatedResponse,
+    ApiForbiddenResponse,
+    ApiUnprocessableEntityResponse,
+    ApiBody,
+    ApiOkResponse,
+    ApiNotFoundResponse,
+} from '@nestjs/swagger'
 import { Service } from '@/domain/workshop/enterprise/entities/service'
 const serviceProducts = z.object({
     productId: z.string().uuid(),
-    quantity: z.number().default(1)
+    quantity: z.number().default(1),
 })
 const serviceCreateSchema = z.object({
     automobileId: z.string().uuid(),
@@ -77,11 +88,11 @@ export class ServiceController {
     }
     @Get('/:id')
     //Swagger
-    @ApiOperation({ summary: 'Find service by id'})
+    @ApiOperation({ summary: 'Find service by id' })
     @ApiResponse({
-      status: 200,
-      description: 'Service found',
-      type: Service,
+        status: 200,
+        description: 'Service found',
+        type: Service,
     })
     //Fim do Swagger
     async handleGetServiceByid(@Param('id') serviceId: string) {
@@ -96,24 +107,32 @@ export class ServiceController {
     @Post()
     @HttpCode(201)
     //Swagger
-    @ApiOperation({ summary: 'Create Service'})
+    @ApiOperation({ summary: 'Create Service' })
     @ApiResponse({
-      status: 201,
-      description: 'Created Service',
-      type: Service,
+        status: 201,
+        description: 'Created Service',
+        type: Service,
     })
     @ApiCreatedResponse({ description: 'Created Succesfully' })
     @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
     @ApiForbiddenResponse({ description: 'Unauthorized Request' })
     @ApiBody({
-      type: Service,
-      description: 'Json structure for Service object'
+        type: Service,
+        description: 'Json structure for Service object',
     })
-  //Fim do Swagger
+    //Fim do Swagger
     async handlePostService(
-        @Body(new ZodValidationPipe(serviceCreateSchema)) body: ServiceBodyCreateSchema,
+        @Body(new ZodValidationPipe(serviceCreateSchema))
+        body: ServiceBodyCreateSchema,
     ) {
-        const { automobileId, ownerId, description, totalValue, employees, products } = body
+        const {
+            automobileId,
+            ownerId,
+            description,
+            totalValue,
+            employees,
+            products,
+        } = body
         const result = await this.createService.execute({
             automobileId,
             ownerId,
@@ -121,7 +140,7 @@ export class ServiceController {
             status: ServiceStatus.Created,
             employees,
             products,
-            totalValue
+            totalValue,
         })
         if (result.isLeft()) {
             throw new BadRequestException()
@@ -130,26 +149,35 @@ export class ServiceController {
     @Put('/:id')
     @HttpCode(204)
     //Swagger
-    @ApiOperation({ summary: 'Edit Service by id'})
+    @ApiOperation({ summary: 'Edit Service by id' })
     @ApiOkResponse({ description: 'The resource was updated successfully' })
     @ApiNotFoundResponse({ description: 'Resource not found' })
     @ApiForbiddenResponse({ description: 'Unauthorized Request' })
     @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
     @ApiBody({
-      type: Service,
-      description: 'Json structure for user object'
+        type: Service,
+        description: 'Json structure for user object',
     })
     @ApiResponse({
-      status: 200,
-      description: 'Service edited',
-      type: Service,
+        status: 200,
+        description: 'Service edited',
+        type: Service,
     })
     //Fim do Swagger
     async handleEditService(
-        @Body(new ZodValidationPipe(serviceEditSchema)) body: ServiceBodyEditSchema,
+        @Body(new ZodValidationPipe(serviceEditSchema))
+        body: ServiceBodyEditSchema,
         @Param('id') serviceId: string,
     ) {
-        const { automobileId, ownerId, description, status, totalValue, employees, products } = body
+        const {
+            automobileId,
+            ownerId,
+            description,
+            status,
+            totalValue,
+            employees,
+            products,
+        } = body
         const result = await this.editService.execute({
             serviceId,
             automobileId,

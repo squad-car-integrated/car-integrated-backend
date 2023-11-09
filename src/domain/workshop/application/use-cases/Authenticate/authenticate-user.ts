@@ -9,48 +9,48 @@ import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
 
 interface AuthenticateUserUseCaseRequest {
-  email: string
-  password: string
+    email: string
+    password: string
 }
 type AuthenticateUserUseCaseResponse = Either<
-  WrongCredentialsError | BadRequestException,
-  {
-    accessToken: string
-  }
+    WrongCredentialsError | BadRequestException,
+    {
+        accessToken: string
+    }
 >
 @Injectable()
 export class AuthenticateUserUseCase {
-  constructor(
-    private employeesRepository: EmployeesRepository,
-    private ownersRepository: OwnersRepository,
-    private hashComparer: HashComparer,
-    private encrypter: Encrypter,
-  ) {}
-  async execute({
-    email,
-    password,
-  }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
-    let user: Owner | Employee | null
-    user = await this.employeesRepository.findByEmail(email)
+    constructor(
+        private employeesRepository: EmployeesRepository,
+        private ownersRepository: OwnersRepository,
+        private hashComparer: HashComparer,
+        private encrypter: Encrypter,
+    ) {}
+    async execute({
+        email,
+        password,
+    }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
+        let user: Owner | Employee | null
+        user = await this.employeesRepository.findByEmail(email)
 
-    if (!user) {
-      user = await this.ownersRepository.findByEmail(email)
-      if (!user) {
-        return left(new WrongCredentialsError())
-      }
+        if (!user) {
+            user = await this.ownersRepository.findByEmail(email)
+            if (!user) {
+                return left(new WrongCredentialsError())
+            }
+        }
+        const isPasswordValid = await this.hashComparer.compare(
+            password,
+            user.password,
+        )
+        if (!isPasswordValid) {
+            return left(new WrongCredentialsError())
+        }
+        const accessToken = await this.encrypter.encrypt({
+            sub: user.id.toString(),
+        })
+        return right({
+            accessToken,
+        })
     }
-    const isPasswordValid = await this.hashComparer.compare(
-      password,
-      user.password,
-    )
-    if (!isPasswordValid) {
-      return left(new WrongCredentialsError())
-    }
-    const accessToken = await this.encrypter.encrypt({
-      sub: user.id.toString(),
-    })
-    return right({
-      accessToken,
-    })
-  }
 }

@@ -4,23 +4,23 @@ import { Injectable } from '@nestjs/common'
 import { AutomobilesRepository } from '../../repositories/automobiles-repository'
 
 interface FetchRecentAutomobilesUseCaseRequest {
-  page: number
+    page: number
 }
 type FetchRecentAutomobilesUseCaseResponse = Either<
-  null,
-  { automobiles: Automobile[] }
+    null,
+    { automobiles: Automobile[] }
 >
 @Injectable()
 export class FetchRecentAutomobilesUseCase {
-  constructor(private automobileRepository: AutomobilesRepository) {}
-  async execute({
-    page,
-  }: FetchRecentAutomobilesUseCaseRequest): Promise<FetchRecentAutomobilesUseCaseResponse> {
-    const automobiles = await this.automobileRepository.findManyRecent({
-      page,
-    })
-    return right({
-      automobiles,
-    })
-  }
+    constructor(private automobileRepository: AutomobilesRepository) {}
+    async execute({
+        page,
+    }: FetchRecentAutomobilesUseCaseRequest): Promise<FetchRecentAutomobilesUseCaseResponse> {
+        const automobiles = await this.automobileRepository.findManyRecent({
+            page,
+        })
+        return right({
+            automobiles,
+        })
+    }
 }
