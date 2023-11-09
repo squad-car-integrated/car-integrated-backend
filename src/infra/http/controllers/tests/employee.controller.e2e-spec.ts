@@ -1,6 +1,7 @@
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { faker } from '@faker-js/faker'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
@@ -21,6 +22,7 @@ describe('Create employee (E2E)', () => {
         prisma = moduleRef.get(PrismaService)
         jwt = moduleRef.get(JwtService)
         employeeFactory = moduleRef.get(EmployeeFactory)
+        
         await app.init()
     })
     test('[POST] /employee', async () => {
@@ -29,7 +31,7 @@ describe('Create employee (E2E)', () => {
             .send({
                 name: 'John Doe',
                 email: 'johndoe@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 monthWorkedHours: 0,
             })
         expect(response.statusCode).toBe(201)
@@ -48,19 +50,19 @@ describe('Create employee (E2E)', () => {
             employeeFactory.makePrismaEmployee({
                 name: 'New Employee 4',
                 email: 'employee4@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 monthWorkedHours: 12,
             }),
             employeeFactory.makePrismaEmployee({
                 name: 'New Employee 5',
                 email: 'employee5@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 monthWorkedHours: 4,
             }),
             employeeFactory.makePrismaEmployee({
                 name: 'New Employee 6',
                 email: 'employee6@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 monthWorkedHours: 30,
             }),
         ])
@@ -83,7 +85,7 @@ describe('Create employee (E2E)', () => {
         const newEmployee = await employeeFactory.makePrismaEmployee({
             name: 'New Employee 1',
             email: 'employee1@example.com',
-            password: '123456',
+            password: faker.internet.password(),
             monthWorkedHours: 10,
         })
         const employeeId = newEmployee.id.toString()
@@ -107,7 +109,7 @@ describe('Create employee (E2E)', () => {
         const employee = await employeeFactory.makePrismaEmployee({
             name: 'New Employee To Edit',
             email: 'employee3@example.com',
-            password: '123456',
+            password: faker.internet.password(),
             monthWorkedHours: 0,
         })
         const employeeId = employee.id.toString()

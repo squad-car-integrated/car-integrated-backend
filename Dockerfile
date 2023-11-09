@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Instale as dependências
-RUN npm install
+RUN npm install --ignore-scripts
 
 # Exponha a porta em que sua API será executada
 EXPOSE 8080

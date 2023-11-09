@@ -1,6 +1,7 @@
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { faker } from '@faker-js/faker'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
@@ -37,7 +38,7 @@ describe('Create owner (E2E)', () => {
                 name: 'John Doe',
                 email: 'johndoeowner@example.com',
                 phoneNumber: '21 99999-2121',
-                password: '123456',
+                password: faker.internet.password(),
             })
         expect(response.statusCode).toBe(201)
         const userOnDatabase = await prisma.owner.findUnique({
@@ -56,19 +57,19 @@ describe('Create owner (E2E)', () => {
             ownerFactory.makePrismaOwner({
                 name: 'New Owner 4',
                 email: 'owner4@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 phoneNumber: '21 99999 2121',
             }),
             ownerFactory.makePrismaOwner({
                 name: 'New Owner 5',
                 email: 'owner5@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 phoneNumber: '21 99999 2121',
             }),
             ownerFactory.makePrismaOwner({
                 name: 'New Owner 6',
                 email: 'owner6@example.com',
-                password: '123456',
+                password: faker.internet.password(),
                 phoneNumber: '21 99999 2121',
             }),
         ])
@@ -92,7 +93,7 @@ describe('Create owner (E2E)', () => {
         const newOwner = await ownerFactory.makePrismaOwner({
             name: 'New Owner 1',
             email: 'owner1@example.com',
-            password: '123456',
+            password: faker.internet.password(),
             phoneNumber: '21 99999 2121',
         })
         const ownerId = newOwner.id.toString()
@@ -115,7 +116,7 @@ describe('Create owner (E2E)', () => {
         const owner = await ownerFactory.makePrismaOwner({
             name: 'New Owner To Edit',
             email: 'owner3@example.com',
-            password: '123456',
+            password: faker.internet.password(),
             phoneNumber: '21 99999 2121',
         })
         const ownerId = owner.id.toString()
