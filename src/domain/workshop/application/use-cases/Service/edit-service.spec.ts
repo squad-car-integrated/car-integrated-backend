@@ -78,8 +78,8 @@ describe('Edit Service', () => {
       totalValue: 30,
       description: 'Descricao editada',
       status: ServiceStatus.Completed,
-      productsIds: [product1Quantity, product2Quantity],
-      employeesIds: ["3", "4"]
+      products: [product1Quantity, product2Quantity],
+      employees: ["3", "4"]
     })
     expect(inMemoryServicesRepository.items[0]).toMatchObject({
       description: 'Descricao editada',

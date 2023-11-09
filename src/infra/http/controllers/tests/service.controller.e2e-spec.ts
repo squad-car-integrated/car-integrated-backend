@@ -152,28 +152,7 @@ describe('Create service (E2E)', () => {
             automobileId: car.id,
             totalValue: 20
         })
-        await serviceEmployeeFactory.makePrismaServiceEmployee({
-            serviceId: service.id,
-            employeeId: employee.id,
-        })
-        await serviceProductFactory.makePrismaServiceProduct({
-            serviceId: service.id,
-            productId: newProduct1.id,
-            quantity: 4
-        })
-        await serviceProductFactory.makePrismaServiceProduct({
-            serviceId: service.id,
-            productId: newProduct2.id,
-            quantity: 6
-        })
-        await serviceProductFactory.makePrismaServiceProduct({
-            serviceId: service.id,
-            productId: newProduct3.id,
-            quantity: 8
-        })
         const serviceId = service.id.toString()
-
-
         const productAndQuantity1: ProductAndQuantity = {
             productId: newProduct1.id.toString(),
             quantity: 12

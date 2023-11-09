@@ -17,7 +17,7 @@ describe('Get Service By Id', () => {
       inMemoryServiceProductsRepository,
       inMemoryServiceEmployeesRepository
     )
-    sut = new GetServiceByIdUseCase(inMemoryServicesRepository)
+    sut = new GetServiceByIdUseCase(inMemoryServicesRepository,inMemoryServiceProductsRepository,inMemoryServiceEmployeesRepository)
   })
 
   it('Should be able to get a service by id', async () => {

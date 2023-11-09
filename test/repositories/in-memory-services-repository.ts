@@ -5,7 +5,10 @@ import { ServicesRepository } from '@/domain/workshop/application/repositories/s
 import { Service } from '@/domain/workshop/enterprise/entities/service'
 
 export class InMemoryServicesRepository implements ServicesRepository {
-  constructor(private serviceProductsRepository: ServiceProductsRepository, private serviceEmployeeRepository: ServiceEmployeesRepository) {}
+  constructor(
+    private serviceProductsRepository: ServiceProductsRepository,
+    private serviceEmployeeRepository: ServiceEmployeesRepository
+    ) {}
   async findManyRecent({ page }: PaginationParams) {
     const sortedProducts = this.items
       .slice()

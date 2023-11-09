@@ -14,6 +14,10 @@ import { OwnersRepository } from '../../repositories/owners-repository'
 import { OwnerDontExistsError } from '../errors/owner-dont-exists-error'
 import { ProductsRepository } from '../../repositories/products-repository'
 import { ProductDontExistsError } from '../errors/product-dont-exists-error'
+import { ServiceProductsRepository } from '../../repositories/service-products-repository'
+import { ServiceEmployeesRepository } from '../../repositories/service-employees-repository'
+import { EmployeesRepository } from '../../repositories/employees-repository'
+import { EmployeeDontExistsError } from '../errors/employee-dont-exists-error'
 export interface ProductAndQuantity {
   productId: string
   quantity: number
@@ -39,7 +43,10 @@ export class CreateServiceUseCase {
     private serviceRepository: ServicesRepository,
     private automobileRepository: AutomobilesRepository,
     private ownerRepository: OwnersRepository,
-    private productRepository: ProductsRepository
+    private productRepository: ProductsRepository,
+    private employeeRepository: EmployeesRepository,
+    private serviceProductsRepository: ServiceProductsRepository,
+    private serviceEmployeesRepository: ServiceEmployeesRepository
   ) {}
 
   async execute({
@@ -51,9 +58,8 @@ export class CreateServiceUseCase {
     description,
     status,
   }: CreateServiceUseCaseRequest): Promise<CreateServiceUseCaseResponse> {
-    const automobile = this.getAutomobile(automobileId);
-    const owner = this.getOwner(ownerId);
-
+    const automobile = await this.getAutomobile(automobileId);
+    const owner = await this.getOwner(ownerId);
     if (!automobile || !owner) {
       return !automobile
         ? left(new AutomobileDontExistsError(automobileId))
@@ -61,15 +67,16 @@ export class CreateServiceUseCase {
     }
 
     const service = this.createService(automobileId, ownerId, totalValue, description, status);
-    this.createServiceProducts(service, products);
-    this.createServiceEmployees(service, employees);
-
+    await this.createServiceProductsList(service, products);
+    await this.createServiceEmployeesList(service, employees);
     await this.serviceRepository.create(service);
+    await this.registerServiceEmployees(service)
+    await this.registerServiceProducts(service)
 
     return right({ service });
   }
 
-  private getAutomobile(automobileId: string) {
+  private async getAutomobile(automobileId: string) {
     return this.automobileRepository.findById(automobileId);
   }
 
@@ -93,7 +100,7 @@ export class CreateServiceUseCase {
     });
   }
 
-  private createServiceProducts(service: Service, products: ProductAndQuantity[]) {
+  private async createServiceProductsList(service: Service, products: ProductAndQuantity[]) {
     const serviceProducts: ServiceProduct[] = [];
 
     for (const product of products) {
@@ -108,7 +115,6 @@ export class CreateServiceUseCase {
         serviceId: service.id,
         quantity: product.quantity,
       });
-
       serviceProducts.push(serviceProduct);
     }
 
@@ -116,13 +122,13 @@ export class CreateServiceUseCase {
     return serviceProducts;
   }
 
-  private createServiceEmployees(service: Service, employees: string[]) {
+  private async createServiceEmployeesList(service: Service, employees: string[]) {
     const serviceEmployees: ServiceEmployee[] = [];
     for (const employee of employees) {
-      const productExists = this.productRepository.findById(employee);
+      const employeeExists = this.employeeRepository.findById(employee);
 
-      if (!productExists) {
-        return left(new ProductDontExistsError(employee));
+      if (!employeeExists) {
+        return left(new EmployeeDontExistsError(employee));
       }
 
       const serviceEmployee = ServiceEmployee.create({
@@ -134,5 +140,19 @@ export class CreateServiceUseCase {
     service.employees = new ServiceEmployeeList(serviceEmployees);
 
     return serviceEmployees;
+  }
+  private async registerServiceEmployees(service: Service){
+    await Promise.all(
+      service.employees.getItems().map(async (employee) =>
+        this.serviceEmployeesRepository.create(employee)
+      )
+    );
+  }
+  private async registerServiceProducts(service: Service){
+    await Promise.all(
+      service.products.getItems().map(async (product) =>
+        this.serviceProductsRepository.create(product)
+      )
+    );
   }
 }

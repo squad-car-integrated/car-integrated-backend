@@ -4,6 +4,10 @@ import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-e
 export class InMemoryServiceEmployeesRepository
   implements ServiceEmployeesRepository
 {
+  async save(serviceEmployee: ServiceEmployee): Promise<void> {
+    const itemIndex = this.items.findIndex((item) => item.id === serviceEmployee.id)
+    this.items[itemIndex] = serviceEmployee
+  }
   async create(serviceEmployee: ServiceEmployee): Promise<void> {
     this.items.push(serviceEmployee)
   }
