@@ -1,6 +1,6 @@
 # Use a imagem oficial do Node.js
 FROM node:14
-
+USER nonroot
 # Crie um diretório de trabalho no contêiner
 WORKDIR /app
 
