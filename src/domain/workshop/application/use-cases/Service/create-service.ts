@@ -109,7 +109,7 @@ export class CreateServiceUseCase {
       if (!productExists) {
         return left(new ProductDontExistsError(product.productId));
       }
-
+      
       const serviceProduct = ServiceProduct.create({
         productId: new UniqueEntityID(product.productId),
         serviceId: service.id,
@@ -117,7 +117,7 @@ export class CreateServiceUseCase {
       });
       serviceProducts.push(serviceProduct);
     }
-
+    service.products = new ServiceProductList(serviceProducts);
 
     return serviceProducts;
   }
@@ -142,17 +142,33 @@ export class CreateServiceUseCase {
     return serviceEmployees;
   }
   private async registerServiceEmployees(service: Service){
-    await Promise.all(
-      service.employees.getItems().map(async (employee) =>
-        this.serviceEmployeesRepository.create(employee)
-      )
-    );
+    try {
+      await Promise.all(
+        service.employees.getItems().map(async (employee) =>
+          this.serviceEmployeesRepository.create(employee)
+        )
+      );
+    } catch (error) {
+      throw error
+    }
+    
   }
   private async registerServiceProducts(service: Service){
-    await Promise.all(
-      service.products.getItems().map(async (product) =>
-        this.serviceProductsRepository.create(product)
-      )
-    );
+    try {
+      await Promise.all(
+        service.products.getItems().map(async (product) => {
+          await this.serviceProductsRepository.create(product)
+          const productOnDb = await this.productRepository.findById(product.productId.toString())
+          if(productOnDb){
+            productOnDb.productAmount -= product.quantity
+            await this.productRepository.save(productOnDb)
+          }
+        }
+        )
+      );
+    } catch (error) {
+      throw error
+    }
+    
   }
 }

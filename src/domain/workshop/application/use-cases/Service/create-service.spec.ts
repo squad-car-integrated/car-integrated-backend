@@ -50,13 +50,13 @@ describe('Create Service', () => {
     const owner = makeOwner()
     const employee = makeEmployee()
     const automobile = makeAutomobile()
-    const product = makeProduct()
+    const product = makeProduct({productAmount: 20})
     await inMemoryOwnerRepository.create(owner)
     await inMemoryEmployeesRepository.create(employee)
     await inMemoryAutomobilesRepository.create(automobile)
     await inMemoryProductRepository.create(product)
-    const product1: ProductAndQuantity = {
-      productId: "product1",
+    const productAndQuantity: ProductAndQuantity = {
+      productId: product.id.toString(),
       quantity: 12
     } 
     const result = await sut.execute({
@@ -66,9 +66,12 @@ describe('Create Service', () => {
       automobileId: automobile.id.toString(),
       description: faker.commerce.productDescription(),
       status: ServiceStatus.InProgress,
-      products: [product1, product1],
+      products: [productAndQuantity],
     })
     expect(result.isRight()).toBe(true)
     expect(inMemoryServicesRepository.items[0]).toBeTruthy()
+    expect(inMemoryServiceEmployeesRepository.items[0].employeeId).toEqual(employee.id)
+    expect(inMemoryServiceProductsRepository.items[0].productId).toEqual(product.id)
+    expect(inMemoryProductRepository.items[0].productAmount).toEqual(8)
   })
 })
