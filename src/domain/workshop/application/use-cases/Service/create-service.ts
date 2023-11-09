@@ -113,7 +113,7 @@ export class CreateServiceUseCase {
         const serviceProducts: ServiceProduct[] = []
 
         for (const product of products) {
-            const productExists = this.productRepository.findById(
+            const productExists = await this.productRepository.findById(
                 product.productId,
             )
 
@@ -139,7 +139,7 @@ export class CreateServiceUseCase {
     ) {
         const serviceEmployees: ServiceEmployee[] = []
         for (const employee of employees) {
-            const employeeExists = this.employeeRepository.findById(employee)
+            const employeeExists = await this.employeeRepository.findById(employee)
 
             if (!employeeExists) {
                 return left(new EmployeeDontExistsError(employee))
