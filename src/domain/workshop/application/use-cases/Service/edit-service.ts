@@ -146,27 +146,26 @@ export class EditServiceUseCase {
     await Promise.all(
       service.products.getItems().map(async (product) => {
         await this.serviceProductsRepository.save(product);
-
-        const productOnDb = await this.productRepository.findById(product.productId.toString());
-
-        if (productOnDb) {
-          let quantityToChange = -product.quantity;
-          const oldServiceProduct = currentServiceProducts.find(
-            (serviceProduct) => serviceProduct.id.toString() === product.id.toString()
-          );
-
-          if (oldServiceProduct && oldServiceProduct.quantity > product.quantity) {
-            quantityToChange = -product.quantity + oldServiceProduct.quantity;
-          }
-
-          productOnDb.productAmount += quantityToChange;
-          await this.productRepository.save(productOnDb);
-        }
+        this.changeProductStock(product,currentServiceProducts)
       })
     );
 
     await Promise.all(
       service.employees.getItems().map(async (employee) => await this.serviceEmployeesRepository.save(employee))
     );
+  }
+  private async changeProductStock(product: ServiceProduct, currentServiceProducts: ServiceProduct[]){
+    const productOnDb = await this.productRepository.findById(product.productId.toString());
+    if (productOnDb) {
+        let quantityToChange = -product.quantity;
+        const oldServiceProduct = currentServiceProducts.find(
+        (serviceProduct) => serviceProduct.id.toString() === product.id.toString()
+        );
+        if (oldServiceProduct && oldServiceProduct.quantity > product.quantity) {
+        quantityToChange = -product.quantity + oldServiceProduct.quantity;
+        }
+        productOnDb.productAmount += quantityToChange;
+        await this.productRepository.save(productOnDb);
+    }
   }
 }
