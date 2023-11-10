@@ -21,7 +21,9 @@ type AuthenticateBodySchema = z.infer<typeof AuthenticateSchema>
 @ApiTags('CarIntegrated')
 @Controller('/sessions')
 export class AuthenticateController {
-    constructor(private authenticateUser: AuthenticateUserUseCase) {}
+    constructor(
+        private authenticateUser: AuthenticateUserUseCase,
+        ) {}
 
     @Post()
     @Public()
@@ -31,7 +33,7 @@ export class AuthenticateController {
         description: 'Json structure for user object',
     })
     @UsePipes(new ZodValidationPipe(AuthenticateSchema))
-    async handle(@Body() body: AuthenticateBodySchema) {
+    async handleSignIn(@Body() body: AuthenticateBodySchema) {
         const { email, password } = body
         const result = await this.authenticateUser.execute({
             email,
