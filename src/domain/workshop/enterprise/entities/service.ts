@@ -11,7 +11,8 @@ export interface ServiceProps {
     ownerId: UniqueEntityID
     employees: ServiceEmployeeList
     products: ServiceProductList
-    totalValue: number
+    laborValue: number
+    productsTotalValue: number
     description: string
     status: ServiceStatus
     createdAt: Date
@@ -46,9 +47,13 @@ export class Service extends AggregateRoot<ServiceProps> {
     get products() {
         return this.props.products
     }
-    @ApiProperty({ example: 3899, description: 'Total cost of the service' })
-    get totalValue() {
-        return this.props.totalValue
+    @ApiProperty({ example: 3899, description: 'Total cost of the labor service' })
+    get laborValue() {
+        return this.props.laborValue
+    }
+    @ApiProperty({ example: 3899, description: 'Total cost of the service the products' })
+    get productsTotalValue() {
+        return this.props.productsTotalValue
     }
     @ApiProperty({
         example: 'Revisão completa',
@@ -81,8 +86,12 @@ export class Service extends AggregateRoot<ServiceProps> {
         this.props.employees = employees
         this.touch()
     }
-    set totalValue(totalValue: number) {
-        this.props.totalValue = totalValue
+    set laborValue(laborValue: number) {
+        this.props.laborValue = laborValue
+        this.touch()
+    }
+    set productsTotalValue(productsTotalValue: number) {
+        this.props.productsTotalValue = productsTotalValue
         this.touch()
     }
     set description(description: string) {
@@ -106,7 +115,8 @@ export class Service extends AggregateRoot<ServiceProps> {
         props: Optional<
             ServiceProps,
             | 'createdAt'
-            | 'totalValue'
+            | 'productsTotalValue'
+            | "laborValue"
             | 'description'
             | 'products'
             | 'employees'
@@ -116,7 +126,8 @@ export class Service extends AggregateRoot<ServiceProps> {
         const service = new Service(
             {
                 ...props,
-                totalValue: props.totalValue ?? 0,
+                productsTotalValue: props.productsTotalValue ?? 0,
+                laborValue: props.laborValue ?? 0,
                 description: props.description ?? '',
                 employees: props.employees ?? new ServiceEmployeeList(),
                 products: props.products ?? new ServiceProductList(),

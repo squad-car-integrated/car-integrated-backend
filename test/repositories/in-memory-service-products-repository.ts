@@ -8,7 +8,12 @@ export class InMemoryServiceProductsRepository
         const itemIndex = this.items.findIndex(
             (item) => item.id === serviceProduct.id,
         )
-        this.items[itemIndex] = serviceProduct
+        if(itemIndex !== -1){
+            this.items[itemIndex] = serviceProduct
+        }else{
+            this.create(serviceProduct)
+        }
+        
     }
     async create(serviceProduct: ServiceProduct): Promise<void> {
         this.items.push(serviceProduct)

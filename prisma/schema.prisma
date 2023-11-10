@@ -62,18 +62,19 @@ model Automobile {
 }
 
 model Service {
-  id           String             @id @default(uuid())
-  automobileId String             @map("automobile_id")
-  ownerId      String             @map("owner_id")
-  employees    ServiceEmployees[]
-  products     ServiceProducts[]
-  totalValue   Float
-  description  String
-  status       String
-  createdAt    DateTime           @default(now()) @map("created_at")
-  updatedAt    DateTime?          @updatedAt @map("updated")
-  owner        Owner              @relation(fields: [ownerId], references: [id])
-  automobile   Automobile         @relation(fields: [automobileId], references: [id])
+  id                 String             @id @default(uuid())
+  automobileId       String             @map("automobile_id")
+  ownerId            String             @map("owner_id")
+  employees          ServiceEmployees[]
+  products           ServiceProducts[]
+  laborValue         Float              @default(0)
+  productsTotalValue Float              @default(0)
+  description        String
+  status             String
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime?          @updatedAt @map("updated")
+  owner              Owner              @relation(fields: [ownerId], references: [id])
+  automobile         Automobile         @relation(fields: [automobileId], references: [id])
 
   @@map("services")
 }

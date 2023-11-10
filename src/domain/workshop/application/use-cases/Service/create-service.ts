@@ -27,7 +27,7 @@ interface CreateServiceUseCaseRequest {
     ownerId: string
     employees: string[]
     products: ProductAndQuantity[]
-    totalValue: number
+    laborValue: number
     description: string
     status: ServiceStatus
 }
@@ -54,7 +54,7 @@ export class CreateServiceUseCase {
         ownerId,
         employees,
         products,
-        totalValue,
+        laborValue,
         description,
         status,
     }: CreateServiceUseCaseRequest): Promise<CreateServiceUseCaseResponse> {
@@ -69,7 +69,7 @@ export class CreateServiceUseCase {
         const service = this.createService(
             automobileId,
             ownerId,
-            totalValue,
+            laborValue,
             description,
             status,
         )
@@ -93,14 +93,14 @@ export class CreateServiceUseCase {
     private createService(
         automobileId: string,
         ownerId: string,
-        totalValue: number,
+        laborValue: number,
         description: string,
         status: ServiceStatus,
     ) {
         return Service.create({
             automobileId: new UniqueEntityID(automobileId),
             ownerId: new UniqueEntityID(ownerId),
-            totalValue,
+            laborValue,
             description,
             status,
         })
@@ -126,6 +126,7 @@ export class CreateServiceUseCase {
                 serviceId: service.id,
                 quantity: product.quantity,
             })
+            service.productsTotalValue += productExists.unitValue * product.quantity
             serviceProducts.push(serviceProduct)
         }
         service.products = new ServiceProductList(serviceProducts)

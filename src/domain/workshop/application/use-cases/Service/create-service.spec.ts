@@ -60,7 +60,7 @@ describe('Create Service', () => {
             quantity: 12,
         }
         const result = await sut.execute({
-            totalValue: faker.number.int(),
+            laborValue: 1000,
             ownerId: owner.id.toString(),
             employees: [employee.id.toString()],
             automobileId: automobile.id.toString(),

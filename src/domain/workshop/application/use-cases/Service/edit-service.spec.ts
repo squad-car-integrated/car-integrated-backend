@@ -41,7 +41,7 @@ describe('Edit Service', () => {
                 ownerId: new UniqueEntityID('owner-1'),
                 automobileId: new UniqueEntityID('car-1'),
                 description: 'New service',
-                totalValue: 20,
+                laborValue: 2000,
                 status: ServiceStatus.PendingApproval,
             },
             new UniqueEntityID('service-1'),
@@ -67,7 +67,7 @@ describe('Edit Service', () => {
             automobileId: newService.automobileId.toString(),
             ownerId: newService.ownerId.toString(),
             serviceId: newService.id.toString(),
-            totalValue: 30,
+            laborValue: 3000,
             description: 'Descricao editada',
             status: ServiceStatus.Completed,
             products: [productAndQuantity],
@@ -75,26 +75,38 @@ describe('Edit Service', () => {
         })
         expect(inMemoryServicesRepository.items[0]).toMatchObject({
             description: 'Descricao editada',
-            totalValue: 30,
+            laborValue: 3000,
             status: ServiceStatus.Completed,
+            productsTotalValue: product.unitValue * 20
         })
-        expect(
-            inMemoryServicesRepository.items[0].products.currentItems,
-        ).toHaveLength(1)
-        expect(
-            inMemoryServicesRepository.items[0].products.currentItems,
-        ).toEqual([expect.objectContaining({ productId: product.id })])
+        const serviceProducts = inMemoryServicesRepository.items[0].products.currentItems
+        expect(serviceProducts).toHaveLength(1)
+        expect(serviceProducts).toEqual([expect.objectContaining({ productId: product.id })])
         expect(inMemoryProductRepository.items[0]).toEqual(
             expect.objectContaining({ id: product.id, productAmount: 30 }),
         )
-        expect(
-            inMemoryServicesRepository.items[0].employees.currentItems,
-        ).toHaveLength(2)
-        expect(
-            inMemoryServicesRepository.items[0].employees.currentItems,
-        ).toEqual([
+        const serviceEmployees = inMemoryServicesRepository.items[0].employees.currentItems
+        expect(serviceEmployees).toHaveLength(2)
+        expect(serviceEmployees).toEqual([
             expect.objectContaining({ employeeId: new UniqueEntityID('3') }),
             expect.objectContaining({ employeeId: new UniqueEntityID('4') }),
         ])
+        const productAndQuantity2: ProductAndQuantity = {
+            productId: product.id.toString(),
+            quantity: 18,
+        }
+        await sut.execute({
+            automobileId: newService.automobileId.toString(),
+            ownerId: newService.ownerId.toString(),
+            serviceId: newService.id.toString(),
+            laborValue: 3000,
+            description: 'Descricao editada',
+            status: ServiceStatus.Completed,
+            products: [productAndQuantity2],
+            employees: ['3', '4'],
+        })
+        expect(inMemoryProductRepository.items[0]).toEqual(
+            expect.objectContaining({ id: product.id, productAmount: 32 }),
+        )
     })
 })

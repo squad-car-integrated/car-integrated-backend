@@ -157,7 +157,7 @@ describe('Create service (E2E)', () => {
             description: 'New Service To Edit',
             ownerId: owner.id,
             automobileId: car.id,
-            totalValue: 20,
+            laborValue: 2000,
         })
         const serviceId = service.id.toString()
         const productAndQuantity1: ProductAndQuantity = {
@@ -179,7 +179,7 @@ describe('Create service (E2E)', () => {
                 description: service.description,
                 ownerId: service.ownerId.toString(),
                 automobileId: service.automobileId.toString(),
-                totalValue: 2987,
+                laborValue: 2987,
                 status: ServiceStatus.InProgress,
                 employees: [employee.id.toString(), newEmployee1.id.toString()],
                 products: [
@@ -194,8 +194,10 @@ describe('Create service (E2E)', () => {
                 id: serviceId,
             },
         })
+        const somaDosProdutos = productAndQuantity1.quantity * newProduct1.unitValue + productAndQuantity2.quantity * newProduct2.unitValue + productAndQuantity3.quantity * newProduct3.unitValue
         expect(serviceOnDatabase).toBeTruthy()
-        expect(serviceOnDatabase?.totalValue).toBe(2987)
+        expect(serviceOnDatabase?.laborValue).toBe(2987)
+        expect(serviceOnDatabase?.productsTotalValue).toBe(somaDosProdutos)
         const serviceProductsOnDatabase = await prisma.serviceProducts.findMany(
             {
                 where: {

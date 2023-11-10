@@ -38,7 +38,7 @@ const serviceCreateSchema = z.object({
     automobileId: z.string().uuid(),
     ownerId: z.string().uuid(),
     description: z.string(),
-    totalValue: z.number().default(0),
+    laborValue: z.number().default(0),
     employees: z.array(z.string().uuid()),
     products: z.array(serviceProducts),
 })
@@ -47,7 +47,7 @@ const serviceEditSchema = z.object({
     ownerId: z.string().uuid(),
     description: z.string(),
     status: z.nativeEnum(ServiceStatus),
-    totalValue: z.number().default(0),
+    laborValue: z.number().default(0),
     employees: z.array(z.string().uuid()),
     products: z.array(serviceProducts),
 })
@@ -128,7 +128,7 @@ export class ServiceController {
             automobileId,
             ownerId,
             description,
-            totalValue,
+            laborValue,
             employees,
             products,
         } = body
@@ -139,7 +139,7 @@ export class ServiceController {
             status: ServiceStatus.Created,
             employees,
             products,
-            totalValue,
+            laborValue,
         })
         if (result.isLeft()) {
             throw new BadRequestException()
@@ -173,7 +173,7 @@ export class ServiceController {
             ownerId,
             description,
             status,
-            totalValue,
+            laborValue,
             employees,
             products,
         } = body
@@ -185,7 +185,7 @@ export class ServiceController {
             status,
             employees,
             products,
-            totalValue,
+            laborValue,
         })
         if (result.isLeft()) {
             throw new BadRequestException()
