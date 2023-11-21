@@ -141,8 +141,9 @@ export class ServiceController {
             products,
             laborValue,
         })
+        console.log(result)
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
     }
     @Put('/:id')

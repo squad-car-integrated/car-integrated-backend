@@ -51,7 +51,6 @@ export class Service extends AggregateRoot<ServiceProps> {
     get laborValue() {
         return this.props.laborValue
     }
-    @ApiProperty({ example: 3899, description: 'Total cost of the service the products' })
     get productsTotalValue() {
         return this.props.productsTotalValue
     }

@@ -2,7 +2,6 @@ import { WatchedList } from '@/core/entities/watched-list'
 import { ServiceEmployee } from './service-employees'
 type ServiceEmployeeString = {
     id: string
-    serviceId: string
     employeeId: string
 }
 export class ServiceEmployeeList extends WatchedList<ServiceEmployee> {
@@ -14,7 +13,6 @@ export class ServiceEmployeeList extends WatchedList<ServiceEmployee> {
         this.currentItems.forEach(employee => {
             newList.push({
                 id: employee.id.toString(),
-                serviceId: employee.serviceId.toString(),
                 employeeId: employee.employeeId.toString(),
             })
         });

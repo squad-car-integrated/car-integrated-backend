@@ -107,6 +107,16 @@ export class EditServiceUseCase {
     return newServiceProducts;
   }
 
+/**
+ * The function updates or creates service employees based on the provided new employee IDs, current
+ * service employees, and service.
+ * @param {string[]} newEmployees - An array of strings representing the IDs of new employees to be
+ * added to the service.
+ * @param {ServiceEmployee[]} currentServiceEmployee - An array of existing service employees for a
+ * specific service.
+ * @param {Service} service - The `service` parameter is an object of type `Service`.
+ * @returns a Promise that resolves to an array of ServiceEmployee objects.
+ */
   private async updateOrCreateServiceEmployee(
     newEmployees: string[],
     currentServiceEmployee: ServiceEmployee[],
@@ -128,6 +138,12 @@ export class EditServiceUseCase {
     return serviceEmployees;
   }
 
+/**
+ * The function calculates the total value of products based on their unit value and quantity.
+ * @param {ServiceProductList} serviceProductList - The `serviceProductList` parameter is an instance
+ * of the `ServiceProductList` class. It represents a list of service products.
+ * @returns the total value of all the products in the serviceProductList.
+ */
   private async updateProductsTotalValue(serviceProductList: ServiceProductList): Promise<number> {
     let productTotal = 0;
     for (const serviceProduct of serviceProductList.getItems()) {
@@ -140,6 +156,13 @@ export class EditServiceUseCase {
     return productTotal;
   }
 
+/**
+ * The function saves a service and its related entities (products and employees) to the database.
+ * @param {Service} service - The `service` parameter is an object of type `Service` which represents a
+ * service entity.
+ * @param {ServiceProduct[]} currentServiceProducts - An array of ServiceProduct objects that
+ * represents the current products associated with the service.
+ */
   private async saveServiceAndRelatedEntities(service: Service, currentServiceProducts: ServiceProduct[]): Promise<void> {
     await this.serviceRepository.save(service);
 
@@ -154,17 +177,29 @@ export class EditServiceUseCase {
       service.employees.getItems().map(async (employee) => await this.serviceEmployeesRepository.save(employee))
     );
   }
+  /**
+   * The function changes the stock quantity of a product based on the quantity specified in the input
+   * and the current stock quantity in the database.
+   * @param {ServiceProduct} product - The `product` parameter is of type `ServiceProduct` and
+   * represents the product that needs to have its stock changed. It contains information such as the
+   * product ID and the quantity to be changed.
+   * @param {ServiceProduct[]} currentServiceProducts - currentServiceProducts is an array of
+   * ServiceProduct objects that represents the current state of service products.
+   */
   private async changeProductStock(product: ServiceProduct, currentServiceProducts: ServiceProduct[]){
     const productOnDb = await this.productRepository.findById(product.productId.toString());
     if (productOnDb) {
         let quantityToChange = -product.quantity;
         const oldServiceProduct = currentServiceProducts.find(
-        (serviceProduct) => serviceProduct.id.toString() === product.id.toString()
+          (serviceProduct) => serviceProduct.id.toString() === product.id.toString()
         );
         if (oldServiceProduct && oldServiceProduct.quantity > product.quantity) {
-        quantityToChange = -product.quantity + oldServiceProduct.quantity;
+          quantityToChange = -product.quantity + oldServiceProduct.quantity;
         }
-        productOnDb.productAmount += quantityToChange;
+        if(oldServiceProduct){
+          quantityToChange += oldServiceProduct.quantity
+        }
+        productOnDb.productAmount += quantityToChange
         await this.productRepository.save(productOnDb);
     }
   }

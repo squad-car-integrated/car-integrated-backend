@@ -19,7 +19,7 @@ describe('Fetch recent services', () => {
             inMemoryServiceProductsRepository,
             inMemoryServiceEmployeesRepository,
         )
-        sut = new FetchRecentServicesUseCase(inMemoryServicesRepository)
+        sut = new FetchRecentServicesUseCase(inMemoryServicesRepository,inMemoryServiceProductsRepository,inMemoryServiceEmployeesRepository)
     })
 
     it('Should be able to fetch recent services', async () => {

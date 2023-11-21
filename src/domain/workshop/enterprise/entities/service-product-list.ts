@@ -2,7 +2,6 @@ import { WatchedList } from '@/core/entities/watched-list'
 import { ServiceProduct } from './service-products'
 type ServiceProductString = {
     id: string
-    serviceId: string
     productId: string
     quantity: number
 }
@@ -15,7 +14,6 @@ export class ServiceProductList extends WatchedList<ServiceProduct> {
         this.currentItems.forEach(serviceProduct => {
             newList.push({
                 id: serviceProduct.id.toString(),
-                serviceId: serviceProduct.serviceId.toString(),
                 productId: serviceProduct.productId.toString(),
                 quantity: serviceProduct.quantity
             })

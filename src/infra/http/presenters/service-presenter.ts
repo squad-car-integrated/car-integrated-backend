@@ -4,7 +4,8 @@ export class ServicePresenter {
     static toHTTP(service: Service) {
         return {
             id: service.id.toString(),
-            totalValue: service.totalValue,
+            labourValue: service.laborValue,
+            productsTotalValue: service.productsTotalValue,
             ownerId: service.ownerId.toString(),
             automobileId: service.automobileId.toString(),
             employees: service.employees.listToString(),
