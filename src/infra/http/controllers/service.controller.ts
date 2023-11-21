@@ -97,7 +97,7 @@ export class ServiceController {
     async handleGetServiceByid(@Param('id') serviceId: string) {
         const result = await this.getServiceById.execute({ id: serviceId })
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
         return {
             service: ServicePresenter.toHTTP(result.value.service),
@@ -141,7 +141,6 @@ export class ServiceController {
             products,
             laborValue,
         })
-        console.log(result)
         if (result.isLeft()) {
             throw new BadRequestException(result.value?.message)
         }
@@ -189,7 +188,7 @@ export class ServiceController {
             laborValue,
         })
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
     }
 }

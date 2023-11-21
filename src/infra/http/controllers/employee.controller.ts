@@ -91,7 +91,7 @@ export class EmployeeController {
             id: employeeId,
         })
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
         const employee = result.value.employee
         return {

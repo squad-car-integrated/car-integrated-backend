@@ -91,7 +91,7 @@ export class OwnerController {
             id: ownerId,
         })
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
         const owner = result.value.owner
         return {

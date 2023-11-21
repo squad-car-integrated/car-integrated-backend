@@ -93,7 +93,7 @@ export class AutomobileController {
             id: automobileId,
         })
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
         const automobile = result.value.automobile
         return {

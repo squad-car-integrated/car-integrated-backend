@@ -90,7 +90,7 @@ export class ProductController {
             id: productId,
         })
         if (result.isLeft()) {
-            throw new BadRequestException()
+            throw new BadRequestException(result.value?.message)
         }
         const product = result.value.product
         return {
