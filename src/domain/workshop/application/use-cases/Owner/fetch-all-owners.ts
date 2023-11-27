@@ -5,6 +5,7 @@ import { OwnersRepository } from '../../repositories/owners-repository'
 
 interface FetchAllOwnersUseCaseRequest {
     page: number
+    name: string
 }
 type FetchAllOwnersUseCaseResponse = Either<null, { owners: Owner[] }>
 @Injectable()
@@ -12,8 +13,9 @@ export class FetchAllOwnersUseCase {
     constructor(private ownerRepository: OwnersRepository) {}
     async execute({
         page,
+        name
     }: FetchAllOwnersUseCaseRequest): Promise<FetchAllOwnersUseCaseResponse> {
-        const owners = await this.ownerRepository.getAll({ page })
+        const owners = await this.ownerRepository.getAll({ page, name })
         return right({
             owners,
         })

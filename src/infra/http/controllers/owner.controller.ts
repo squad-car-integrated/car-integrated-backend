@@ -32,6 +32,7 @@ import {
     ApiBody,
     ApiOkResponse,
     ApiNotFoundResponse,
+    ApiQuery
 } from '@nestjs/swagger'
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
 const ownerSchema = z.object({
@@ -46,7 +47,13 @@ const pageQueryParamSchema = z
     .default('1')
     .transform(Number)
     .pipe(z.number().min(1))
+const itemNameQueryParamSchema = z
+    .string()
+    .optional()
+    .default('')
 const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+const queryItemNameValidationPipe = new ZodValidationPipe(itemNameQueryParamSchema)
+type ItemNameQueryParamSchema = z.infer<typeof itemNameQueryParamSchema>
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 type OwnerBodySchema = z.infer<typeof ownerSchema>
 @Controller('/owner')
@@ -63,11 +70,14 @@ export class OwnerController {
 
     @Get()
     @ApiOperation({ summary: 'Fetch owners by page' })
+    @ApiQuery({ name: 'page', type: Number, required: false })
+    @ApiQuery({ name: 'name', type: String, required: false })
     @HttpCode(200)
     async handleFetchOwner(
         @Query('page', queryValidationPipe) page: PageQueryParamSchema,
+        @Query('name', queryItemNameValidationPipe) name: ItemNameQueryParamSchema,
     ) {
-        const result = await this.fetchAllOwners.execute({ page })
+        const result = await this.fetchAllOwners.execute({ page, name })
         if (result.isLeft()) {
             throw new BadRequestException()
         }

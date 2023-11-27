@@ -6,7 +6,6 @@ export class OnwerPresenter {
             id: onwer.id.toString(),
             name: onwer.name,
             email: onwer.email,
-            password: onwer.password,
             phoneNumber: onwer.phoneNumber,
             createdAt: onwer.createdAt,
             updatedAt: onwer.updatedAt,

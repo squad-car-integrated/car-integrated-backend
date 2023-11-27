@@ -20,14 +20,25 @@ export class PrismaOwnersRepository implements OwnersRepository {
         return PrismaOwnerMapper.toDomain(owner)
     }
     async getAll(params: PaginationParams): Promise<Owner[]> {
-        const owner = await this.prisma.owner.findMany({
+        const query: any = {
             take: 20,
             skip: (params.page - 1) * 20,
             orderBy: {
                 name: 'desc',
             },
-        })
-        return owner.map(PrismaOwnerMapper.toDomain)
+        };
+
+        if (params.name || params.name !== "") {
+            query.where = {
+                name: {
+                    contains: params.name,
+                    mode: "insensitive"
+                }
+            };
+        }
+    
+        const owners = await this.prisma.owner.findMany(query);
+        return owners.map(PrismaOwnerMapper.toDomain);
     }
     async save(owner: Owner): Promise<void> {
         const data = PrismaOwnerMapper.toPrisma(owner)

@@ -6,7 +6,6 @@ export class EmployeePresenter {
             id: employee.id.toString(),
             name: employee.name,
             email: employee.email,
-            password: employee.password,
             monthWorkedHours: employee.monthWorkedHours,
             createdAt: employee.createdAt,
             updatedAt: employee.updatedAt,
