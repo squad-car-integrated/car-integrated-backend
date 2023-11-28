@@ -46,16 +46,16 @@ export class PrismaAutomobilesRepository implements AutomobilesRepository {
             },
         })
     }
-    async findByPlate(plate: string): Promise<Automobile | null> {
-        const automobile = await this.prisma.automobile.findUnique({
+    async findByPlate(plate: string): Promise<Automobile[]> {
+        const automobile = await this.prisma.automobile.findMany({
             where: {
-                plate,
+                plate:{
+                    contains: plate,
+                    mode: "insensitive"
+                },
             },
         })
-        if (!automobile) {
-            return null
-        }
-        return PrismaAutomobileMapper.toDomain(automobile)
+        return PrismaAutomobileMapper.toDomainMany(automobile)
     }
     async create(automobile: Automobile): Promise<void> {
         const data = PrismaAutomobileMapper.toPrisma(automobile)

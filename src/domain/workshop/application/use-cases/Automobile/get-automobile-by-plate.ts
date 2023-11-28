@@ -8,8 +8,8 @@ interface GetAutomobileByPlateUseCaseRequest {
     plate: string
 }
 type GetAutomobileByPlateUseCaseResponse = Either<
-    ResourceNotFoundError,
-    { automobile: Automobile }
+    null,
+    { automobiles: Automobile[] }
 >
 @Injectable()
 export class GetAutomobileByPlateUseCase {
@@ -17,12 +17,9 @@ export class GetAutomobileByPlateUseCase {
     async execute({
         plate,
     }: GetAutomobileByPlateUseCaseRequest): Promise<GetAutomobileByPlateUseCaseResponse> {
-        const automobile = await this.automobileRepository.findByPlate(plate)
-        if (!automobile) {
-            return left(new ResourceNotFoundError())
-        }
+        const automobiles = await this.automobileRepository.findByPlate(plate)
         return right({
-            automobile,
+            automobiles,
         })
     }
 }

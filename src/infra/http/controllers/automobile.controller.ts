@@ -35,9 +35,9 @@ import {
 import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 import { GetAutomobileByPlateUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-plate'
 const automobileSchema = z.object({
-    model: z.string(),
-    brand: z.string(),
-    plate: z.string(),
+    model: z.string().toUpperCase(),
+    brand: z.string().toUpperCase(),
+    plate: z.string().toUpperCase(),
     ownerId: z.string().uuid(),
 })
 const pageQueryParamSchema = z
@@ -119,11 +119,15 @@ export class AutomobileController {
             plate: automobilePlate,
         })
         if (result.isLeft()) {
-            throw new BadRequestException(result.value?.message)
+            throw new BadRequestException()
         }
-        const automobile = result.value.automobile
+        let automobiles: AutomobilePresenter[] = []
+        result.value.automobiles.forEach((element) => {
+            const convert = AutomobilePresenter.toHTTP(element)
+            automobiles.push(convert)
+        })
         return {
-            automobile: AutomobilePresenter.toHTTP(automobile),
+            automobiles
         }
     }
 
