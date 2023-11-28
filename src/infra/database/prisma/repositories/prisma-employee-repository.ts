@@ -9,14 +9,23 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 export class PrismaEmployeesRepository implements EmployeesRepository {
     constructor(private prisma: PrismaService) {}
     async getAll(params: PaginationParams): Promise<Employee[]> {
-        const employee = await this.prisma.employee.findMany({
+        const query: any = {
             take: 20,
             skip: (params.page - 1) * 20,
             orderBy: {
                 name: 'desc',
             },
-        })
-        return employee.map(PrismaEmployeeMapper.toDomain)
+        };
+        if (params.name || params.name !== "") {
+            query.where = {
+                name: {
+                    contains: params.name,
+                    mode: "insensitive"
+                }
+            };
+        }
+        const employees = await this.prisma.employee.findMany(query);
+        return employees.map(PrismaEmployeeMapper.toDomain)
     }
     async findById(id: string): Promise<Employee | null> {
         const employee = await this.prisma.employee.findUnique({
@@ -62,5 +71,11 @@ export class PrismaEmployeesRepository implements EmployeesRepository {
         await this.prisma.employee.create({
             data,
         })
+    }
+    async getNumberOfPages(){
+        const numberOfAutomobiles = await this.prisma.employee.count();
+        const carsPerPage = 20;
+        const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+        return totalPages;
     }
 }

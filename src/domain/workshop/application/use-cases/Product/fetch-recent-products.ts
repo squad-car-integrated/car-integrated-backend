@@ -6,7 +6,7 @@ import { ProductsRepository } from '../../repositories/products-repository'
 interface FetchRecentProductsUseCaseRequest {
     page: number
 }
-type FetchRecentProductsUseCaseResponse = Either<null, { products: Product[] }>
+type FetchRecentProductsUseCaseResponse = Either<null, { products: Product[], totalPages: number }>
 @Injectable()
 export class FetchRecentProductsUseCase {
     constructor(private productRepository: ProductsRepository) {}
@@ -14,8 +14,10 @@ export class FetchRecentProductsUseCase {
         page,
     }: FetchRecentProductsUseCaseRequest): Promise<FetchRecentProductsUseCaseResponse> {
         const products = await this.productRepository.findManyRecent({ page })
+        const totalPages = await this.productRepository.getNumberOfPages()
         return right({
             products,
+            totalPages
         })
     }
 }

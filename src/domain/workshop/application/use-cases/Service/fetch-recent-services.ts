@@ -10,7 +10,7 @@ import { ServiceProductsRepository } from '../../repositories/service-products-r
 interface FetchRecentServicesUseCaseRequest {
     page: number
 }
-type FetchRecentServicesUseCaseResponse = Either<null, { services: Service[] }>
+type FetchRecentServicesUseCaseResponse = Either<null, { services: Service[], totalPages: number }>
 @Injectable()
 export class FetchRecentServicesUseCase {
     constructor(
@@ -37,9 +37,10 @@ export class FetchRecentServicesUseCase {
                 return service;
             }),
         );
-
+        const totalPages = await this.serviceRepository.getNumberOfPages()
         return right({
             services: servicesWithDetails,
+            totalPages
         });
     }
 }

@@ -7,4 +7,5 @@ export abstract class ProductsRepository {
     abstract create(product: Product): Promise<void>
     abstract save(product: Product): Promise<void>
     abstract delete(product: Product): Promise<void>
+    abstract getNumberOfPages(): Promise<number>
 }

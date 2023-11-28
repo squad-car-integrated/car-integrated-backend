@@ -52,4 +52,10 @@ export class PrismaProductsRepository implements ProductsRepository {
             data,
         })
     }
+    async getNumberOfPages(){
+        const numberOfAutomobiles = await this.prisma.product.count();
+        const carsPerPage = 20;
+        const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+        return totalPages;
+    }
 }

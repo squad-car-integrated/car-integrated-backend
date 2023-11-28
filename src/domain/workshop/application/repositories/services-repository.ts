@@ -7,4 +7,5 @@ export abstract class ServicesRepository {
     abstract create(service: Service): Promise<void>
     abstract save(service: Service): Promise<void>
     abstract delete(service: Service): Promise<void>
+    abstract getNumberOfPages(): Promise<number>
 }

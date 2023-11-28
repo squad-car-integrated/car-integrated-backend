@@ -8,7 +8,7 @@ interface FetchRecentAutomobilesUseCaseRequest {
 }
 type FetchRecentAutomobilesUseCaseResponse = Either<
     null,
-    { automobiles: Automobile[] }
+    { automobiles: Automobile[], totalPages: number }
 >
 @Injectable()
 export class FetchRecentAutomobilesUseCase {
@@ -19,8 +19,10 @@ export class FetchRecentAutomobilesUseCase {
         const automobiles = await this.automobileRepository.findManyRecent({
             page,
         })
+        const totalPages = await this.automobileRepository.getNumberOfPages()
         return right({
             automobiles,
+            totalPages
         })
     }
 }

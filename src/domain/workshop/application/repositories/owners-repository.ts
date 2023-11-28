@@ -8,4 +8,5 @@ export abstract class OwnersRepository {
     abstract create(owner: Owner): Promise<void>
     abstract save(owner: Owner): Promise<void>
     abstract delete(owner: Owner): Promise<void>
+    abstract getNumberOfPages(): Promise<number>
 }

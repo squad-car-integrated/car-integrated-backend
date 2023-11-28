@@ -8,4 +8,5 @@ export abstract class AutomobilesRepository {
     abstract create(automobile: Automobile): Promise<void>
     abstract save(automobile: Automobile): Promise<void>
     abstract delete(automobile: Automobile): Promise<void>
+    abstract getNumberOfPages(): Promise<number>
 }

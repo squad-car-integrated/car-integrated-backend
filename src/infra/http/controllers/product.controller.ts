@@ -70,8 +70,10 @@ export class ProductController {
             throw new BadRequestException()
         }
         const products = result.value.products
+        const pages = result.value.totalPages
         return {
             products: products.map(ProductPresenter.toHTTP),
+            pages
         }
     }
 

@@ -2,6 +2,7 @@ import { Either, left, right } from '@/core/either'
 import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 import { AutomobilesRepository } from '../../repositories/automobiles-repository'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface GetAutomobileByPlateUseCaseRequest {
     plate: string
@@ -10,6 +11,7 @@ type GetAutomobileByPlateUseCaseResponse = Either<
     ResourceNotFoundError,
     { automobile: Automobile }
 >
+@Injectable()
 export class GetAutomobileByPlateUseCase {
     constructor(private automobileRepository: AutomobilesRepository) {}
     async execute({

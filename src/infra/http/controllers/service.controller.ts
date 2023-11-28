@@ -81,8 +81,10 @@ export class ServiceController {
             throw new BadRequestException()
         }
         const services = result.value.services
+        const pages = result.value.totalPages
         return {
             services: services.map(ServicePresenter.toHTTP),
+            pages
         }
     }
     @Get('/:id')

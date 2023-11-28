@@ -50,4 +50,10 @@ export class PrismaServicesRepository implements ServicesRepository {
             },
         })
     }
+    async getNumberOfPages(){
+        const numberOfAutomobiles = await this.prisma.service.count();
+        const carsPerPage = 20;
+        const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+        return totalPages;
+    }
 }

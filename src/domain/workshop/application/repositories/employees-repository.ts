@@ -8,4 +8,5 @@ export abstract class EmployeesRepository {
     abstract create(employee: Employee): Promise<void>
     abstract save(employee: Employee): Promise<void>
     abstract delete(employee: Employee): Promise<void>
+    abstract getNumberOfPages(): Promise<number>
 }

@@ -74,4 +74,10 @@ export class PrismaOwnersRepository implements OwnersRepository {
             data,
         })
     }
+    async getNumberOfPages(){
+        const numberOfAutomobiles = await this.prisma.owner.count();
+        const carsPerPage = 20;
+        const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+        return totalPages;
+    }
 }

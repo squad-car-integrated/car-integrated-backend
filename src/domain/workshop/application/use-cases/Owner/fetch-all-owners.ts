@@ -7,7 +7,7 @@ interface FetchAllOwnersUseCaseRequest {
     page: number
     name: string
 }
-type FetchAllOwnersUseCaseResponse = Either<null, { owners: Owner[] }>
+type FetchAllOwnersUseCaseResponse = Either<null, { owners: Owner[], totalPages: number }>
 @Injectable()
 export class FetchAllOwnersUseCase {
     constructor(private ownerRepository: OwnersRepository) {}
@@ -16,8 +16,10 @@ export class FetchAllOwnersUseCase {
         name
     }: FetchAllOwnersUseCaseRequest): Promise<FetchAllOwnersUseCaseResponse> {
         const owners = await this.ownerRepository.getAll({ page, name })
+        const totalPages = await this.ownerRepository.getNumberOfPages()
         return right({
             owners,
+            totalPages
         })
     }
 }

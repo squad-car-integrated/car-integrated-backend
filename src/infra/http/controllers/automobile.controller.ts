@@ -30,8 +30,10 @@ import {
     ApiResponse,
     ApiTags,
     ApiUnprocessableEntityResponse,
+    ApiQuery
 } from '@nestjs/swagger'
 import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
+import { GetAutomobileByPlateUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-plate'
 const automobileSchema = z.object({
     model: z.string(),
     brand: z.string(),
@@ -53,11 +55,11 @@ type AutomobileBodySchema = z.infer<typeof automobileSchema>
 export class AutomobileController {
     constructor(
         private createAutomobile: CreateAutomobileUseCase,
+        private getAutomobileByPlate: GetAutomobileByPlateUseCase,
         private getAutomobileById: GetAutomobileByIdUseCase,
         private fetchAutomobile: FetchRecentAutomobilesUseCase,
         private editAutomobile: EditAutomobileUseCase,
     ) {}
-
     @Get()
     @ApiOperation({ summary: 'Fetch cars by page' })
     @HttpCode(200)
@@ -73,8 +75,10 @@ export class AutomobileController {
             const convert = AutomobilePresenter.toHTTP(element)
             automobiles.push(convert)
         })
+        const pages = result.value.totalPages
         return {
             automobiles,
+            pages
         }
     }
 
@@ -91,6 +95,28 @@ export class AutomobileController {
     async handleGetAutomobileById(@Param('id') automobileId: string) {
         const result = await this.getAutomobileById.execute({
             id: automobileId,
+        })
+        if (result.isLeft()) {
+            throw new BadRequestException(result.value?.message)
+        }
+        const automobile = result.value.automobile
+        return {
+            automobile: AutomobilePresenter.toHTTP(automobile),
+        }
+    }
+    @Get('/plate/:plate')
+    @HttpCode(200)
+    //Swagger
+    @ApiOperation({ summary: 'Find Car by plate' })
+    @ApiResponse({
+        status: 200,
+        description: 'Car found',
+        type: Automobile,
+    })
+    //Fim do Swagger
+    async handleGetAutomobileByPlate(@Param('plate') automobilePlate: string) {
+        const result = await this.getAutomobileByPlate.execute({
+            plate: automobilePlate,
         })
         if (result.isLeft()) {
             throw new BadRequestException(result.value?.message)

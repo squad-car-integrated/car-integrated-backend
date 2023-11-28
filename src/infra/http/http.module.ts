@@ -30,6 +30,7 @@ import { CreateServiceUseCase } from '@/domain/workshop/application/use-cases/Se
 import { EditServiceUseCase } from '@/domain/workshop/application/use-cases/Service/edit-service'
 import { FetchRecentServicesUseCase } from '@/domain/workshop/application/use-cases/Service/fetch-recent-services'
 import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/Service/get-service-by-id'
+import { GetAutomobileByPlateUseCase } from '@/domain/workshop/application/use-cases/Automobile/get-automobile-by-plate'
 
 @Module({
     imports: [DatabaseModule, CryptographyModule],
@@ -58,6 +59,7 @@ import { GetServiceByIdUseCase } from '@/domain/workshop/application/use-cases/S
 
         CreateAutomobileUseCase,
         GetAutomobileByIdUseCase,
+        GetAutomobileByPlateUseCase,
         FetchRecentAutomobilesUseCase,
         EditAutomobileUseCase,
 

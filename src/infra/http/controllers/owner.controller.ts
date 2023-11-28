@@ -82,8 +82,10 @@ export class OwnerController {
             throw new BadRequestException()
         }
         const owners = result.value.owners
+        const pages = result.value.totalPages
         return {
             owners: owners.map(OnwerPresenter.toHTTP),
+            pages
         }
     }
     @Get('/:id')
