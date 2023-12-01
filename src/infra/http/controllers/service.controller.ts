@@ -46,7 +46,6 @@ const serviceEditSchema = z.object({
     description: z.string(),
     status: z.nativeEnum(ServiceStatus),
     laborValue: z.number().default(0),
-    ownerId: z.string().uuid(),
     employees: z.array(z.string().uuid()),
     products: z.array(serviceProducts),
 })
@@ -170,7 +169,6 @@ export class ServiceController {
     ) {
         const {
             automobileId,
-            ownerId,
             description,
             status,
             laborValue,
@@ -180,7 +178,6 @@ export class ServiceController {
         const result = await this.editService.execute({
             serviceId,
             automobileId,
-            ownerId,
             description,
             status,
             employees,

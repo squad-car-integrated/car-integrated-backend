@@ -20,7 +20,6 @@ import { OwnerDontExistsError } from '../errors/owner-dont-exists-error';
 
 interface EditServiceUseCaseRequest {
   serviceId: string;
-  ownerId: string;
   automobileId: string;
   laborValue: number;
   description: string;
@@ -39,13 +38,11 @@ export class EditServiceUseCase {
     private serviceRepository: ServicesRepository,
     private serviceProductsRepository: ServiceProductsRepository,
     private serviceEmployeesRepository: ServiceEmployeesRepository,
-    private ownerRepository: OwnersRepository,
     private productRepository: ProductsRepository,
   ) {}
 
   async execute({
     automobileId,
-    ownerId,
     serviceId,
     laborValue,
     description,
@@ -54,9 +51,8 @@ export class EditServiceUseCase {
     employees,
   }: EditServiceUseCaseRequest): Promise<EditServiceUseCaseResponse> {
     const service = await this.getServiceByIdOrError(serviceId);
-    const owner = await this.getOwnerByIdOrError(ownerId)
-    if (!service || !owner) {
-      return !service ? left(new ResourceNotFoundError()) : left(new OwnerDontExistsError(ownerId));
+    if (!service) {
+      return left(new ResourceNotFoundError());
     }
 
     const currentServiceProducts = await this.serviceProductsRepository.findManyByServiceId(serviceId);
@@ -76,7 +72,6 @@ export class EditServiceUseCase {
     service.description = description;
     service.status = status;
     service.automobileId = new UniqueEntityID(automobileId);
-    service.ownerId = new UniqueEntityID(ownerId);
     service.products = serviceProductList;
     service.employees = serviceEmployeeList;
 
@@ -88,10 +83,6 @@ export class EditServiceUseCase {
   private async getServiceByIdOrError(serviceId: string): Promise<Service | null> {
     const service = await this.serviceRepository.findById(serviceId);
     return service || null;
-  }
-  private async getOwnerByIdOrError(ownerId: string): Promise<Owner | null> {
-    const owner = await this.ownerRepository.findById(ownerId);
-    return owner || null;
   }
   private async updateOrCreateServiceProduct(
     newProducts: ProductAndQuantity[],

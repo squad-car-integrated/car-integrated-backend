@@ -39,7 +39,6 @@ describe('Create Service', () => {
         sut = new CreateServiceUseCase(
             inMemoryServicesRepository,
             inMemoryAutomobilesRepository,
-            inMemoryOwnerRepository,
             inMemoryProductRepository,
             inMemoryEmployeesRepository,
             inMemoryServiceProductsRepository,
@@ -61,7 +60,6 @@ describe('Create Service', () => {
         }
         const result = await sut.execute({
             laborValue: 1000,
-            ownerId: owner.id.toString(),
             employees: [employee.id.toString()],
             automobileId: automobile.id.toString(),
             description: faker.commerce.productDescription(),

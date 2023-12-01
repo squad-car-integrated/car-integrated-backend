@@ -6,7 +6,6 @@ export class ServicePresenter {
             id: service.id.toString(),
             labourValue: service.laborValue,
             productsTotalValue: service.productsTotalValue,
-            ownerId: service.ownerId.toString(),
             automobileId: service.automobileId.toString(),
             employees: service.employees.listToString(),
             products: service.products.listToString(),

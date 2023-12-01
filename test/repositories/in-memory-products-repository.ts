@@ -3,6 +3,9 @@ import { ProductsRepository } from '@/domain/workshop/application/repositories/p
 import { Product } from '@/domain/workshop/enterprise/entities/product'
 
 export class InMemoryProductsRepository implements ProductsRepository {
+    getNumberOfPages(): Promise<number> {
+        throw new Error('Method not implemented.')
+    }
     async findManyRecent({ page }: PaginationParams) {
         const sortedProducts = this.items
             .slice()

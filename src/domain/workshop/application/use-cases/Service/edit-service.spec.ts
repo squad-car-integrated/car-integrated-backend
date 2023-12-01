@@ -9,6 +9,7 @@ import { makeServiceEmployee } from 'test/factories/make-service-employee'
 import { ProductAndQuantity } from './create-service'
 import { InMemoryProductsRepository } from 'test/repositories/in-memory-products-repository'
 import { makeProduct } from 'test/factories/make-product'
+import { InMemoryOwnersRepository } from 'test/repositories/in-memory-owners-repository'
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
@@ -38,7 +39,6 @@ describe('Edit Service', () => {
     it('Should be able to edit a service', async () => {
         const newService = makeService(
             {
-                ownerId: new UniqueEntityID('owner-1'),
                 automobileId: new UniqueEntityID('car-1'),
                 description: 'New service',
                 laborValue: 2000,
@@ -65,7 +65,6 @@ describe('Edit Service', () => {
         }
         await sut.execute({
             automobileId: newService.automobileId.toString(),
-            ownerId: newService.ownerId.toString(),
             serviceId: newService.id.toString(),
             laborValue: 3000,
             description: 'Descricao editada',
@@ -97,7 +96,6 @@ describe('Edit Service', () => {
         }
         await sut.execute({
             automobileId: newService.automobileId.toString(),
-            ownerId: newService.ownerId.toString(),
             serviceId: newService.id.toString(),
             laborValue: 3000,
             description: 'Descricao editada',

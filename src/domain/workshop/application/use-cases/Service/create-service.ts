@@ -10,8 +10,6 @@ import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-e
 import { ServiceEmployeeList } from '@/domain/workshop/enterprise/entities/service-employee-list'
 import { AutomobilesRepository } from '../../repositories/automobiles-repository'
 import { AutomobileDontExistsError } from '../errors/automobile-dont-exists-error'
-import { OwnersRepository } from '../../repositories/owners-repository'
-import { OwnerDontExistsError } from '../errors/owner-dont-exists-error'
 import { ProductsRepository } from '../../repositories/products-repository'
 import { ProductDontExistsError } from '../errors/product-dont-exists-error'
 import { ServiceProductsRepository } from '../../repositories/service-products-repository'
@@ -41,7 +39,6 @@ export class CreateServiceUseCase {
     constructor(
         private serviceRepository: ServicesRepository,
         private automobileRepository: AutomobilesRepository,
-        private ownerRepository: OwnersRepository,
         private productRepository: ProductsRepository,
         private employeeRepository: EmployeesRepository,
         private serviceProductsRepository: ServiceProductsRepository,
@@ -60,10 +57,8 @@ export class CreateServiceUseCase {
         if (!automobile || !automobile.ownerId) {
             return left(new AutomobileDontExistsError(automobileId));
         }
-        const ownerId = automobile.ownerId.toString();
         const service = this.createService(
             automobileId,
-            ownerId,
             laborValue,
             description,
             status,
@@ -81,20 +76,14 @@ export class CreateServiceUseCase {
         return this.automobileRepository.findById(automobileId)
     }
 
-    private getOwner(ownerId: string) {
-        return this.ownerRepository.findById(ownerId)
-    }
-
     private createService(
         automobileId: string,
-        ownerId: string,
         laborValue: number,
         description: string,
         status: ServiceStatus,
     ) {
         return Service.create({
             automobileId: new UniqueEntityID(automobileId),
-            ownerId: new UniqueEntityID(ownerId),
             laborValue,
             description,
             status,

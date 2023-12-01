@@ -15,7 +15,6 @@ export function makeService(
     const service = Service.create(
         {
             laborValue: faker.number.int(2000),
-            ownerId: new UniqueEntityID(),
             automobileId: new UniqueEntityID(),
             description: 'Troca de oleo',
             status: ServiceStatus.InProgress,

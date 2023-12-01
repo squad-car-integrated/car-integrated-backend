@@ -9,6 +9,9 @@ export class InMemoryServicesRepository implements ServicesRepository {
         private serviceProductsRepository: ServiceProductsRepository,
         private serviceEmployeeRepository: ServiceEmployeesRepository,
     ) {}
+    getNumberOfPages(): Promise<number> {
+        throw new Error('Method not implemented.')
+    }
     async findManyRecent({ page }: PaginationParams) {
         const sortedProducts = this.items
             .slice()

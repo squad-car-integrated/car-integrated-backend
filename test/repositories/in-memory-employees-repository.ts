@@ -3,6 +3,9 @@ import { EmployeesRepository } from '@/domain/workshop/application/repositories/
 import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 
 export class InMemoryEmployeesRepository implements EmployeesRepository {
+    getNumberOfPages(): Promise<number> {
+        throw new Error('Method not implemented.')
+    }
     async findByEmail(email: string) {
         const employee = this.items.find((item) => item.email === email)
         if (!employee) {

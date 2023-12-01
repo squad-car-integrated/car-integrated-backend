@@ -3,6 +3,9 @@ import { OwnersRepository } from '@/domain/workshop/application/repositories/own
 import { Owner } from '@/domain/workshop/enterprise/entities/owner'
 
 export class InMemoryOwnersRepository implements OwnersRepository {
+    getNumberOfPages(): Promise<number> {
+        throw new Error('Method not implemented.')
+    }
     async findByEmail(email: string) {
         const owner = this.items.find((item) => item.email === email)
         if (!owner) {

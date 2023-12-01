@@ -17,7 +17,6 @@ model Owner {
   password    String
   phoneNumber String
   automobiles Automobile[]
-  services    Service[]
 
   @@map("owners")
 }
@@ -64,7 +63,6 @@ model Automobile {
 model Service {
   id                 String             @id @default(uuid())
   automobileId       String             @map("automobile_id")
-  ownerId            String             @map("owner_id")
   employees          ServiceEmployees[]
   products           ServiceProducts[]
   laborValue         Float              @default(0)
@@ -73,7 +71,6 @@ model Service {
   status             String
   createdAt          DateTime           @default(now()) @map("created_at")
   updatedAt          DateTime?          @updatedAt @map("updated")
-  owner              Owner              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   automobile         Automobile         @relation(fields: [automobileId], references: [id], onDelete: Cascade)
 
   @@map("services")

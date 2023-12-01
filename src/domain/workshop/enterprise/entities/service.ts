@@ -8,7 +8,6 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export interface ServiceProps {
     automobileId: UniqueEntityID
-    ownerId: UniqueEntityID
     employees: ServiceEmployeeList
     products: ServiceProductList
     laborValue: number
@@ -25,13 +24,6 @@ export class Service extends AggregateRoot<ServiceProps> {
     })
     get automobileId() {
         return this.props.automobileId
-    }
-    @ApiProperty({
-        example: new UniqueEntityID().toString(),
-        description: 'owner id',
-    })
-    get ownerId() {
-        return this.props.ownerId
     }
     @ApiProperty({
         example: [new UniqueEntityID().toString()],
@@ -103,10 +95,6 @@ export class Service extends AggregateRoot<ServiceProps> {
     }
     set automobileId(automobileId: UniqueEntityID) {
         this.props.automobileId = automobileId
-        this.touch()
-    }
-    set ownerId(ownerId: UniqueEntityID) {
-        this.props.ownerId = ownerId
         this.touch()
     }
 

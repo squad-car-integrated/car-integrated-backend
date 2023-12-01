@@ -3,12 +3,15 @@ import { AutomobilesRepository } from '@/domain/workshop/application/repositorie
 import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 
 export class InMemoryAutomobilesRepository implements AutomobilesRepository {
-    async findByPlate(plate: string): Promise<Automobile | null> {
-        const automobile = this.items.find(
+    getNumberOfPages(): Promise<number> {
+        throw new Error('Method not implemented.')
+    }
+    async findByPlate(plate: string): Promise<Automobile[]> {
+        const automobile = this.items.filter(
             (item) => item.plate.toString() === plate,
         )
         if (!automobile) {
-            return null
+            return []
         }
         return automobile
     }

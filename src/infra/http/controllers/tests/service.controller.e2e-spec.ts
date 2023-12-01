@@ -77,7 +77,6 @@ describe('Create service (E2E)', () => {
             .post('/services')
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
-                ownerId: owner.id.toString(),
                 automobileId: car.id.toString(),
                 description: 'New car service',
                 totalValue: 0,
@@ -98,17 +97,14 @@ describe('Create service (E2E)', () => {
         await Promise.all([
             serviceFactory.makePrismaService({
                 description: 'New Service 2',
-                ownerId: owner.id,
                 automobileId: car.id,
             }),
             serviceFactory.makePrismaService({
                 description: 'New Service 3',
-                ownerId: owner.id,
                 automobileId: car.id,
             }),
             serviceFactory.makePrismaService({
                 description: 'New Service 4',
-                ownerId: owner.id,
                 automobileId: car.id,
             }),
         ])
@@ -129,7 +125,6 @@ describe('Create service (E2E)', () => {
         const accessToken = jwt.sign({ sub: employee.id.toString() })
         const newService = await serviceFactory.makePrismaService({
             description: 'New Service 5',
-            ownerId: owner.id,
             automobileId: car.id,
         })
         const serviceId = newService.id.toString()
@@ -155,7 +150,6 @@ describe('Create service (E2E)', () => {
         const newEmployee1 = await employeeFactory.makePrismaEmployee()
         const service = await serviceFactory.makePrismaService({
             description: 'New Service To Edit',
-            ownerId: owner.id,
             automobileId: car.id,
             laborValue: 2000,
         })
@@ -177,7 +171,6 @@ describe('Create service (E2E)', () => {
             .set('Authorization', `Bearer ${accessToken}`)
             .send({
                 description: service.description,
-                ownerId: service.ownerId.toString(),
                 automobileId: service.automobileId.toString(),
                 laborValue: 2987,
                 status: ServiceStatus.InProgress,
