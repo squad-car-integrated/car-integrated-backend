@@ -5,7 +5,7 @@ import { OwnersRepository } from '../../repositories/owners-repository'
 
 interface FetchAllOwnersUseCaseRequest {
     page: number
-    name: string
+    name?: string
 }
 type FetchAllOwnersUseCaseResponse = Either<null, { owners: Owner[], totalPages: number }>
 @Injectable()
