@@ -14,6 +14,9 @@ import { ServiceProduct } from '@/domain/workshop/enterprise/entities/service-pr
 import { ServiceEmployee } from '@/domain/workshop/enterprise/entities/service-employees';
 import { ProductsRepository } from '../../repositories/products-repository';
 import { ProductAndQuantity } from './create-service';
+import { OwnersRepository } from '../../repositories/owners-repository';
+import { Owner } from '@/domain/workshop/enterprise/entities/owner';
+import { OwnerDontExistsError } from '../errors/owner-dont-exists-error';
 
 interface EditServiceUseCaseRequest {
   serviceId: string;
@@ -26,7 +29,7 @@ interface EditServiceUseCaseRequest {
   employees: string[];
 }
 type EditServiceUseCaseResponse = Either<
-  ResourceNotFoundError | NotAllowedError,
+  ResourceNotFoundError | NotAllowedError | OwnerDontExistsError,
   { service: Service }
 >;
 
@@ -36,6 +39,7 @@ export class EditServiceUseCase {
     private serviceRepository: ServicesRepository,
     private serviceProductsRepository: ServiceProductsRepository,
     private serviceEmployeesRepository: ServiceEmployeesRepository,
+    private ownerRepository: OwnersRepository,
     private productRepository: ProductsRepository,
   ) {}
 
@@ -50,8 +54,9 @@ export class EditServiceUseCase {
     employees,
   }: EditServiceUseCaseRequest): Promise<EditServiceUseCaseResponse> {
     const service = await this.getServiceByIdOrError(serviceId);
-    if (!service) {
-      return left(new ResourceNotFoundError());
+    const owner = await this.getOwnerByIdOrError(ownerId)
+    if (!service || !owner) {
+      return !service ? left(new ResourceNotFoundError()) : left(new OwnerDontExistsError(ownerId));
     }
 
     const currentServiceProducts = await this.serviceProductsRepository.findManyByServiceId(serviceId);
@@ -84,7 +89,10 @@ export class EditServiceUseCase {
     const service = await this.serviceRepository.findById(serviceId);
     return service || null;
   }
-
+  private async getOwnerByIdOrError(ownerId: string): Promise<Owner | null> {
+    const owner = await this.ownerRepository.findById(ownerId);
+    return owner || null;
+  }
   private async updateOrCreateServiceProduct(
     newProducts: ProductAndQuantity[],
     currentServiceProduct: ServiceProduct[],
