@@ -24,7 +24,6 @@ export interface ProductAndQuantity {
 }
 interface CreateServiceUseCaseRequest {
     automobileId: string
-    ownerId: string
     employees: string[]
     products: ProductAndQuantity[]
     laborValue: number
@@ -51,7 +50,6 @@ export class CreateServiceUseCase {
 
     async execute({
         automobileId,
-        ownerId,
         employees,
         products,
         laborValue,
@@ -59,13 +57,10 @@ export class CreateServiceUseCase {
         status,
     }: CreateServiceUseCaseRequest): Promise<CreateServiceUseCaseResponse> {
         const automobile = await this.getAutomobile(automobileId)
-        const owner = await this.getOwner(ownerId)
-        if (!automobile || !owner) {
-            return !automobile
-                ? left(new AutomobileDontExistsError(automobileId))
-                : left(new OwnerDontExistsError(ownerId))
+        if (!automobile || !automobile.ownerId) {
+            return left(new AutomobileDontExistsError(automobileId));
         }
-
+        const ownerId = automobile.ownerId.toString();
         const service = this.createService(
             automobileId,
             ownerId,

@@ -36,7 +36,6 @@ const serviceProducts = z.object({
 })
 const serviceCreateSchema = z.object({
     automobileId: z.string().uuid(),
-    ownerId: z.string().uuid(),
     description: z.string(),
     laborValue: z.number().default(0),
     employees: z.array(z.string().uuid()),
@@ -44,10 +43,10 @@ const serviceCreateSchema = z.object({
 })
 const serviceEditSchema = z.object({
     automobileId: z.string().uuid(),
-    ownerId: z.string().uuid(),
     description: z.string(),
     status: z.nativeEnum(ServiceStatus),
     laborValue: z.number().default(0),
+    ownerId: z.string().uuid(),
     employees: z.array(z.string().uuid()),
     products: z.array(serviceProducts),
 })
@@ -128,15 +127,14 @@ export class ServiceController {
     ) {
         const {
             automobileId,
-            ownerId,
             description,
             laborValue,
             employees,
             products,
         } = body
+        console.log(body)
         const result = await this.createService.execute({
             automobileId,
-            ownerId,
             description,
             status: ServiceStatus.Created,
             employees,

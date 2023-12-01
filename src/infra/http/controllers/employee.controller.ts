@@ -76,7 +76,7 @@ export class EmployeeController {
         @Query('page', queryValidationPipe) page: PageQueryParamSchema,
         @Query('name', queryItemNameValidationPipe) name: ItemNameQueryParamSchema,
     ) {
-        const result = await this.getAllEmployees.execute({ page })
+        const result = await this.getAllEmployees.execute({ page, name })
         if (result.isLeft()) {
             throw new BadRequestException()
         }
