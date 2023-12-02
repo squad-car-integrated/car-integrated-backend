@@ -9,7 +9,6 @@ import { makeServiceEmployee } from 'test/factories/make-service-employee'
 import { ProductAndQuantity } from './create-service'
 import { InMemoryProductsRepository } from 'test/repositories/in-memory-products-repository'
 import { makeProduct } from 'test/factories/make-product'
-import { InMemoryOwnersRepository } from 'test/repositories/in-memory-owners-repository'
 
 let inMemoryServicesRepository: InMemoryServicesRepository
 let inMemoryServiceProductsRepository: InMemoryServiceProductsRepository
@@ -103,6 +102,7 @@ describe('Edit Service', () => {
             products: [productAndQuantity2],
             employees: ['3', '4'],
         })
+        console.log(inMemoryProductRepository.items[0])
         expect(inMemoryProductRepository.items[0]).toEqual(
             expect.objectContaining({ id: product.id, productAmount: 32 }),
         )

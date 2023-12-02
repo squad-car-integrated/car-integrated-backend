@@ -4,11 +4,16 @@ import { Automobile } from '@/domain/workshop/enterprise/entities/automobile'
 
 export class InMemoryAutomobilesRepository implements AutomobilesRepository {
     getNumberOfPages(): Promise<number> {
-        throw new Error('Method not implemented.')
+        return new Promise((resolve) => {
+            const numberOfAutomobiles = this.items.length;
+            const carsPerPage = 20;
+            const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+            resolve(totalPages);
+        });
     }
     async findByPlate(plate: string): Promise<Automobile[]> {
         const automobile = this.items.filter(
-            (item) => item.plate.toString() === plate,
+            (item) => item.plate === plate,
         )
         if (!automobile) {
             return []

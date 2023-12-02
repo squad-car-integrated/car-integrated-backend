@@ -4,7 +4,12 @@ import { Product } from '@/domain/workshop/enterprise/entities/product'
 
 export class InMemoryProductsRepository implements ProductsRepository {
     getNumberOfPages(): Promise<number> {
-        throw new Error('Method not implemented.')
+        return new Promise((resolve) => {
+            const numberOfAutomobiles = this.items.length;
+            const carsPerPage = 20;
+            const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+            resolve(totalPages);
+        });
     }
     async findManyRecent({ page }: PaginationParams) {
         const sortedProducts = this.items

@@ -4,7 +4,12 @@ import { Employee } from '@/domain/workshop/enterprise/entities/employee'
 
 export class InMemoryEmployeesRepository implements EmployeesRepository {
     getNumberOfPages(): Promise<number> {
-        throw new Error('Method not implemented.')
+        return new Promise((resolve) => {
+            const numberOfAutomobiles = this.items.length;
+            const carsPerPage = 20;
+            const totalPages = Math.ceil(numberOfAutomobiles / carsPerPage);
+            resolve(totalPages);
+        });
     }
     async findByEmail(email: string) {
         const employee = this.items.find((item) => item.email === email)

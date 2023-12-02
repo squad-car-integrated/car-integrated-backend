@@ -17,9 +17,10 @@ describe('Create Automobile', () => {
         const result = await sut.execute({
             model: faker.vehicle.model(),
             brand: 'Honda',
-            plate: 'KFG91230I',
+            plate: 'KFG91232I',
             ownerId: owner.id.toString(),
         })
         expect(result.isRight()).toBe(true)
     })
+
 })

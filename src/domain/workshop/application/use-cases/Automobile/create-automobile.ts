@@ -27,7 +27,7 @@ export class CreateAutomobileUseCase {
     }: CreateAutomobileUseCaseRequest): Promise<CreateAutomobileUseCaseResponse> {
         const autoAlreadyExists =
             await this.automobileRepository.findByPlate(plate)
-        if (autoAlreadyExists) {
+        if (autoAlreadyExists.length > 0) {
             return left(new AutomobileAlreadyExistsError(plate))
         }
         const automobile = Automobile.create({
