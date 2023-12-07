@@ -19,6 +19,7 @@ export class PrismaAutomobilesRepository implements AutomobilesRepository {
         return PrismaAutomobileMapper.toDomainMany(automobiles)
     }
     async findById(id: string): Promise<Automobile | null> {
+        console.log(id)
         const automobile = await this.prisma.automobile.findUnique({
             where: {
                 id,

@@ -187,10 +187,9 @@ export class AutomobileController {
     //Fim do Swagger
     async handleEditAutomobile(
         @Body(new ZodValidationPipe(automobileSchema)) body: AutomobileBodySchema,
-        @Param('automobileId') automobileId: string,
+        @Param('id') automobileId: string,
     ) {
         const { model, brand, plate, ownerId } = body
-
         const result = await this.editAutomobile.execute({
             model,
             brand,
@@ -198,6 +197,7 @@ export class AutomobileController {
             ownerId,
             automobileId,
         })
+        console.log(result.value)
         if (result.isLeft()) {
             const error = result.value
             if (error instanceof AutomobileAlreadyExistsError) {
