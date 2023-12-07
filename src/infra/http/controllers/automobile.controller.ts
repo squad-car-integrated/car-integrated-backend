@@ -185,10 +185,9 @@ export class AutomobileController {
         type: Automobile,
     })
     //Fim do Swagger
-    @UsePipes(new ZodValidationPipe(automobileSchema))
     async handleEditAutomobile(
-        @Body() body: AutomobileBodySchema,
-        @Param('id') automobileId: string,
+        @Body(new ZodValidationPipe(automobileSchema)) body: AutomobileBodySchema,
+        @Param('automobileId') automobileId: string,
     ) {
         const { model, brand, plate, ownerId } = body
 
