@@ -77,6 +77,7 @@ describe('Create employee (E2E)', () => {
                 expect.objectContaining({ name: 'New Employee 6' }),
                 expect.objectContaining({ name: 'New Employee 5' }),
             ]),
+            pages: 1
         })
     })
     test('[GET] /employee/:id', async () => {

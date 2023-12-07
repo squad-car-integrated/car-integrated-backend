@@ -83,6 +83,7 @@ describe('Create service (E2E)', () => {
                 employees: [employee.id.toString()],
                 products: [productAndQuantity1, productAndQuantity2],
             })
+        console.log(response.body)
         expect(response.statusCode).toBe(201)
         const serviceOnDatabase = await prisma.service.findFirst({
             where: {

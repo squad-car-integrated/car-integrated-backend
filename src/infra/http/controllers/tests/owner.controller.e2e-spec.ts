@@ -84,6 +84,7 @@ describe('Create owner (E2E)', () => {
                 expect.objectContaining({ name: 'New Owner 6' }),
                 expect.objectContaining({ name: 'New Owner 5' }),
             ]),
+            pages: 1
         })
     })
     test('[GET] /owner/:id', async () => {

@@ -83,6 +83,7 @@ describe('Create products (E2E)', () => {
                 expect.objectContaining({ name: 'New product 02' }),
                 expect.objectContaining({ name: 'New product 03' }),
             ]),
+            pages: 1
         })
     })
     test('[PUT] /product/:id', async () => {
