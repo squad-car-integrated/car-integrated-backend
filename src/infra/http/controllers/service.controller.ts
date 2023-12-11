@@ -131,7 +131,6 @@ export class ServiceController {
             employees,
             products,
         } = body
-        console.log(body)
         const result = await this.createService.execute({
             automobileId,
             description,

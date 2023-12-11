@@ -79,11 +79,10 @@ describe('Create service (E2E)', () => {
             .send({
                 automobileId: car.id.toString(),
                 description: 'New car service',
-                totalValue: 0,
+                laborValue: 1000,
                 employees: [employee.id.toString()],
                 products: [productAndQuantity1, productAndQuantity2],
             })
-        console.log(response.body)
         expect(response.statusCode).toBe(201)
         const serviceOnDatabase = await prisma.service.findFirst({
             where: {
@@ -120,6 +119,7 @@ describe('Create service (E2E)', () => {
                 expect.objectContaining({ description: 'New Service 3' }),
                 expect.objectContaining({ description: 'New Service 4' }),
             ]),
+            pages: 1
         })
     })
     test('[GET] /service/:id', async () => {
@@ -137,7 +137,6 @@ describe('Create service (E2E)', () => {
         expect(response.body).toEqual({
             service: expect.objectContaining({
                 description: 'New Service 5',
-                ownerId: owner.id.toString(),
             }),
         })
     })

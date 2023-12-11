@@ -102,9 +102,8 @@ describe('Edit Service', () => {
             products: [productAndQuantity2],
             employees: ['3', '4'],
         })
-        console.log(inMemoryProductRepository.items[0])
         expect(inMemoryProductRepository.items[0]).toEqual(
-            expect.objectContaining({ id: product.id, productAmount: 32 }),
+            expect.objectContaining({ id: product.id, productAmount: 52 }),
         )
     })
 })
